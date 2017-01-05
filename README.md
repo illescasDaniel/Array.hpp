@@ -12,6 +12,9 @@ It uses a unique_ptr<> to automatically manage the memory.
 Insert & delete 30 million values:
 
 ```std::vector Insertion: 0.737s  
-evt::**Array** Insertion: **0.485s**  
-std::vector Removal: 0.581s  
+
+evt::**Array** Insertion: **0.485s**
+
+std::vector Removal: 0.581s
+
 evt::**Array** Removal: **0.305s**```

@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <iterator>
+#include <memory>
 #include <string>
 #include <random>
 
