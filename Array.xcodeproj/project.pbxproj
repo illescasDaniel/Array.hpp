@@ -29,8 +29,8 @@
 		652291351E1E784400AC2D8E /* Benchmark.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Benchmark.hpp; sourceTree = "<group>"; };
 		652291361E1EB8BF00AC2D8E /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		652291371E1EB93C00AC2D8E /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; name = .travis.yml; path = ../.travis.yml; sourceTree = "<group>"; };
-		652291381E1EBBC200AC2D8E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
-		6522913A1E1EBBF500AC2D8E /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		6522913B1E1EBFFB00AC2D8E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
+		6522913C1E1EC01800AC2D8E /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,8 +74,8 @@
 		652291391E1EBBC900AC2D8E /* Github */ = {
 			isa = PBXGroup;
 			children = (
-				6522913A1E1EBBF500AC2D8E /* LICENSE */,
-				652291381E1EBBC200AC2D8E /* README.md */,
+				6522913C1E1EC01800AC2D8E /* LICENSE */,
+				6522913B1E1EBFFB00AC2D8E /* README.md */,
 				652291361E1EB8BF00AC2D8E /* Makefile */,
 				652291371E1EB93C00AC2D8E /* .travis.yml */,
 			);
