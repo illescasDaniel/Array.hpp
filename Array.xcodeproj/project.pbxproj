@@ -25,6 +25,12 @@
 /* Begin PBXFileReference section */
 		6522912A1E1E71CD00AC2D8E /* Array */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Array; sourceTree = BUILT_PRODUCTS_DIR; };
 		6522912D1E1E71CD00AC2D8E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
+		652291341E1E724400AC2D8E /* Array.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Array.hpp; sourceTree = "<group>"; };
+		652291351E1E784400AC2D8E /* Benchmark.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Benchmark.hpp; sourceTree = "<group>"; };
+		652291361E1EB8BF00AC2D8E /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
+		652291371E1EB93C00AC2D8E /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; name = .travis.yml; path = ../.travis.yml; sourceTree = "<group>"; };
+		652291381E1EBBC200AC2D8E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		6522913A1E1EBBF500AC2D8E /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,9 +63,23 @@
 		6522912C1E1E71CD00AC2D8E /* Array */ = {
 			isa = PBXGroup;
 			children = (
+				652291341E1E724400AC2D8E /* Array.hpp */,
+				652291351E1E784400AC2D8E /* Benchmark.hpp */,
 				6522912D1E1E71CD00AC2D8E /* main.cpp */,
+				652291391E1EBBC900AC2D8E /* Github */,
 			);
 			path = Array;
+			sourceTree = "<group>";
+		};
+		652291391E1EBBC900AC2D8E /* Github */ = {
+			isa = PBXGroup;
+			children = (
+				6522913A1E1EBBF500AC2D8E /* LICENSE */,
+				652291381E1EBBC200AC2D8E /* README.md */,
+				652291361E1EB8BF00AC2D8E /* Makefile */,
+				652291371E1EB93C00AC2D8E /* .travis.yml */,
+			);
+			name = Github;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -217,16 +237,26 @@
 		652291321E1E71CD00AC2D8E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				DEVELOPMENT_TEAM = PRK6268SLD;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				WARNING_CFLAGS = "";
+				WARNING_LDFLAGS = "";
 			};
 			name = Debug;
 		};
 		652291331E1E71CD00AC2D8E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
 				DEVELOPMENT_TEAM = PRK6268SLD;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_WARN_PEDANTIC = YES;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				WARNING_CFLAGS = "";
+				WARNING_LDFLAGS = "";
 			};
 			name = Release;
 		};
