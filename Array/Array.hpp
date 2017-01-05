@@ -254,7 +254,7 @@ namespace evt {
 			}
 		}
 		
-		void removeAt(const size_t& index, bool shrinkIfEmpty = true) {
+		void removeAt(const size_t& index, const bool& shrinkIfEmpty = true) {
 			
 			if (count() == 1 && capacity() > 1 && values != nullptr && shrinkIfEmpty) {
 				shrink();
@@ -269,7 +269,7 @@ namespace evt {
 			count_ -= 1;
 		}
 		
-		void removeLast(bool shrinkIfEmpty = true) {
+		void removeLast(const bool& shrinkIfEmpty = true) {
 			
 			if (count() == 1 && capacity() > 1 && values != nullptr && shrinkIfEmpty) {
 				shrink();
@@ -288,6 +288,10 @@ namespace evt {
 		bool contains(const Type& element) const {
 			checkIfEmpty();
 			return (find(this->begin(), this->end(), element)) != this->end();
+		}
+		
+		bool isEmpty() const {
+			return (count() == 0);
 		}
 		
 		string toString() const {
@@ -373,7 +377,7 @@ namespace evt {
 			std::shuffle(this->begin(), this->end(), rng);
 		}
 		
-		Array shuffled() const{
+		Array shuffled() const {
 			
 			checkIfEmpty();
 			
@@ -437,10 +441,6 @@ namespace evt {
 		Type last() const {
 			checkIfEmpty();
 			return values[count() - 1];
-		}
-		
-		bool isEmpty() const {
-			return (count() == 0);
 		}
 	};
 }

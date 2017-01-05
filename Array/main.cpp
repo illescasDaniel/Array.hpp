@@ -9,7 +9,7 @@ int main() {
 	
 	int numbers1[3] = {1,2,3};
 	
-	Array<int> numbers = numbers1;//{1,2,3};
+	Array<int> numbers = numbers1; //{1,2,3};
 	cout << *(numbers.end()-1) << endl;
 	
 	for (const auto& number: numbers) {
@@ -107,8 +107,6 @@ int main() {
 	cout << moreNumbers.count() << ' ' << moreNumbers.capacity() << endl;
 	cout << boolalpha << moreNumbers.isEmpty() << endl;
 	
-	//
-	
 	cout << numbers.contains(99) << endl;
 	
 	numbers.sort();
@@ -133,8 +131,6 @@ int main() {
 	cout << moreNumbers.toString() << endl;
 	cout << moreNumbers.count() << ' ' << moreNumbers.capacity() << endl;
 	
-	//
-	
 	cout << moreNumbers.count() << ' ' << moreNumbers.capacity() << endl;
 	moreNumbers.resize(30);
 	
@@ -147,9 +143,6 @@ int main() {
 	cout << moreNumbers.count() << ' ' << moreNumbers.capacity() << endl;
 	
 	/* BENCHMARKS */
-
-	//Array<int> numbers2(1000000);
-	//cout << "Numbers2: " << numbers2.count() << ' ' << numbers2.capacity() << endl;
 	
 	cout << "std::vector Insertion: " << testVectorInsertion() << "s" << endl;
 	cout << "evt::Array Insertion: " << testArrayInsertion() << "s" << endl;

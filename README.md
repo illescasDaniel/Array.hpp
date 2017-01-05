@@ -5,8 +5,7 @@
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/illescasDaniel/print.hpp/blob/master/LICENCE) 
 
 Container to store data, similar to `std::vector` but with better syntax.  
-Also offers a little bit better performance (see [Benchmark](#Benchmark)).  
-It uses a unique_ptr<> to automatically manage the memory.
+Offers a little bit better performance (see [Benchmark](#Benchmark)) and it uses `unique_ptr<>` to automatically manage the memory.
 
 ## Benchmarks (-O0)
 
