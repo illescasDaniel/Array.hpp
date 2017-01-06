@@ -73,7 +73,7 @@ int main() {
 	// ------
 	
 	Array<int> otherNumbers = {90, 91, 92};
-	numbers.append(otherNumbers);
+	numbers += otherNumbers;
 	
 	cout << numbers.toString() << endl;
 	cout << numbers.count() << ' ' << numbers.capacity() << endl;
@@ -141,6 +141,15 @@ int main() {
 	
 	cout << moreNumbers.toString() << endl;
 	cout << moreNumbers.count() << ' ' << moreNumbers.capacity() << endl;
+	
+	const char* name1 = "Daniel";
+	Array<string> names = {name1, "Sophie", "Michael"};
+	names.append("lol");
+	cout << names.toString() << endl;
+	
+	Array<float> floats;
+	floats.append(10.1);
+	cout << floats.count() << ' ' << floats.capacity() << endl;
 	
 	/* BENCHMARKS */
 	

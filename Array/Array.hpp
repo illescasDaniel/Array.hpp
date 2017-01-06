@@ -1,6 +1,7 @@
 #pragma once
 
 #include <initializer_list>
+#include "Print-lite.hpp"
 #include <algorithm>
 #include <stdexcept>
 #include <iterator>
@@ -11,7 +12,7 @@
 using namespace std;
 
 namespace evt {
-	
+
 	template <typename Type>
 	class Array {
 		
@@ -54,7 +55,7 @@ namespace evt {
 			}
 			else {
 				
-				size_t newcount = (count() == 0) ? (countOfContainer) : (count() * 2);
+				size_t newcount = (this->isEmpty()) ? (countOfContainer) : (count() * 2);
 				
 				while (newcount < (count() + countOfContainer)) {
 					newcount += 2;
@@ -121,8 +122,10 @@ namespace evt {
 		
 		Array(const int32_t& capacity) { // Type can't be size_t because it intefere with the other constructor
 			
+			size_t intialCapacity = (capacity < 0) ? (- capacity) : (capacity);
+			
 			if (values == nullptr) {
-				values = unique_ptr<Type[]>(new Type[size_t(capacity)]);
+				values = unique_ptr<Type[]>(new Type[intialCapacity]);
 				capacity_ = capacity;
 			}
 		}
@@ -140,7 +143,7 @@ namespace evt {
 			
 			if (capacity() == count()) {
 				
-				size_t newcount = (count() == 0) ? (1) : (count() * 2);
+				size_t newcount = (this->isEmpty()) ? (2) : (count() * 2);
 				
 				newValues = unique_ptr<Type[]>(new Type[newcount]);
 				
@@ -168,7 +171,7 @@ namespace evt {
 			
 			if (capacity() == count()) {
 				
-				size_t newCount = (count() == 0) ? (1) : (count() * 2);
+				size_t newCount = (this->isEmpty()) ? (2) : (count() * 2);
 				
 				unique_ptr<Type[]> newValues (new Type[newCount]);
 				
@@ -190,7 +193,7 @@ namespace evt {
 		}
 		
 		template<typename Container>
-		void append(const Container& newElements) { (*this) += newElements; }
+		void appendElements(const Container& newElements) { (*this) += newElements; }
 		void append(const initializer_list<Type>& newElements) { (*this) += newElements; }
 		
 		void resize(const size_t& newSize) {
@@ -300,8 +303,7 @@ namespace evt {
 			
 			size_t position = 0;
 			for (const auto& value: *this) {
-				
-				output += to_string(value);
+				output += quotedString(value);
 				
 				if (position+1 < count()) {
 					output += ", ";
