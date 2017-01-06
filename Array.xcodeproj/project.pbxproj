@@ -23,7 +23,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		6512575D1E1FBFFB00710B35 /* Print-lite.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "Print-lite.hpp"; sourceTree = "<group>"; };
 		6522912A1E1E71CD00AC2D8E /* Array */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Array; sourceTree = BUILT_PRODUCTS_DIR; };
 		6522912D1E1E71CD00AC2D8E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		652291341E1E724400AC2D8E /* Array.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Array.hpp; sourceTree = "<group>"; };
@@ -45,15 +44,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6512575E1E1FC00400710B35 /* Extra */ = {
-			isa = PBXGroup;
-			children = (
-				6512575D1E1FBFFB00710B35 /* Print-lite.hpp */,
-				652291351E1E784400AC2D8E /* Benchmark.hpp */,
-			);
-			name = Extra;
-			sourceTree = "<group>";
-		};
 		652291211E1E71CD00AC2D8E = {
 			isa = PBXGroup;
 			children = (
@@ -74,7 +64,7 @@
 			isa = PBXGroup;
 			children = (
 				652291341E1E724400AC2D8E /* Array.hpp */,
-				6512575E1E1FC00400710B35 /* Extra */,
+				652291351E1E784400AC2D8E /* Benchmark.hpp */,
 				6522912D1E1E71CD00AC2D8E /* main.cpp */,
 				652291391E1EBBC900AC2D8E /* Github */,
 			);

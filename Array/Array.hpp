@@ -1,16 +1,23 @@
 #pragma once
 
 #include <initializer_list>
-#include "Print-lite.hpp"
 #include <algorithm>
 #include <stdexcept>
+#include <typeinfo>
 #include <iterator>
 #include <memory>
 #include <string>
 #include <random>
 
+// Extra functions for the "toString()" method
+namespace std {
+	std::string to_string(const std::string& str) { return str; }
+	std::string to_string(const char chr) { return std::string(1,chr); }
+}
+
 namespace evt {
 	
+	// MARK: - Array Class
 	template <typename Type>
 	class Array {
 		
@@ -340,7 +347,17 @@ namespace evt {
 			
 			size_t position = 0;
 			for (const auto& value: *this) {
-				output += quotedString(value);
+				//output += quotedString(value);
+				
+				output += [&](){
+					if (typeid(value) == typeid(std::string)) {
+						return ("\"" + std::to_string(value) + "\"");
+					} else if (typeid(value) == typeid(char)) {
+						return ("\'" + std::to_string(value) + "\'");
+					} else {
+						return std::to_string(value);
+					}
+				}();
 				
 				if (position+1 < count()) {
 					output += ", ";
