@@ -347,7 +347,6 @@ namespace evt {
 			
 			size_t position = 0;
 			for (const auto& value: *this) {
-				//output += quotedString(value);
 				
 				output += [&](){
 					if (typeid(value) == typeid(std::string)) {
