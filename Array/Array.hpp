@@ -428,7 +428,7 @@ namespace evt {
 				std::mt19937_64 rng(arc4random());
 			#else
 				std::random_device rd;
-				mt19937_64 rng(rd());
+				std::mt19937_64 rng(rd());
 			#endif
 
 			std::shuffle(this->begin(), this->end(), rng);
