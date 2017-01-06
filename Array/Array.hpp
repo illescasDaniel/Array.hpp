@@ -427,7 +427,7 @@ namespace evt {
 			#ifdef __APPLE__
 				std::mt19937_64 rng(arc4random());
 			#else
-				random_device rd;
+				std::random_device rd;
 				mt19937_64 rng(rd());
 			#endif
 
