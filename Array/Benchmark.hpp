@@ -3,8 +3,8 @@
 #include <vector>
 #include <chrono>
 
-using namespace chrono;
 using namespace std;
+using namespace chrono;
 
 std::vector<int> numbers;
 evt::Array<int> numbers2;

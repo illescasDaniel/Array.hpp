@@ -11,7 +11,7 @@ int main() {
 	
 	Array<int> numbers = numbers1; //{1,2,3};
 	cout << *(numbers.end()-1) << endl;
-	
+
 	for (const auto& number: numbers) {
 		cout << number << ' ';
 	}
@@ -150,6 +150,24 @@ int main() {
 	Array<float> floats;
 	floats.append(10.1);
 	cout << floats.count() << ' ' << floats.capacity() << endl;
+	
+	cout << Array<int>({1,2,3}).toString() << endl;
+	
+	Array<string> names2(names);
+	cout << names2.toString() << endl;
+	
+	cout << names2.count() << ' ' << names2.capacity() << endl;
+	names2.clear();
+	
+	cout << names2.toString() << endl;
+	cout << names2.count() << ' ' << names2.capacity() << endl;
+
+	// Move assignment operator
+	
+	Array<int> cosa, cosa2 {1,2,3};
+	cosa = move(cosa2);
+	cout << cosa[0] << endl;
+	cout << cosa2.isEmpty() << endl;
 	
 	/* BENCHMARKS */
 	
