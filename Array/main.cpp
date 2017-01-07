@@ -169,6 +169,12 @@ int main() {
 	cout << cosa[0] << endl;
 	cout << cosa2.isEmpty() << endl;
 	
+	try {
+		cout << cosa2.first() << endl;
+	} catch (const length_error& exception) {
+		cerr << "Error: " << exception.what() << endl;
+	}
+	
 	/* BENCHMARKS */
 	
 	cout << "std::vector Insertion: " << testVectorInsertion() << "s" << endl;

@@ -507,13 +507,11 @@ namespace evt {
 		}
 		
 		Type first() const {
-			checkIfEmpty();
-			return values[0];
+			return *(this->begin());
 		}
 		
 		Type last() const {
-			checkIfEmpty();
-			return values[count() - 1];
+			return *(this->end()-1);
 		}
 	};
 }
