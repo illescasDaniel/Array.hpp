@@ -11,11 +11,11 @@ Offers a little bit better performance than `std::vector` (see [Benchmark](#Benc
 
 Insert & delete values:
 
-std::vector push_back: 0.805s
-evt::**Array** Append: **0.268s**
-std::vector Removal: 0.589s
-evt::**Array** Removal: **0.222s**
-std::vector Insert at beginning: 1.616s
-evt::**Array Insert at beginning: **1.595s**
-std::vector Insert at end: 1.423s
-evt::**Array** Insert at end: **0.533s**
+std::vector push_back: 0.805s  
+evt::**Array** Append: **0.268s**  
+std::vector Removal: 0.589s  
+evt::**Array** Removal: **0.222s**  
+std::vector Insert at beginning: 1.616s  
+evt::**Array Insert at beginning: **1.595s**  
+std::vector Insert at end: 1.423s  
+evt::**Array** Insert at end: **0.533s**  
