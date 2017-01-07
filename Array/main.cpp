@@ -5,6 +5,8 @@
 using namespace std;
 using namespace evt;
 
+
+
 int main() {
 	
 	int numbers1[3] = {1,2,3};
@@ -224,6 +226,24 @@ int main() {
 	test2.resize(0);
 	cout << test2.count() << ' ' << test2.capacity() << endl;
 	
+	//
+	
+	Array<int> numbers2 {1,2,3,4,5};
+	
+	numbers2.append(6);
+	cout << numbers2.toString() << endl;
+	cout << numbers2.count() << ' ' << numbers2.capacity() << endl;
+	
+	numbers2.resize(7);
+	cout << numbers2.toString() << endl;
+	cout << numbers2.count() << ' ' << numbers2.capacity() << endl;
+	
+	numbers2.clear();
+	cout << numbers2.count() << ' ' << numbers2.capacity() << endl;
+	
+	numbers2.append(10);
+	cout << numbers2[0]<< endl;
+	
 	/* BENCHMARKS */
 	
 	cout << "\n------- BENCHMARKS -------\n" << endl;
@@ -241,4 +261,6 @@ int main() {
 	cout << "evt::Array Insert at end: " << testArrayInsertAtEnd() << "s" << endl;
 	
 	cout << "evt::Array Append elements: " << testArrayAppendElements() << "s" << endl;
+	
+	cout << "evt::Array Element access: " << testElementAccess() << "s" << endl;
 }

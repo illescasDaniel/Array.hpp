@@ -8,7 +8,7 @@ using namespace chrono;
 
 std::vector<int> numbers;
 evt::Array<int> numbers2;
-constexpr int size = 30000000;
+constexpr int aSize = 30000000;
 constexpr int insertSize = 150000;
 
 template <typename Function>
@@ -25,7 +25,7 @@ float testVectorPushBack() {
 	
 	return benchmark([](){
 		
-		for (int i = 0; i < size; ++i) {
+		for (int i = 0; i < aSize; ++i) {
 			numbers.push_back(i);
 		}
 	});
@@ -35,7 +35,7 @@ float testArrayAppend() {
 	
 	return benchmark([](){
 		
-		for (int i = 0; i < size; ++i) {
+		for (int i = 0; i < aSize; ++i) {
 			numbers2.append(i);
 		}
 	});
@@ -73,24 +73,24 @@ float testVectorInsertAtEnd() {
 	
 	return benchmark([](){
 		
-		for (int i = 0; i < size; ++i) {
+		for (int i = 0; i < aSize; ++i) {
 			numbers.insert(numbers.end(), i);
 		}
 	});
 }
 
 
-evt::Array<int> one(size);
-evt::Array<int> two(size);
+evt::Array<int> one(aSize);
+evt::Array<int> two(aSize);
 
 float testArrayAppendElements() {
 	
-	for (int i = 0; i < size; ++i) {
+	for (int i = 0; i < aSize; ++i) {
 		one.append(i);
 	}
 	
-	for (int i = 0; i < size; ++i) {
-		two.append(size - i);
+	for (int i = 0; i < aSize; ++i) {
+		two.append(aSize - i);
 	}
 	
 	return benchmark([](){
@@ -107,7 +107,7 @@ float testArrayInsertAtEnd() {
 	
 	return benchmark([](){
 		
-		for (int i = 0; i < size; ++i) {
+		for (int i = 0; i < aSize; ++i) {
 			numbers2.insertAt(numbers2.end(), i);
 		}
 	});
@@ -117,7 +117,7 @@ float testVectorRemoval() {
 	
 	return benchmark([](){
 		
-		for (int i = 0; i < size; ++i) {
+		for (int i = 0; i < aSize; ++i) {
 			numbers.pop_back();
 		}
 	});
@@ -127,8 +127,18 @@ float testArrayRemoval() {
 	
 	return benchmark([](){
 		
-		for (int i = 0; i < size; ++i) {
+		for (int i = 0; i < aSize; ++i) {
 			numbers2.removeLast();
+		}
+	});
+}
+
+float testElementAccess() {
+	
+	return benchmark([](){
+		
+		for (int i = 0; i < aSize; ++i) {
+			numbers2[i];
 		}
 	});
 }

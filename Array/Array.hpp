@@ -11,8 +11,8 @@
 
 // Extra functions for the "toString()" method
 namespace std {
-	std::string to_string(const std::string& str) { return str; }
-	std::string to_string(const char chr) { return std::string(1,chr); }
+	inline std::string to_string(const std::string& str) { return str; }
+	inline std::string to_string(const char chr) { return std::string(1,chr); }
 }
 
 namespace evt {
@@ -96,13 +96,13 @@ namespace evt {
 			return true;
 		}
 		
-		void checkIfEmpty() const {
+		inline void checkIfEmpty() const {
 			if (count_ == 0) {
 				throw std::length_error("Array is empty (lenght == 0)");
 			}
 		}
 		
-		void checkIfOutOfRange(const size_t index) const {
+		inline void checkIfOutOfRange(const size_t index) const {
 			if (index >= count_) {
 				throw std::out_of_range("Index out of range");
 			}
@@ -113,9 +113,12 @@ namespace evt {
 		// MARK: Constructors
 		
 		Array() {}
+		
 		template<typename Container>
 		Array(const Container& elements) { assignNewElements(elements); }
+		
 		Array(const std::initializer_list<Type>& elements) { assignNewElements(elements); }
+		
 		explicit Array(const Array& otherArray) { (*this) = otherArray; }
 		
 		explicit Array(const int32_t capacity): capacity_(capacity) { // Type can't be size_t because it intefere with the other constructor
@@ -129,18 +132,18 @@ namespace evt {
 			#endif
 		}
 		
-		size_t count() const { return count_; }
-		size_t capacity() const { return capacity_; }
+		inline size_t count() const { return count_; }
+		inline size_t capacity() const { return capacity_; }
 		
 		// MARK: Manage elements
 		
 		void insertAt(const Type* position, const Type& newElement) {
 			
-			if (position == &values[0]) {
-				this->insert(newElement, 0);
-			}
-			else if (position == &values[count_]) {
+			if (position == &values[count_]) {
 				this->append(newElement);
+			}
+			else if (position == &values[0]) {
+				this->insert(newElement, 0);
 			}
 			else if (position > &values[0] && position < &values[count_]) {
 				this->insert(newElement, position - &values[0]);
@@ -166,7 +169,7 @@ namespace evt {
 				#if __cplusplus >= 201400
 					auto newValues = std::make_unique<Type[]>(capacity_);
 				#elif __cplusplus >= 201100
-					std::unique_ptr<Type[] newValues(new Type[capacity_]);
+					std::unique_ptr<Type[]> newValues(new Type[capacity_]);
 				#endif
 				
 				std::copy(&values[0], &values[count_], &newValues[0]);
@@ -212,8 +215,8 @@ namespace evt {
 		}
 		
 		template<typename Container>
-		void appendElements(const Container& newElements) { (*this) += newElements; }
-		void append(const std::initializer_list<Type>& newElements) { (*this) += newElements; }
+		inline void appendElements(const Container& newElements) { (*this) += newElements; }
+		inline void append(const std::initializer_list<Type>& newElements) { (*this) += newElements; }
 		
 		void resize(const size_t newSize) {
 			
@@ -222,7 +225,6 @@ namespace evt {
 			}
 			
 			if (newSize < capacity_) {
-				std::for_each(&values[newSize], &values[count_], [](Type& value){ value = Type{}; });
 				count_ = newSize;
 			}
 			else if (newSize > capacity_) {
@@ -266,18 +268,13 @@ namespace evt {
 			return false;
 		}
 		
-		void clear() {
+		inline void clear() {
 			removeAll(true);
 		}
 		
 		void removeAll(const bool keepCapacity = false) {
 			
-			if (keepCapacity) {
-				if (values != nullptr) {
-					std::for_each(&values[0], &values[count_], [](Type& value){ value = Type{}; });
-				}
-			}
-			else {
+			if (!keepCapacity && values != nullptr) {
 				
 				#if __cplusplus >= 201400
 					values = std::make_unique<Type[]>(0);
@@ -301,7 +298,6 @@ namespace evt {
 			checkIfOutOfRange(index);
 			
 			std::copy(&values[index + 1], &values[count_], &values[index]);
-			values[count_ - 1] = Type{};
 			
 			count_ -= 1;
 		}
@@ -314,11 +310,10 @@ namespace evt {
 			
 			checkIfEmpty();
 			
-			values[count_] = Type{};
 			count_ -= 1;
 		}
 		
-		void removeFirst() {
+		inline void removeFirst() {
 			removeAt(0);
 		}
 
@@ -327,7 +322,7 @@ namespace evt {
 			return (std::find(&values[0], &values[count_], element)) != &values[count_];
 		}
 		
-		bool isEmpty() const {
+		inline bool isEmpty() const {
 			return (count_ == 0);
 		}
 		
@@ -366,35 +361,35 @@ namespace evt {
 		
 		// MARK: Operators overload
 		
-		Type& operator[](const size_t index) {
+		inline Type& operator[](const size_t index) {
 			checkIfOutOfRange(index);
 			return values[index];
 		}
 		
 		template<typename Container>
-		Array& operator+=(const Container& newElements) {
+		inline Array& operator+=(const Container& newElements) {
 			return appendNewElements(newElements);
 		}
 		
-		Array& operator+=(const std::initializer_list<Type>& newElements) {
+		inline Array& operator+=(const std::initializer_list<Type>& newElements) {
 			return appendNewElements(newElements);
 		}
 		
 		template<typename Container>
-		bool operator==(const Container& elements) const {
+		inline bool operator==(const Container& elements) const {
 			return compareElements(elements);
 		}
 		
-		bool operator==(const std::initializer_list<Type>& elements) const {
+		inline bool operator==(const std::initializer_list<Type>& elements) const {
 			return compareElements(elements);
 		}
 		
 		template<typename Container>
-		bool operator!=(const Container& elements) const {
+		inline bool operator!=(const Container& elements) const {
 			return !( (*this) == elements );
 		}
 		
-		bool operator!=(const std::initializer_list<Type>& elements) const {
+		inline bool operator!=(const std::initializer_list<Type>& elements) const {
 			return !( (*this) == elements );
 		}
 		
@@ -490,20 +485,20 @@ namespace evt {
 		
 		// MARK: Positions
 		
-		Type* begin() const {
+		inline Type* begin() const {
 			return &values[0];
 		}
 		
-		Type* end() const {
+		inline Type* end() const {
 			return &values[count_];
 		}
 		
-		Type first() const {
+		inline Type first() const {
 			checkIfEmpty();
 			return *(&values[0]);
 		}
 		
-		Type last() const {
+		inline Type last() const {
 			checkIfEmpty();
 			return *(&values[count_]-1);
 		}
