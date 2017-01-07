@@ -134,7 +134,7 @@ namespace evt {
 		
 		explicit Array(const int32_t capacity): capacity_(capacity) { // Type can't be size_t because it intefere with the other constructor
 			
-			size_t intialCapacity = (capacity < 0) ? (- capacity) : (capacity);
+			const size_t intialCapacity = (capacity < 0) ? (- capacity) : (capacity);
 			
 			#if __cplusplus >= 201400
 				values = std::make_unique<Type[]>(intialCapacity);
@@ -148,42 +148,54 @@ namespace evt {
 		
 		// MARK: Manage elements
 		
+		void insertAt(const Type* position, const Type& newElement) {
+			
+			if (position == this->begin()) {
+				this->insert(newElement, 0);
+			}
+			else if (position == this->end()) {
+				this->append(newElement);
+			}
+			else if (position > this->begin() && position < this->end()) {
+				this->insert(newElement, position - this->begin());
+			}
+			else {
+				throw std::out_of_range("Index out of range");
+			}
+		}
+		
 		void insert(const Type& newElement, const size_t index) {
 			
+			if (index == count() - 1 || this->isEmpty()) {
+				this->append(newElement);
+				return;
+			}
+
 			checkIfOutOfRange(index);
-			
-			std::unique_ptr<Type[]> newValues = nullptr;
 			
 			if (capacity() == count()) {
 				
-				size_t newCount = (this->isEmpty()) ? (2) : (count() * 2);
+				const size_t newCount = count() * 2;
 				
 				#if __cplusplus >= 201400
-					newValues = std::make_unique<Type[]>(newCount);
+					auto newValues = std::make_unique<Type[]>(newCount);
 				#elif __cplusplus >= 201100
-					newValues = std::unique_ptr<Type[]>(new Type[newCount]);
-				#endif
-				
-				std::copy(this->begin(), this->end(), &newValues[0]);
-				std::copy(&newValues[index], &newValues[count_ + 1], &newValues[index + 1]);
-				
-				capacity_ = newCount;
-			}
-			else {
-				
-				#if __cplusplus >= 201400
-					newValues = std::make_unique<Type[]>(count());
-				#elif __cplusplus >= 201100
-					newValues = std::unique_ptr<Type[]>(new Type[count()]);
+					std::unique_ptr<Type[] newValues(new Type[newCount]);
 				#endif
 				
 				std::copy(this->begin(), this->end(), &newValues[0]);
 				std::copy(&newValues[index], &newValues[count()], &newValues[index + 1]);
+				
+				capacity_ = newCount;
+				
+				newValues[index] = newElement;
+				values = move(newValues);
 			}
-			
-			newValues[index] = newElement;
-			
-			values = move(newValues);
+			else if (capacity() > count()) {
+
+				std::copy(&values[index], &values[count()], &values[index + 1]);
+				values[index] = newElement;
+			}
 			
 			count_ += 1;
 		}
@@ -192,7 +204,7 @@ namespace evt {
 			
 			if (capacity() == count()) {
 				
-				size_t newCount = (this->isEmpty()) ? (2) : (count() * 2);
+				const size_t newCount = (this->isEmpty()) ? (2) : (count() * 2);
 				
 				#if __cplusplus >= 201400
 					auto newValues = std::make_unique<Type[]>(newCount);
@@ -497,20 +509,20 @@ namespace evt {
 		// MARK: Positions
 		
 		Type* begin() const {
-			checkIfEmpty();
 			return &values[0];
 		}
 		
 		Type* end() const {
-			checkIfEmpty();
 			return &values[count()];
 		}
 		
 		Type first() const {
+			checkIfEmpty();
 			return *(this->begin());
 		}
 		
 		Type last() const {
+			checkIfEmpty();
 			return *(this->end()-1);
 		}
 	};

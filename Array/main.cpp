@@ -175,11 +175,48 @@ int main() {
 		cerr << "Error: " << exception.what() << endl;
 	}
 	
+	Array<double> test {10.1, 20.2};
+	test.insert(15.9, 1);
+	cout << test.toString() << endl;
+	cout << test.count() << ' ' << test.capacity() << endl;
+	
+	test.insert(100.9, 0);
+	cout << test.toString() << endl;
+	cout << test.count() << ' ' << test.capacity() << endl;
+	
+	test.insert(20.90, 0);
+	cout << test.toString() << endl;
+	cout << test.count() << ' ' << test.capacity() << endl;
+	
+	test.insert(280.91, 0);
+	cout << test.toString() << endl;
+	cout << test.count() << ' ' << test.capacity() << endl;
+	
+	Array<float> test2;
+	cout << "?: " << test2.end() << endl;
+	test2.insertAt(test2.begin(), 100);
+	cout << test2.toString() << endl;
+	cout << test2.count() << ' ' << test2.capacity() << endl;
+	
+	test2.append(200);
+	
+	test2.insertAt(test2.end(), 300);
+	cout << test2.toString() << endl;
+	cout << test2.count() << ' ' << test2.capacity() << endl;
+	
 	/* BENCHMARKS */
 	
-	cout << "std::vector Insertion: " << testVectorInsertion() << "s" << endl;
-	cout << "evt::Array Insertion: " << testArrayInsertion() << "s" << endl;
+	cout << "\n------- BENCHMARKS -------\n" << endl;
+	
+	cout << "std::vector push_back: " << testVectorPushBack() << "s" << endl;
+	cout << "evt::Array Append: " << testArrayAppend() << "s" << endl;
 	
 	cout << "std::vector Removal: " << testVectorRemoval() << "s" << endl;
 	cout << "evt::Array Removal: " << testArrayRemoval() << "s" << endl;
+	
+	cout << "std::vector Insert at beginning: " << testVectorInsertAtBeginning() << "s" << endl;
+	cout << "evt::Array Insert at beginning: " << testArrayInsertAtBeginning() << "s" << endl;
+	
+	cout << "std::vector Insert at end: " << testVectorInsertAtEnd() << "s" << endl;
+	cout << "evt::Array Insert at end: " << testArrayInsertAtEnd() << "s" << endl;
 }
