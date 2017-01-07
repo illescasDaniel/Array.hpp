@@ -79,6 +79,28 @@ float testVectorInsertAtEnd() {
 	});
 }
 
+
+evt::Array<int> one(size);
+evt::Array<int> two(size);
+
+float testArrayAppendElements() {
+	
+	for (int i = 0; i < size; ++i) {
+		one.append(i);
+	}
+	
+	for (int i = 0; i < size; ++i) {
+		two.append(size - i);
+	}
+	
+	return benchmark([](){
+		one += two;
+	});
+	
+	one.removeAll();
+	two.removeAll();
+}
+
 float testArrayInsertAtEnd() {
 	
 	numbers2.removeAll();

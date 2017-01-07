@@ -35,16 +35,12 @@ namespace evt {
 			capacity_ = count_;
 			
 			#if __cplusplus >= 201400
-				values = std::make_unique<Type[]>(count());
+				values = std::make_unique<Type[]>(count_);
 			#elif __cplusplus >= 201100
-				values = std::unique_ptr<Type[]>(new Type[count()]);
+				values = std::unique_ptr<Type[]>(new Type[count_]);
 			#endif
-			
-			size_t index = 0;
-			for (const auto& element: elements) {
-				values[index] = element;
-				++index;
-			}
+
+			std::move(std::begin(elements), std::end(elements), &values[0]);
 		}
 		
 		template <typename Container>
@@ -52,21 +48,16 @@ namespace evt {
 			
 			size_t countOfContainer = std::distance(std::begin(newElements), std::end(newElements));
 			
-			if (capacity() >= (count() + countOfContainer)) {
+			if (capacity_ >= (count_ + countOfContainer)) {
 				
-				size_t index = count();
-				for (const auto& newElement: newElements) {
-					values[index] = newElement;
-					++index;
-				}
-				
+				std::move(std::begin(newElements), std::end(newElements), &values[count_]);
 				count_ += countOfContainer;
 			}
 			else {
 				
-				size_t newCount = (this->isEmpty()) ? (countOfContainer) : (count() * 2);
+				size_t newCount = (this->isEmpty()) ? (countOfContainer) : (count_ * 2);
 				
-				while (newCount < (count() + countOfContainer)) {
+				while (newCount < (count_ + countOfContainer)) {
 					newCount += 2;
 				}
 				
@@ -76,20 +67,15 @@ namespace evt {
 					std::unique_ptr<Type[]> newValues (new Type[newCount]);
 				#endif
 				
-				if (count() > 0) {
-					std::copy(this->begin(), this->end(), &newValues[0]);
+				if (count_ > 0) {
+					std::copy(&values[0], &values[count_], &newValues[0]);
 				}
-				
-				size_t index = count();
-				for (const auto& element: newElements) {
-					newValues[index] = element;
-					++index;
-				}
-				
+
+				std::move(std::begin(newElements), std::end(newElements), &newValues[count_]);
 				values = move(newValues);
 				
 				capacity_ = newCount;
-				count_ = count() + countOfContainer;
+				count_ += countOfContainer;
 			}
 			
 			return *this;
@@ -104,20 +90,20 @@ namespace evt {
 				if (values[index] != element) {
 					return false;
 				}
-				++index;
+				index += 1;
 			}
 			
 			return true;
 		}
 		
 		void checkIfEmpty() const {
-			if (count() == 0) {
+			if (count_ == 0) {
 				throw std::length_error("Array is empty (lenght == 0)");
 			}
 		}
 		
 		void checkIfOutOfRange(const size_t index) const {
-			if (index >= count()) {
+			if (index >= count_) {
 				throw std::out_of_range("Index out of range");
 			}
 		}
@@ -150,14 +136,14 @@ namespace evt {
 		
 		void insertAt(const Type* position, const Type& newElement) {
 			
-			if (position == this->begin()) {
+			if (position == &values[0]) {
 				this->insert(newElement, 0);
 			}
-			else if (position == this->end()) {
+			else if (position == &values[count_]) {
 				this->append(newElement);
 			}
-			else if (position > this->begin() && position < this->end()) {
-				this->insert(newElement, position - this->begin());
+			else if (position > &values[0] && position < &values[count_]) {
+				this->insert(newElement, position - &values[0]);
 			}
 			else {
 				throw std::out_of_range("Index out of range");
@@ -166,34 +152,31 @@ namespace evt {
 		
 		void insert(const Type& newElement, const size_t index) {
 			
-			if (index == count() - 1 || this->isEmpty()) {
+			if (index == count_ - 1 || this->isEmpty()) {
 				this->append(newElement);
 				return;
 			}
 
 			checkIfOutOfRange(index);
 			
-			if (capacity() == count()) {
+			if (capacity_ == count_) {
 				
-				const size_t newCount = count() * 2;
+				capacity_ = count_ * 2;
 				
 				#if __cplusplus >= 201400
-					auto newValues = std::make_unique<Type[]>(newCount);
+					auto newValues = std::make_unique<Type[]>(capacity_);
 				#elif __cplusplus >= 201100
-					std::unique_ptr<Type[] newValues(new Type[newCount]);
+					std::unique_ptr<Type[] newValues(new Type[capacity_]);
 				#endif
 				
-				std::copy(this->begin(), this->end(), &newValues[0]);
-				std::copy(&newValues[index], &newValues[count()], &newValues[index + 1]);
-				
-				capacity_ = newCount;
+				std::copy(&values[0], &values[count_], &newValues[0]);
+				std::copy(&newValues[index], &newValues[count_], &newValues[index + 1]);
 				
 				newValues[index] = newElement;
 				values = move(newValues);
 			}
-			else if (capacity() > count()) {
-
-				std::copy(&values[index], &values[count()], &values[index + 1]);
+			else {
+				std::copy(&values[index], &values[count_], &values[index + 1]);
 				values[index] = newElement;
 			}
 			
@@ -202,9 +185,9 @@ namespace evt {
 		
 		void append(const Type& newElement) {
 			
-			if (capacity() == count()) {
+			if (capacity_ == count_) {
 				
-				const size_t newCount = (this->isEmpty()) ? (2) : (count() * 2);
+				const size_t newCount = (this->isEmpty()) ? (2) : (count_ * 2);
 				
 				#if __cplusplus >= 201400
 					auto newValues = std::make_unique<Type[]>(newCount);
@@ -212,18 +195,17 @@ namespace evt {
 					std::unique_ptr<Type[]> newValues (new Type[newCount]);
 				#endif
 				
-				if (count() > 0) {
-					std::copy(this->begin(), this->end(), &newValues[0]);
+				if (count_ > 0) {
+					std::copy(&values[0], &values[count_], &newValues[0]);
 				}
 				
-				newValues[count()] = newElement;
-				
+				newValues[count_] = newElement;
 				values = move(newValues);
 				
 				capacity_ = newCount;
 			}
-			else if (count() < capacity()) {
-				values[count()] = newElement;
+			else {
+				values[count_] = newElement;
 			}
 			
 			count_ += 1;
@@ -235,17 +217,15 @@ namespace evt {
 		
 		void resize(const size_t newSize) {
 			
-			if (newSize == 0 && count() > 0 && capacity() > 0 && values != nullptr) {
+			if (newSize == 0 && count_ > 0) {
 				removeAll();
 			}
 			
-			checkIfEmpty();
-			
-			if (newSize < capacity()) {
-				std::for_each(&values[newSize], this->end(), [](Type& value){ value = Type{}; });
+			if (newSize < capacity_) {
+				std::for_each(&values[newSize], &values[count_], [](Type& value){ value = Type{}; });
 				count_ = newSize;
 			}
-			else if (newSize > capacity()) {
+			else if (newSize > capacity_) {
 				
 				#if __cplusplus >= 201400
 					auto newValues = std::make_unique<Type[]>(newSize);
@@ -253,7 +233,9 @@ namespace evt {
 					std::unique_ptr<Type[]> newValues(new Type[newSize]);
 				#endif
 				
-				std::copy(this->begin(), this->end(), &newValues[0]);
+				if (!this->isEmpty()) {
+					std::copy(&values[0], &values[count_], &newValues[0]);
+				}
 				
 				values = move(newValues);
 				capacity_ = newSize;
@@ -262,21 +244,21 @@ namespace evt {
 		
 		bool shrink() {
 			
-			if (capacity() > count()) {
+			if (capacity_ > count_) {
 				
 				#if __cplusplus >= 201400
-					auto newValues = std::make_unique<Type[]>(count());
+					auto newValues = std::make_unique<Type[]>(count_);
 				#elif __cplusplus >= 201100
-					std::unique_ptr<Type[]> newValues (new Type[count()]);
+					std::unique_ptr<Type[]> newValues (new Type[count_]);
 				#endif
 				
-				if (count() > 0) {
-					std::copy(this->begin(), this->end(), &newValues[0]);
+				if (count_ > 0) {
+					std::copy(&values[0], &values[count_], &newValues[0]);
 				}
 				
 				values = move(newValues);
 				
-				capacity_ = count();
+				capacity_ = count_;
 				
 				return true;
 			}
@@ -292,8 +274,7 @@ namespace evt {
 			
 			if (keepCapacity) {
 				if (values != nullptr) {
-					std::for_each(this->begin(), this->end(), [](Type& value){ value = Type{}; });
-					count_ = 0;
+					std::for_each(&values[0], &values[count_], [](Type& value){ value = Type{}; });
 				}
 			}
 			else {
@@ -304,35 +285,36 @@ namespace evt {
 					values = std::unique_ptr<Type[]>(new Type[0]);
 				#endif
 
-				count_ = 0;
 				capacity_ = 0;
 			}
+			
+			count_ = 0;
 		}
 		
 		void removeAt(const size_t index, const bool shrinkIfEmpty = true) {
 			
-			if (count() == 1 && capacity() > 1 && values != nullptr && shrinkIfEmpty) {
+			if (count_ == 2 && shrinkIfEmpty) {
 				shrink();
 			}
 			
 			checkIfEmpty();
 			checkIfOutOfRange(index);
 			
-			std::copy(&values[index + 1], this->end(), &values[index]);
-			values[count() - 1] = Type{};
+			std::copy(&values[index + 1], &values[count_], &values[index]);
+			values[count_ - 1] = Type{};
 			
 			count_ -= 1;
 		}
 		
 		void removeLast(const bool shrinkIfEmpty = true) {
 			
-			if (count() == 1 && capacity() > 1 && values != nullptr && shrinkIfEmpty) {
+			if (count_ == 2 && shrinkIfEmpty) {
 				shrink();
 			}
 			
 			checkIfEmpty();
 			
-			values[count()] = Type{};
+			values[count_] = Type{};
 			count_ -= 1;
 		}
 		
@@ -342,11 +324,11 @@ namespace evt {
 
 		bool contains(const Type& element) const {
 			checkIfEmpty();
-			return (std::find(this->begin(), this->end(), element)) != this->end();
+			return (std::find(&values[0], &values[count_], element)) != &values[count_];
 		}
 		
 		bool isEmpty() const {
-			return (count() == 0);
+			return (count_ == 0);
 		}
 		
 		std::string toString() const {
@@ -370,11 +352,11 @@ namespace evt {
 					}
 				}();
 				
-				if (position+1 < count()) {
+				if (position+1 < count_) {
 					output += ", ";
 				}
 				
-				++position;
+				position += 1;
 			}
 			
 			output += "]";
@@ -418,24 +400,24 @@ namespace evt {
 		
 		Array& operator=(const Array& otherArray) {
 			
-			count_ = otherArray.count();
-			capacity_ = otherArray.capacity();
+			count_ = otherArray.count_;
+			capacity_ = otherArray.capacity_;
 			
 			#if __cplusplus >= 201400
-				values = std::make_unique<Type[]>(capacity());
+				values = std::make_unique<Type[]>(capacity_);
 			#elif __cplusplus >= 201100
-				values = std::unique_ptr<Type[]> (new Type[capacity()]);
+				values = std::unique_ptr<Type[]> (new Type[capacity_]);
 			#endif
 			
-			std::copy(otherArray.begin(), otherArray.end(), this->begin());
+			std::copy(otherArray.begin(), otherArray.end(), &values[0]);
 			
 			return *this;
 		}
 		
 		Array& operator=(Array&& otherArray) {
 			
-			count_ = std::move(otherArray.count());
-			capacity_ = std::move(otherArray.capacity());
+			count_ = std::move(otherArray.count_);
+			capacity_ = std::move(otherArray.capacity_);
 			
 			values = move(otherArray.values);
 			otherArray.values = nullptr;
@@ -459,7 +441,7 @@ namespace evt {
 				std::mt19937_64 rng(rd());
 			#endif
 
-			std::shuffle(this->begin(), this->end(), rng);
+			std::shuffle(&values[0], &values[count_], rng);
 		}
 		
 		Array shuffled() const {
@@ -476,13 +458,13 @@ namespace evt {
 		
 		void sort() {
 			checkIfEmpty();
-			std::sort(this->begin(), this->end());
+			std::sort(&values[0], &values[count_]);
 		}
 		
 		template <typename Function>
 		void sort(const Function& compareFunction) {
 			checkIfEmpty();
-			std::sort(this->begin(), this->end(), compareFunction);
+			std::sort(&values[0], &values[count_], compareFunction);
 		}
 		
 		template <typename Function>
@@ -513,17 +495,17 @@ namespace evt {
 		}
 		
 		Type* end() const {
-			return &values[count()];
+			return &values[count_];
 		}
 		
 		Type first() const {
 			checkIfEmpty();
-			return *(this->begin());
+			return *(&values[0]);
 		}
 		
 		Type last() const {
 			checkIfEmpty();
-			return *(this->end()-1);
+			return *(&values[count_]-1);
 		}
 	};
 }

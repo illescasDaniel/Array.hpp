@@ -204,6 +204,26 @@ int main() {
 	cout << test2.toString() << endl;
 	cout << test2.count() << ' ' << test2.capacity() << endl;
 	
+	test2.removeLast();
+	cout << test2.toString() << endl;
+	cout << test2.count() << ' ' << test2.capacity() << endl;
+	
+	test2.removeLast();
+	cout << test2.toString() << endl;
+	cout << test2.count() << ' ' << test2.capacity() << endl;
+	
+	test2.removeLast();
+	cout << test2.toString() << endl;
+	cout << test2.count() << ' ' << test2.capacity() << endl;
+	
+	test2.removeAll();
+	cout << test2.count() << ' ' << test2.capacity() << endl;
+	test2.resize(10);
+	cout << test2.count() << ' ' << test2.capacity() << endl;
+	
+	test2.resize(0);
+	cout << test2.count() << ' ' << test2.capacity() << endl;
+	
 	/* BENCHMARKS */
 	
 	cout << "\n------- BENCHMARKS -------\n" << endl;
@@ -219,4 +239,6 @@ int main() {
 	
 	cout << "std::vector Insert at end: " << testVectorInsertAtEnd() << "s" << endl;
 	cout << "evt::Array Insert at end: " << testArrayInsertAtEnd() << "s" << endl;
+	
+	cout << "evt::Array Append elements: " << testArrayAppendElements() << "s" << endl;
 }
