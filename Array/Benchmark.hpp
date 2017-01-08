@@ -46,7 +46,7 @@ float testVectorInsertAtBeginning() {
 	vector<int> backup;
 	numbers = move(backup); // reset the internal capacity to 0 and removes the elements
 	
-	return benchmark([](){
+	return benchmark([] {
 		
 		for (int i = 0; i < insertSize; ++i) {
 			numbers.insert(numbers.begin(), i);
@@ -58,7 +58,7 @@ float testArrayInsertAtBeginning() {
 	
 	numbers2.removeAll();
 	
-	return benchmark([](){
+	return benchmark([] {
 		
 		for (int i = 0; i < insertSize; ++i) {
 			numbers2.insertAt(numbers2.begin(), i);
@@ -71,7 +71,7 @@ float testVectorInsertAtEnd() {
 	vector<int> backup;
 	numbers = move(backup);
 	
-	return benchmark([](){
+	return benchmark([] {
 		
 		for (int i = 0; i < aSize; ++i) {
 			numbers.insert(numbers.end(), i);

@@ -13,6 +13,13 @@
 namespace std {
 	inline std::string to_string(const std::string& str) { return str; }
 	inline std::string to_string(const char chr) { return std::string(1,chr); }
+	/* Custom to_string()
+	 
+	 template <typename MyClass>
+	 inline std::string to_string(const MyClass& object) {
+		return object.value + ... ;
+	 }
+	 */
 }
 
 namespace evt {
@@ -79,21 +86,6 @@ namespace evt {
 			}
 			
 			return *this;
-		}
-		
-		// TRUE if elements are the same
-		template<typename Container>
-		bool compareElements(const Container& elements) const {
-			
-			size_t index = 0;
-			for (const auto& element: elements) {
-				if (values[index] != element) {
-					return false;
-				}
-				index += 1;
-			}
-			
-			return true;
 		}
 		
 		inline void checkIfEmpty() const {
@@ -359,6 +351,14 @@ namespace evt {
 			return output;
 		}
 		
+		// Convert Array to other types
+		template <typename Container>
+		static Container to(const Array<Type>& elements) {
+			Container cont(elements.count());
+			std::copy(elements.begin(), elements.end(), std::begin(cont));
+			return cont;
+		}
+		
 		// MARK: Operators overload
 		
 		inline Type& operator[](const size_t index) {
@@ -377,11 +377,11 @@ namespace evt {
 		
 		template<typename Container>
 		inline bool operator==(const Container& elements) const {
-			return compareElements(elements);
+			return std::equal(&values[0], &values[count_], std::begin(elements));
 		}
 		
 		inline bool operator==(const std::initializer_list<Type>& elements) const {
-			return compareElements(elements);
+			return std::equal(&values[0], &values[count_], std::begin(elements));
 		}
 		
 		template<typename Container>

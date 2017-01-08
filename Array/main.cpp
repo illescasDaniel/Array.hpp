@@ -5,7 +5,11 @@
 using namespace std;
 using namespace evt;
 
-
+struct Human {
+	int age;
+	Human() {}
+	Human(int age): age(age) {}
+};
 
 int main() {
 	
@@ -226,8 +230,6 @@ int main() {
 	test2.resize(0);
 	cout << test2.count() << ' ' << test2.capacity() << endl;
 	
-	//
-	
 	Array<int> numbers2 {1,2,3,4,5};
 	
 	numbers2.append(6);
@@ -243,6 +245,18 @@ int main() {
 	
 	numbers2.append(10);
 	cout << numbers2[0]<< endl;
+	
+	numbers2 = vector<int>({1,2,3,4,5,6});
+	cout << numbers2.toString() << endl;
+	cout << "count: " << numbers2.count() << ' ' << numbers2.capacity() << endl;
+	
+	vector<int> a = Array<int>::to<vector<int>>(numbers2);
+	cout << "a size: " << a.size() << endl;
+	
+	for (const auto& element: a) {
+		cout << element << ' ';
+	}cout << endl;
+	
 	
 	/* BENCHMARKS */
 	
