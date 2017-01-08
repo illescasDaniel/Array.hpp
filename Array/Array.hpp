@@ -3,10 +3,8 @@
 #include <initializer_list>
 #include <algorithm>
 #include <stdexcept>
-#include <typeinfo>
 #include <iterator>
 #include <memory>
-#include <string>
 #include <random>
 
 // Extra functions for the "toString()" method
