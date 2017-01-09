@@ -133,6 +133,16 @@ float testArrayRemoval() {
 	});
 }
 
+float testArrayRemoveFirst() {
+	
+	return benchmark([](){
+		
+		for (int i = 0; i < insertSize; ++i) {
+			numbers2.removeFirst();
+		}
+	});
+}
+
 float testElementAccess() {
 	
 	return benchmark([](){

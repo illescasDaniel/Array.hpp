@@ -250,6 +250,9 @@ int main() {
 	cout << numbers2.toString() << endl;
 	cout << "count: " << numbers2.count() << ' ' << numbers2.capacity() << endl;
 	
+	numbers2.removeLast();
+	cout << numbers2.count() << ' ' << numbers2.capacity() << endl;
+	
 	vector<int> a = Array<int>::to<vector<int>>(numbers2);
 	cout << "a size: " << a.size() << endl;
 	
@@ -271,10 +274,14 @@ int main() {
 	cout << "std::vector Insert at beginning: " << testVectorInsertAtBeginning() << "s" << endl;
 	cout << "evt::Array Insert at beginning: " << testArrayInsertAtBeginning() << "s" << endl;
 	
+	cout << "evt::Array Remove first: " << testArrayRemoveFirst() << "s" << endl;
+	
 	cout << "std::vector Insert at end: " << testVectorInsertAtEnd() << "s" << endl;
 	cout << "evt::Array Insert at end: " << testArrayInsertAtEnd() << "s" << endl;
 	
 	cout << "evt::Array Append elements: " << testArrayAppendElements() << "s" << endl;
 	
 	cout << "evt::Array Element access: " << testElementAccess() << "s" << endl;
+	
+	
 }

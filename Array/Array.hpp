@@ -11,13 +11,12 @@
 namespace std {
 	inline std::string to_string(const std::string& str) { return str; }
 	inline std::string to_string(const char chr) { return std::string(1,chr); }
-	/* Custom to_string()
-	 
-	 template <typename MyClass>
-	 inline std::string to_string(const MyClass& object) {
-		return object.value + ... ;
-	 }
-	 */
+	
+	/* Custom "to_string()" function for X class */
+	// template <typename MyClass>
+	// inline std::string to_string(const MyClass& object) {
+	//		return object.value + ... ;
+	// }
 }
 
 namespace evt {
@@ -264,7 +263,9 @@ namespace evt {
 		
 		void removeAll(const bool keepCapacity = false) {
 			
-			if (!keepCapacity && values != nullptr) {
+			if (capacity_ == 0) { return; }
+			
+			if (!keepCapacity) {
 				
 				#if __cplusplus >= 201400
 					values = std::make_unique<Type[]>(0);
@@ -279,7 +280,7 @@ namespace evt {
 		}
 		
 		void removeAt(const size_t index, const bool shrinkIfEmpty = true) {
-			
+		
 			if (count_ == 2 && shrinkIfEmpty) {
 				shrink();
 			}
@@ -293,14 +294,11 @@ namespace evt {
 		}
 		
 		void removeLast(const bool shrinkIfEmpty = true) {
-			
-			if (count_ == 2 && shrinkIfEmpty) {
-				shrink();
-			}
-			
-			checkIfEmpty();
-			
-			count_ -= 1;
+			(count_ == 2 && shrinkIfEmpty) ?
+				(shrink(), count_ -= 1)
+			:	((count_ != 0) ?
+					(count_ -= 1)
+				:	(throw std::length_error("Array is empty (lenght == 0)")));
 		}
 		
 		inline void removeFirst() {
@@ -414,7 +412,7 @@ namespace evt {
 			
 			values = move(otherArray.values);
 			otherArray.values = nullptr;
-			
+
 			otherArray.count_ = 0;
 			otherArray.capacity_ = 0;
 			
