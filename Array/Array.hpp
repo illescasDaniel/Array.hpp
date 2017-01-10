@@ -30,6 +30,8 @@ namespace evt {
 	template <typename Type, size_t initialCapacity = 2>
 	class Array {
 		
+		#define sizeOfArrayInMB(number_) (float((24 + (sizeof(Type)*(number_)))) / 1000000.0)
+		
 		// MARK: - Attributes
 		
 		std::unique_ptr<Type[]> values { new Type[2] };
@@ -230,7 +232,7 @@ namespace evt {
 			
 			if (capacity_ == count_) {
 				
-				capacity_ <<= 2;
+				capacity_ = (sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1);
 				
 				#if cplusplus14 && use_make_unique
 					auto newValues = std::make_unique<Type[]>(capacity_);
@@ -262,7 +264,7 @@ namespace evt {
 			
 			if (capacity_ == count_) {
 				
-				capacity_ <<= 2;
+				capacity_ = (sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1);
 				
 				#if cplusplus14 && use_make_unique
 					auto newValues = std::make_unique<Type[]>(capacity_);
@@ -287,7 +289,7 @@ namespace evt {
 			
 			if (capacity_ == count_) {
 				
-				capacity_ <<= 2;
+				capacity_ = (sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1);
 				
 				#if cplusplus14 && use_make_unique
 					auto newValues = std::make_unique<Type[]>(capacity_);
@@ -310,7 +312,7 @@ namespace evt {
 			
 			if (capacity_ == count_) {
 				
-				capacity_ <<= 2;
+				capacity_ = (sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1);
 				
 				#if cplusplus14 && use_make_unique
 					auto newValues = std::make_unique<Type[]>(capacity_);
@@ -638,6 +640,7 @@ namespace evt {
 	};
 }
 
+#undef sizeOfArrayInMB
 #undef use_make_unique
 #undef cplusplus14
 #undef cplusplus11

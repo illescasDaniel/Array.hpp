@@ -254,6 +254,8 @@ int main() {
 		cout << element << ' ';
 	}cout << endl;
 	
+	// Array<int, 1000> aaaa;
+	
 	// Array<int> nnnn = vector<int>({1,2,3,4}); // uses the move (&&) operation
 	
 	/* BENCHMARKS */
