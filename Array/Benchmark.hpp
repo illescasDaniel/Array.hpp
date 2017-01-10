@@ -23,7 +23,7 @@ float benchmark(const Function& function) {
 
 float testVectorPushBack() {
 	
-	return benchmark([](){
+	return benchmark([] {
 		
 		for (int i = 0; i < aSize; ++i) {
 			numbers.push_back(i);
@@ -33,7 +33,7 @@ float testVectorPushBack() {
 
 float testArrayAppend() {
 	
-	return benchmark([](){
+	return benchmark([] {
 		
 		for (int i = 0; i < aSize; ++i) {
 			numbers2.append(i);
@@ -79,6 +79,17 @@ float testVectorInsertAtEnd() {
 	});
 }
 
+float testArrayInsertAtEnd() {
+	
+	numbers2.removeAll();
+	
+	return benchmark([] {
+		
+		for (int i = 0; i < aSize; ++i) {
+			numbers2.insertAt(numbers2.end(), i);
+		}
+	});
+}
 
 evt::Array<int> one(aSize);
 evt::Array<int> two(aSize);
@@ -101,21 +112,9 @@ float testArrayAppendElements() {
 	two.removeAll();
 }
 
-float testArrayInsertAtEnd() {
-	
-	numbers2.removeAll();
-	
-	return benchmark([](){
-		
-		for (int i = 0; i < aSize; ++i) {
-			numbers2.insertAt(numbers2.end(), i);
-		}
-	});
-}
-
 float testVectorRemoval() {
 	
-	return benchmark([](){
+	return benchmark([] {
 		
 		for (int i = 0; i < aSize; ++i) {
 			numbers.pop_back();
@@ -125,7 +124,7 @@ float testVectorRemoval() {
 
 float testArrayRemoval() {
 	
-	return benchmark([](){
+	return benchmark([] {
 		
 		for (int i = 0; i < aSize; ++i) {
 			numbers2.removeLast();
@@ -135,7 +134,7 @@ float testArrayRemoval() {
 
 float testArrayRemoveFirst() {
 	
-	return benchmark([](){
+	return benchmark([] {
 		
 		for (int i = 0; i < insertSize; ++i) {
 			numbers2.removeFirst();
@@ -145,7 +144,7 @@ float testArrayRemoveFirst() {
 
 float testElementAccess() {
 	
-	return benchmark([](){
+	return benchmark([] {
 		
 		for (int i = 0; i < aSize; ++i) {
 			numbers2[i];

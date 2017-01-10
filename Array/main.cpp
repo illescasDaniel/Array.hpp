@@ -5,12 +5,6 @@
 using namespace std;
 using namespace evt;
 
-struct Human {
-	int age;
-	Human() {}
-	Human(int age): age(age) {}
-};
-
 int main() {
 	
 	int numbers1[3] = {1,2,3};
@@ -260,6 +254,7 @@ int main() {
 		cout << element << ' ';
 	}cout << endl;
 	
+	// Array<int> nnnn = vector<int>({1,2,3,4}); // uses the move (&&) operation
 	
 	/* BENCHMARKS */
 	
@@ -282,6 +277,4 @@ int main() {
 	cout << "evt::Array Append elements: " << testArrayAppendElements() << "s" << endl;
 	
 	cout << "evt::Array Element access: " << testElementAccess() << "s" << endl;
-	
-	
 }
