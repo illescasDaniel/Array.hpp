@@ -30,7 +30,7 @@ namespace evt {
 	template <typename Type, size_t initialCapacity = 2>
 	class Array {
 		
-		#define sizeOfArrayInMB(number_) (float((24 + (sizeof(Type)*(number_)))) / 1000000.0)
+		#define sizeOfArrayInMB(number_) (float((16 + (sizeof(Type)*(number_)))) / 1000000.0)
 		
 		// MARK: - Attributes
 		
@@ -76,9 +76,7 @@ namespace evt {
 			size_t countOfContainer = std::distance(std::begin(newElements), std::end(newElements));
 			
 			if (capacity_ >= (count_ + countOfContainer)) {
-				
 				std::copy(std::begin(newElements), std::end(newElements), &values[count_]);
-				count_ += countOfContainer;
 			}
 			else {
 
@@ -100,9 +98,9 @@ namespace evt {
 
 				std::copy(std::begin(newElements), std::end(newElements), &newValues[count_]);
 				values = std::move(newValues);
-
-				count_ += countOfContainer;
 			}
+			
+			count_ += countOfContainer;
 			
 			return *this;
 		}
@@ -113,9 +111,7 @@ namespace evt {
 			size_t countOfContainer = std::distance(std::begin(newElements), std::end(newElements));
 			
 			if (capacity_ >= (count_ + countOfContainer)) {
-				
 				std::move(std::begin(newElements), std::end(newElements), &values[count_]);
-				count_ += countOfContainer;
 			}
 			else {
 				
@@ -137,9 +133,9 @@ namespace evt {
 				
 				std::move(std::begin(newElements), std::end(newElements), &newValues[count_]);
 				values = std::move(newValues);
-				
-				count_ += countOfContainer;
 			}
+			
+			count_ += countOfContainer;
 			
 			return *this;
 		}
@@ -175,7 +171,7 @@ namespace evt {
 		explicit Array(const int32_t capacity) { // Type can't be size_t because it intefere with the other constructor
 			
 			size_t intialCapacity = (capacity < 0) ? (- capacity) : (capacity);
-			if (capacity_ < 1) { capacity_ = 2; }
+			if (intialCapacity < 1) { intialCapacity = 2; }
 			
 			#if cplusplus14 && use_make_unique
 				values = std::make_unique<Type[]>(intialCapacity);

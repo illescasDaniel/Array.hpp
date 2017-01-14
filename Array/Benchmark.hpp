@@ -28,7 +28,6 @@ float testVectorPushBack() {
 		for (int i = 0; i < aSize; ++i) {
 			numbers.push_back(i);
 		}
-		cout << "vector: " << numbers.size() << ' ' << numbers.capacity() << endl;
 	});
 }
 
@@ -39,7 +38,6 @@ float testArrayAppend() {
 		for (int i = 0; i < aSize; ++i) {
 			numbers2.append(i);
 		}
-		cout << "Array: " << numbers2.count() << ' ' << numbers2.capacity() << endl;
 	});
 }
 
