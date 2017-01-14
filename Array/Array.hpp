@@ -5,10 +5,11 @@
 #define cplusplus14 (__cplusplus >= 201400)
 #define cplusplus11 (__cplusplus >= 201100)
 
+#define DISTANCE_(iteratorFirst_, iteratorLast_) ((iteratorLast_)-(iteratorFirst_))
+
 #include <initializer_list>
 #include <algorithm>
 #include <stdexcept>
-#include <iterator>
 #include <memory>
 #include <random>
 
@@ -43,7 +44,7 @@ namespace evt {
 		template <typename Container>
 		void assignNewElements(const Container& elements) {
 			
-			count_ = std::distance(std::begin(elements), std::end(elements));
+			count_ = DISTANCE_(std::begin(elements), std::end(elements));
 			capacity_ = (count_ > 0) ? count_ : 2;
 			
 			#if cplusplus14 && use_make_unique
@@ -58,7 +59,7 @@ namespace evt {
 		template <typename Container>
 		void assignNewElements(Container&& elements) {
 			
-			count_ = std::distance(std::begin(elements), std::end(elements));
+			count_ = DISTANCE_(std::begin(elements), std::end(elements));
 			capacity_ = (count_ > 0) ? count_ : 2;
 			
 			#if cplusplus14 && use_make_unique
@@ -73,7 +74,7 @@ namespace evt {
 		template <typename Container>
 		Array& appendNewElements(const Container& newElements) {
 			
-			size_t countOfContainer = std::distance(std::begin(newElements), std::end(newElements));
+			size_t countOfContainer = DISTANCE_(std::begin(newElements), std::end(newElements));
 			
 			if (capacity_ >= (count_ + countOfContainer)) {
 				std::copy(std::begin(newElements), std::end(newElements), &values[count_]);
@@ -108,7 +109,7 @@ namespace evt {
 		template <typename Container>
 		Array& appendNewElementsMOVE(Container&& newElements) {
 			
-			size_t countOfContainer = std::distance(std::begin(newElements), std::end(newElements));
+			size_t countOfContainer = DISTANCE_(std::begin(newElements), std::end(newElements));
 			
 			if (capacity_ >= (count_ + countOfContainer)) {
 				std::move(std::begin(newElements), std::end(newElements), &values[count_]);
@@ -640,3 +641,4 @@ namespace evt {
 #undef use_make_unique
 #undef cplusplus14
 #undef cplusplus11
+#undef DISTANCE_
