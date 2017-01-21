@@ -11,23 +11,25 @@ Offers better performance than `std::vector` (see [Benchmark](#Benchmark)) and i
 
 Insert & delete values **-O0**:
 
-std::vector push_back: 0.815s  
-evt::**Array** Append: **0.235s**  
-std::vector Removal: 0.609s  
-evt::**Array** Removal: **0.119s**  
-std::vector Insert at beginning: 1.601s  
-evt::**Array** Insert at beginning: **1.594s**  
-std::vector Insert at end: 1.335s  
-evt::**Array** Insert at end: **0.457s**  
+std::vector push_back: 0.821s  
+std::vector emplace_back: 0.724s  
+evt::**Array** Append: **0.215s**  
+std::vector Removal: 0.596s  
+evt::**Array** Removal: **0.122s**  
+std::vector Insert at beginning: 1.61s  
+evt::**Array** Insert at beginning: **1.612s**  
+std::vector Insert at end: 1.285s  
+evt::**Array** Insert at end: **0.471s**  
   
   
 **-O2:**  
   
-std::vector push_back: 0.172s  
-evt::**Array** Append: **0.072s**  
+std::vector push_back: 0.178s  
+std::vector emplace_back: 0.14s  
+evt::**Array** Append: **0.077s**  
 std::vector Removal: 0s  
-evt::**Array** Removal: **0.069s**  
-std::vector Insert at beginning: 1.638s  
-evt::**Array** Insert at beginning: **1.665s**  
-std::vector Insert at end: 0.177s  
-evt::**Array** Insert at end: **0.178s**  
+evt::**Array** Removal: **0.074s**  
+std::vector Insert at beginning: 1.577s  
+evt::**Array** Insert at beginning: **1.589s**  
+std::vector Insert at end: 0.184s  
+evt::**Array** Insert at end: **0.181s**  

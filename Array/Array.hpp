@@ -31,7 +31,7 @@ namespace evt {
 	template <typename Type, size_t initialCapacity = 2>
 	class Array {
 		
-		#define sizeOfArrayInMB(number_) (float((16 + (sizeof(Type)*(number_)))) / 1000000.0)
+		#define sizeOfArrayInMB(number_) (float((24 + (sizeof(Type)*(number_)))) / 1000000.0)
 		
 		// MARK: - Attributes
 		

@@ -31,6 +31,19 @@ float testVectorPushBack() {
 	});
 }
 
+float testVectorEmplaceBack() {
+	
+	vector<int> backup;
+	numbers = move(backup); // Reset the internal capacity to 0 and remove the elements
+	
+	return benchmark([] {
+		
+		for (int i = 0; i < aSize; ++i) {
+			numbers.emplace_back(i);
+		}
+	});
+}
+
 float testArrayAppend() {
 	
 	return benchmark([] {
@@ -44,7 +57,7 @@ float testArrayAppend() {
 float testVectorInsertAtBeginning() {
 	
 	vector<int> backup;
-	numbers = move(backup); // reset the internal capacity to 0 and removes the elements
+	numbers = move(backup);
 	
 	return benchmark([] {
 		

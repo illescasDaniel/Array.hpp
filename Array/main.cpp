@@ -263,6 +263,7 @@ int main() {
 	cout << "\n------- BENCHMARKS -------\n" << endl;
 	
 	cout << "std::vector push_back: " << testVectorPushBack() << "s" << endl;
+	cout << "std::vector emplace_back: " << testVectorEmplaceBack() << "s" << endl;
 	cout << "evt::Array Append: " << testArrayAppend() << "s" << endl;
 	
 	cout << "std::vector Removal: " << testVectorRemoval() << "s" << endl;
