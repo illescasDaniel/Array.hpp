@@ -183,14 +183,14 @@ namespace evt {
 		
 		explicit Array(const int32_t capacity) { // Type can't be size_t because it intefere with the other constructor
 			
-			size_t intialCapacity = (capacity < 0) ? (- capacity) : (capacity);
-			
-			if (intialCapacity > 2) {
+			if (capacity > 2) {
+				
+				capacity_ = initialCapacity;
 				
 				#if cplusplus14 && use_make_unique
-					values = std::make_unique<Type[]>(intialCapacity);
+					values = std::make_unique<Type[]>(capacity_);
 				#elif cplusplus11 || !use_make_unique
-					values = std::unique_ptr<Type[]>(new Type[intialCapacity]);
+					values = std::unique_ptr<Type[]>(new Type[capacity_]);
 				#endif
 			}
 		}
