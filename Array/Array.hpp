@@ -45,30 +45,40 @@ namespace evt {
 		void assignNewElements(const Container& elements) {
 			
 			count_ = DISTANCE_(std::begin(elements), std::end(elements));
-			capacity_ = (count_ > 0) ? count_ : 2;
 			
-			#if cplusplus14 && use_make_unique
-				values = std::make_unique<Type[]>(capacity_);
-			#elif cplusplus11 || !use_make_unique
-				values = std::unique_ptr<Type[]>(new Type[capacity_]);
-			#endif
-
-			std::copy(std::begin(elements), std::end(elements), &values[0]);
+			if (count_ > 2) {
+				
+				capacity_ = count_;
+				
+				#if cplusplus14 && use_make_unique
+					values = std::make_unique<Type[]>(capacity_);
+				#elif cplusplus11 || !use_make_unique
+					values = std::unique_ptr<Type[]>(new Type[capacity_]);
+				#endif
+			}
+			if (count_ > 0) {
+				std::copy(std::begin(elements), std::end(elements), &values[0]);
+			}
 		}
 		
 		template <typename Container>
 		void assignNewElements(Container&& elements) {
 			
 			count_ = DISTANCE_(std::begin(elements), std::end(elements));
-			capacity_ = (count_ > 0) ? count_ : 2;
 			
-			#if cplusplus14 && use_make_unique
-				values = std::make_unique<Type[]>(capacity_);
-			#elif cplusplus11 || !use_make_unique
-				values = std::unique_ptr<Type[]>(new Type[capacity_]);
-			#endif
+			if (count_ > 2) {
 			
-			std::move(std::begin(elements), std::end(elements), &values[0]);
+				capacity_ = count_;
+				
+				#if cplusplus14 && use_make_unique
+					values = std::make_unique<Type[]>(capacity_);
+				#elif cplusplus11 || !use_make_unique
+					values = std::unique_ptr<Type[]>(new Type[capacity_]);
+				#endif
+			}
+			if (count_ > 0) {
+				std::move(std::begin(elements), std::end(elements), &values[0]);
+			}
 		}
 		
 		template <typename Container>
@@ -79,7 +89,7 @@ namespace evt {
 			if (capacity_ >= (count_ + countOfContainer)) {
 				std::copy(std::begin(newElements), std::end(newElements), &values[count_]);
 			}
-			else {
+			else if (countOfContainer > 0) {
 
 				capacity_ = countOfContainer + count_;
 				
@@ -114,7 +124,7 @@ namespace evt {
 			if (capacity_ >= (count_ + countOfContainer)) {
 				std::move(std::begin(newElements), std::end(newElements), &values[count_]);
 			}
-			else {
+			else if (countOfContainer > 0) {
 				
 				capacity_ = countOfContainer + count_;
 				
