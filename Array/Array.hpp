@@ -28,7 +28,7 @@ namespace std {
 namespace evt {
 	
 	// MARK: - Array Class
-	template <typename Type, size_t initialCapacity = 2>
+	template <typename Type, std::size_t initialCapacity = 2>
 	class Array {
 		
 		#define sizeOfArrayInMB(number_) (float((24 + (sizeof(Type)*(number_)))) / 1000000.0)
@@ -36,8 +36,8 @@ namespace evt {
 		// MARK: - Attributes
 		
 		std::unique_ptr<Type[]> values { new Type[2] };
-		size_t count_ { 0 };
-		size_t capacity_ { 2 };
+		std::size_t count_ { 0 };
+		std::size_t capacity_ { 2 };
 		
 		// MARK: - Private functions
 		
@@ -84,7 +84,7 @@ namespace evt {
 		template <typename Container>
 		Array& appendNewElements(const Container& newElements) {
 			
-			size_t countOfContainer = DISTANCE_(std::begin(newElements), std::end(newElements));
+			std::size_t countOfContainer = DISTANCE_(std::begin(newElements), std::end(newElements));
 			
 			if (capacity_ >= (count_ + countOfContainer)) {
 				std::copy(std::begin(newElements), std::end(newElements), &values[count_]);
@@ -119,7 +119,7 @@ namespace evt {
 		template <typename Container>
 		Array& appendNewElementsMOVE(Container&& newElements) {
 			
-			size_t countOfContainer = DISTANCE_(std::begin(newElements), std::end(newElements));
+			std::size_t countOfContainer = DISTANCE_(std::begin(newElements), std::end(newElements));
 			
 			if (capacity_ >= (count_ + countOfContainer)) {
 				std::move(std::begin(newElements), std::end(newElements), &values[count_]);
@@ -157,7 +157,7 @@ namespace evt {
 			}
 		}
 		
-		inline void checkIfOutOfRange(const size_t index) const {
+		inline void checkIfOutOfRange(const std::size_t index) const {
 			if (index >= count_) {
 				throw std::out_of_range("Index out of range");
 			}
@@ -191,7 +191,7 @@ namespace evt {
 		
 		explicit Array(const Array& otherArray) { (*this) = otherArray; }
 		
-		explicit Array(const int32_t capacity) { // Type can't be size_t because it intefere with the other constructor
+		explicit Array(const int capacity) { // Type can't be std::size_t because it intefere with the other constructor
 			
 			if (capacity > 2) {
 				
@@ -205,8 +205,9 @@ namespace evt {
 			}
 		}
 		
-		inline size_t count() const { return count_; }
-		inline size_t capacity() const { return capacity_; }
+		inline std::size_t size() const  { return count_; }
+		inline std::size_t count() const { return count_; }
+		inline std::size_t capacity() const { return capacity_; }
 		
 		// MARK: Manage elements
 		
@@ -242,7 +243,7 @@ namespace evt {
 			}
 		}
 		
-		void insert(const Type& newElement, const size_t index) {
+		void insert(const Type& newElement, const std::size_t index) {
 			
 			if (index == count_ - 1 || this->isEmpty()) {
 				this->append(newElement);
@@ -274,7 +275,7 @@ namespace evt {
 			count_ += 1;
 		}
 		
-		void insert(Type&& newElement, const size_t index) {
+		void insert(Type&& newElement, const std::size_t index) {
 			
 			if (index == count_ - 1 || this->isEmpty()) {
 				this->append(newElement);
@@ -360,7 +361,7 @@ namespace evt {
 		inline void appendElements(Container&& newElements) { (*this) += newElements; }
 		inline void append(std::initializer_list<Type>&& newElements) { (*this) += newElements; }
 		
-		void resize(const size_t newSize) {
+		void resize(const std::size_t newSize) {
 			
 			if (newSize == 0 && count_ > 0) {
 				removeAll();
@@ -430,7 +431,7 @@ namespace evt {
 			count_ = 0;
 		}
 		
-		void removeAt(const size_t index, const bool shrinkIfEmpty = true) {
+		void removeAt(const std::size_t index, const bool shrinkIfEmpty = true) {
 		
 			if (count_ == 2 && shrinkIfEmpty) {
 				shrink();
@@ -473,7 +474,7 @@ namespace evt {
 			
 			std::string output = "[";
 			
-			size_t position = 0;
+			std::size_t position = 0;
 			for (const auto& value: *this) {
 				
 				output += [&](){
@@ -508,7 +509,7 @@ namespace evt {
 		
 		// MARK: Operators overload
 		
-		inline Type& operator[](const size_t index) {
+		inline Type& operator[](const std::size_t index) {
 			checkIfOutOfRange(index);
 			return values[index];
 		}
