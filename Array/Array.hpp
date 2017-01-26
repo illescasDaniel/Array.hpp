@@ -12,6 +12,7 @@
 #include <initializer_list>
 #include <algorithm>
 #include <stdexcept>
+#include <typeinfo>
 #include <cstring>
 #include <random>
 
@@ -493,9 +494,8 @@ namespace evt {
 							return ("\"" + std::to_string(value) + "\"");
 						} else if (typeid(value) == typeid(char)) {
 							return ("\'" + std::to_string(value) + "\'");
-						} else {
-							return std::to_string(value);
 						}
+						return std::to_string(value);
 					}();
 				
 				if (position+1 < count_) {

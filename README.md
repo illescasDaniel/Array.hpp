@@ -1,7 +1,7 @@
 # Array.hpp
 
 [![Build Status](https://travis-ci.org/illescasDaniel/Array.hpp.svg?branch=master)](https://travis-ci.org/illescasDaniel/Array.hpp)
-[![Version](https://img.shields.io/badge/version-v1.9--beta-green.svg)](https://github.com/illescasDaniel/Array.hpp/releases)
+[![Version](https://img.shields.io/badge/version-v1.9.1--beta-green.svg)](https://github.com/illescasDaniel/Array.hpp/releases)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/illescasDaniel/Array.hpp/blob/master/LICENCE) 
 
 Container to store data, similar to `std::vector` but with better syntax.  
@@ -12,15 +12,14 @@ Offers better performance than `std::vector`. :D
 Insert & delete values **-O0**:
 
 std::vector push_back: 0.798s  
-std::vector emplace_back: 0.721s  
-evt::**Array** Append: **0.162s**  
-std::vector Removal: 0.589s  
-evt::**Array** Removal: **0.116s**  
-std::vector Insert at beginning: 1.619s  
-evt::**Array** Insert at beginning: **1.602s**  
-std::vector Insert at end: 1.309s  
-evt::**Array** Insert at end: **0.284s**  
-  
+std::vector emplace_back: 0.783s  
+evt::**Array** Append: **0.153s**  
+std::vector Removal: 0.62s  
+evt::**Array** Removal: **0.112s**  
+std::vector Insert at beginning: 1.627s  
+evt::**Array** Insert at beginning: **1.648s**  
+std::vector Insert at end: 1.426s  
+evt::**Array** Insert at end: **0.295s**  
 
 **-O2:**  
   
