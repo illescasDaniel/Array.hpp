@@ -361,16 +361,18 @@ namespace evt {
 		inline void appendElements(Container&& newElements) { (*this) += newElements; }
 		inline void append(std::initializer_list<Type>&& newElements) { (*this) += newElements; }
 		
-		void resize(const std::size_t newSize) {
+		/// Only reserves new memory if the new size if bigger than the array capacity
+		void reserve(const std::size_t newSize) {
 			
 			if (newSize == 0 && count_ > 0) {
 				removeAll();
+				return;
 			}
 			
-			if (newSize < capacity_) {
+			if (newSize < count_) {
 				count_ = newSize;
 			}
-			else if (newSize > capacity_) {
+			if (newSize > capacity_) {
 				
 				#if cplusplus14 && use_make_unique
 					auto newValues = std::make_unique<Type[]>(newSize);
@@ -385,6 +387,32 @@ namespace evt {
 				values = std::move(newValues);
 				capacity_ = newSize;
 			}
+		}
+		
+		/// Only reserves new memory if the new size if bigger than the array count
+		void resize(std::size_t newSize) {
+			
+			if (newSize == 0 && count_ > 0) {
+				removeAll();
+				return;
+			}
+			
+			if (newSize < count_) {
+				count_ = newSize;
+			}
+
+			#if cplusplus14 && use_make_unique
+				auto newValues = std::make_unique<Type[]>(newSize);
+			#elif cplusplus11 || !use_make_unique
+				std::unique_ptr<Type[]> newValues(new Type[newSize]);
+			#endif
+			
+			if (!this->isEmpty()) {
+				std::copy(&values[0], &values[count_], &newValues[0]);
+			}
+			
+			values = std::move(newValues);
+			capacity_ = newSize;
 		}
 		
 		bool shrink() {
@@ -519,13 +547,13 @@ namespace evt {
 			return appendNewElements(newElements);
 		}
 		
-		inline Array& operator+=(const std::initializer_list<Type>& newElements) {
-			return appendNewElements(newElements);
-		}
-		
 		template<typename Container>
 		inline Array& operator+=(Container&& newElements) {
 			return appendNewElementsMOVE(newElements);
+		}
+		
+		inline Array& operator+=(const std::initializer_list<Type>& newElements) {
+			return appendNewElements(newElements);
 		}
 		
 		inline Array& operator+=(std::initializer_list<Type>&& newElements) {

@@ -108,7 +108,7 @@ int main() {
 	cout << boolalpha << moreNumbers.isEmpty() << endl;
 	
 	cout << numbers.contains(99) << endl;
-	
+
 	numbers.sort();
 	
 	cout << numbers.toString() << endl;
@@ -132,7 +132,7 @@ int main() {
 	cout << moreNumbers.count() << ' ' << moreNumbers.capacity() << endl;
 	
 	cout << moreNumbers.count() << ' ' << moreNumbers.capacity() << endl;
-	moreNumbers.resize(30);
+	moreNumbers.reserve(30);
 	
 	cout << moreNumbers.toString() << endl;
 	cout << moreNumbers.count() << ' ' << moreNumbers.capacity() << endl;
@@ -218,15 +218,19 @@ int main() {
 	
 	test2.removeAll();
 	cout << test2.count() << ' ' << test2.capacity() << endl;
-	test2.resize(10);
+	test2.reserve(10);
 	cout << test2.count() << ' ' << test2.capacity() << endl;
 	
-	test2.resize(0);
+	test2.reserve(0);
 	cout << test2.count() << ' ' << test2.capacity() << endl;
 	
 	Array<int> numbers2 {1,2,3,4,5};
 	
 	numbers2.append(6);
+	cout << numbers2.toString() << endl;
+	cout << numbers2.count() << ' ' << numbers2.capacity() << endl;
+	
+	numbers2.reserve(7);
 	cout << numbers2.toString() << endl;
 	cout << numbers2.count() << ' ' << numbers2.capacity() << endl;
 	
