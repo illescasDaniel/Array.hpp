@@ -5,7 +5,19 @@
 using namespace std;
 using namespace evt;
 
+class Test {
+public:
+	int a,b;	
+	Test(int a_, int b_): a(a_), b(b_) {}
+};
+
 int main() {
+	
+	Array<Test> tests;
+	tests.append(Test(1, 2));
+	tests.append(Test(3, 4));
+	cout << tests[0].a << ' ' << tests[0].b << endl;
+	//
 	
 	int numbers1[3] = {1,2,3};
 	
@@ -143,7 +155,7 @@ int main() {
 	cout << moreNumbers.count() << ' ' << moreNumbers.capacity() << endl;
 	
 	const char* name1 = "Daniel";
-	Array<string> names = {name1, "Sophie", "Michael"};
+	Array<string> names = {name1, "Sophie", "Michael"}; //vector<string>({"Daniel", "Sophie", "Michael"});
 	names.append("lol");
 	cout << names.toString() << endl;
 	

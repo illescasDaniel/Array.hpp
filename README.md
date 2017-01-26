@@ -1,40 +1,35 @@
 # Array.hpp
 
 [![Build Status](https://travis-ci.org/illescasDaniel/Array.hpp.svg?branch=master)](https://travis-ci.org/illescasDaniel/Array.hpp)
-[![Version](https://img.shields.io/badge/version-v1.8--beta-green.svg)](https://github.com/illescasDaniel/Array.hpp/releases)
+[![Version](https://img.shields.io/badge/version-v1.9--beta-green.svg)](https://github.com/illescasDaniel/Array.hpp/releases)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/illescasDaniel/Array.hpp/blob/master/LICENCE) 
 
 Container to store data, similar to `std::vector` but with better syntax.  
-Offers better performance than `std::vector` and it uses `std::unique_ptr<>` to automatically manage the memory.
+Offers better performance than `std::vector`. :D
 
 ## Benchmarks
 
 Insert & delete values **-O0**:
 
-std::vector push_back: 0.821s  
-std::vector emplace_back: 0.724s  
-evt::**Array** Append: **0.215s**  
-std::vector Removal: 0.596s  
-evt::**Array** Removal: **0.122s**  
-std::vector Insert at beginning: 1.61s  
-evt::**Array** Insert at beginning: **1.612s**  
-std::vector Insert at end: 1.285s  
-evt::**Array** Insert at end: **0.471s**  
+std::vector push_back: 0.798s  
+std::vector emplace_back: 0.721s  
+evt::**Array** Append: **0.162s**  
+std::vector Removal: 0.589s  
+evt::**Array** Removal: **0.116s**  
+std::vector Insert at beginning: 1.619s  
+evt::**Array Insert at beginning: **1.602s**  
+std::vector Insert at end: 1.309s  
+evt::**Array** Insert at end: **0.284s**  
   
-  
+
 **-O2:**  
   
-std::vector push_back: 0.178s  
-std::vector emplace_back: 0.14s  
-evt::**Array** Append: **0.077s**  
+std::vector push_back: 0.175s  
+std::vector emplace_back: 0.134s  
+evt::**Array** Append: **0.076s**  
 std::vector Removal: 0s  
-evt::**Array** Removal: **0.074s**  
-std::vector Insert at beginning: 1.577s  
-evt::**Array** Insert at beginning: **1.589s**  
-std::vector Insert at end: 0.184s  
-evt::**Array** Insert at end: **0.181s**  
-
-## Known "issues"
-
-- You cannot create an evt::Array of a class which doesn't have a default constructor  
-- Performance on std::string is pretty much the same than std::vector, need to test more types  
+evt::**Array** Removal: **0.067s**  
+std::vector Insert at beginning: 1.578s  
+evt::**Array** Insert at beginning: **1.578s**  
+std::vector Insert at end: 0.197s  
+evt::**Array** Insert at end: **0.163s**  
