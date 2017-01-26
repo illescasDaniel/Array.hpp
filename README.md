@@ -17,7 +17,7 @@ evt::**Array** Append: **0.162s**
 std::vector Removal: 0.589s  
 evt::**Array** Removal: **0.116s**  
 std::vector Insert at beginning: 1.619s  
-evt::**Array Insert at beginning: **1.602s**  
+evt::**Array** Insert at beginning: **1.602s**  
 std::vector Insert at end: 1.309s  
 evt::**Array** Insert at end: **0.284s**  
   
