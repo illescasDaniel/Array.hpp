@@ -4,8 +4,7 @@
 [![Version](https://img.shields.io/badge/version-v1.9.2--beta-green.svg)](https://github.com/illescasDaniel/Array.hpp/releases)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/illescasDaniel/Array.hpp/blob/master/LICENCE) 
 
-Container to store data, similar to `std::vector` but with better syntax.  
-Offers better performance than `std::vector`. :D
+Container to store data, similar to `std::vector` but with better syntax and performance than `std::vector`.  
 
 ## Benchmarks
 
