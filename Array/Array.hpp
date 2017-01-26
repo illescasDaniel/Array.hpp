@@ -345,7 +345,11 @@ namespace evt {
 				values = newValues;
 			}
 			
-			values[count_] = std::move(newElement);
+			if (typeid(std::string) == typeid(Type)) {
+				values[count_] = newElement;
+			} else {
+				values[count_] = std::move(newElement);
+			}
 
 			count_ += 1;
 		}
@@ -539,6 +543,10 @@ namespace evt {
 		}
 		
 		// MARK: Operators overload
+		
+		inline Type& operator*() const {
+			return *values;
+		}
 		
 		inline Type& operator[](const std::size_t index) {
 			checkIfOutOfRange(index);

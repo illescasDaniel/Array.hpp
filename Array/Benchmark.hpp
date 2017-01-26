@@ -161,6 +161,7 @@ float testElementAccess() {
 		
 		for (int i = 0; i < aSize; ++i) {
 			numbers2[i];
+			//(*numbers2 + i);
 		}
 	});
 }
