@@ -6,8 +6,8 @@
 #define evt_Array_hpp
 
 #define DISTANCE_(iteratorFirst_, iteratorLast_) ((iteratorLast_)-(iteratorFirst_))
-#define copy_(first, last, d_first) ( std::memcpy(d_first, first, sizeof(Type) * (DISTANCE_(first,last))) )
-#define move_(first, last, d_first) ( std::memmove(d_first, first, sizeof(Type) * (DISTANCE_(first,last))) )
+#define copy_(first, last, d_first) ( std::memcpy(d_first, first, sizeof(Type) * (last-first)) )
+#define move_(first, last, d_first) ( std::memmove(d_first, first, sizeof(Type) * (last-first)) )
 
 #include <initializer_list>
 #include <algorithm>
@@ -51,12 +51,15 @@ namespace evt {
 		
 		// MARK: - Private functions
 		
-		inline void assignMemoryForSize(const size_t newSize) {
-			
+		inline void deleteMemory() {
 			if (values) {
 				operator delete[](values);
+				values = nullptr;
 			}
-			
+		}
+		
+		inline void assignMemoryForSize(const size_t newSize) {
+			deleteMemory();
 			values = newType(newSize);
 		}
 		
@@ -69,9 +72,7 @@ namespace evt {
 				capacity_ = count_;
 				assignMemoryForSize(capacity_);
 			}
-			if (count_ > 0) {
-				copy_(std::begin(elements), std::end(elements), &values[0]);
-			}
+			copy_(std::begin(elements), std::end(elements), &values[0]);
 		}
 		
 		template <typename Container>
@@ -84,9 +85,7 @@ namespace evt {
 				capacity_ = count_;
 				assignMemoryForSize(capacity_);
 			}
-			if (count_ > 0) {
-				std::memmove(&values[0], &elements[0], sizeof(Type) * count_);
-			}
+			std::memmove(&values[0], &elements[0], sizeof(Type) * count_);
 		}
 		
 		template <typename Container>
@@ -107,11 +106,10 @@ namespace evt {
 				
 				Type* newValues = newType(capacity_);
 				
-				if (count_ > 0) {
-					copy_(&values[0], &values[count_], &newValues[0]);
-				}
-
+				copy_(&values[0], &values[count_], &newValues[0]);
 				copy_(std::begin(newElements), std::end(newElements), &newValues[count_]);
+				
+				deleteMemory();
 				values = newValues;
 			}
 			
@@ -138,11 +136,10 @@ namespace evt {
 				
 				Type* newValues = newType(capacity_);
 
-				if (count_ > 0) {
-					copy_(&values[0], &values[count_], &newValues[0]);
-				}
-				
+				move_(&values[0], &values[count_], &newValues[0]);
 				move_(std::begin(newElements), std::end(newElements), &newValues[count_]);
+				
+				deleteMemory();
 				values = newValues;
 			}
 			
@@ -273,6 +270,7 @@ namespace evt {
 				copy_(&values[0], &values[count_], &newValues[0]);
 				copy_(&newValues[index], &newValues[count_], &newValues[index + 1]);
 				
+				deleteMemory();
 				values = newValues;
 			}
 			else {
@@ -301,6 +299,7 @@ namespace evt {
 				copy_(&values[0], &values[count_], &newValues[0]);
 				copy_(&newValues[index], &newValues[count_], &newValues[index + 1]);
 				
+				deleteMemory();
 				values = newValues;
 			}
 			else {
@@ -318,39 +317,28 @@ namespace evt {
 				capacity_ = (sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1);
 				
 				Type* newValues = newType(capacity_);
+				std::memcpy(newValues, values, sizeof(Type) * count_);
 				
-				if (count_ > 0) {
-					copy_(&values[0], &values[count_], &newValues[0]);
-				}
-				
+				deleteMemory();
 				values = newValues;
 			}
 			values[count_] = newElement;
-			
 			count_ += 1;
 		}
 		
 		void append(Type&& newElement) {
-			
+	
 			if (capacity_ == count_) {
 				
 				capacity_ = (sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1);
 				
 				Type* newValues = newType(capacity_);
-
-				if (count_ > 0) {
-					move_(&values[0], &values[count_], &newValues[0]);
-				}
+				std::memmove(newValues, values, sizeof(Type) * count_);
 				
+				deleteMemory();
 				values = newValues;
 			}
-			
-			if (typeid(std::string) == typeid(Type)) {
-				values[count_] = newElement;
-			} else {
-				values[count_] = std::move(newElement);
-			}
-
+			values[count_] = std::move(newElement);
 			count_ += 1;
 		}
 		
@@ -382,12 +370,12 @@ namespace evt {
 			if (newSize > capacity_) {
 				
 				Type* newValues = newType(newSize);
-
-				if (!this->isEmpty()) {
-					copy_(&values[0], &values[count_], &newValues[0]);
-				}
 				
+				copy_(&values[0], &values[count_], &newValues[0]);
+				
+				deleteMemory();
 				values = newValues;
+				
 				capacity_ = newSize;
 			}
 		}
@@ -406,11 +394,11 @@ namespace evt {
 
 			Type* newValues = newType(newSize);
 			
-			if (!this->isEmpty()) {
-				copy_(&values[0], &values[count_], &newValues[0]);
-			}
+			copy_(&values[0], &values[count_], &newValues[0]);
 			
+			deleteMemory();
 			values = newValues;
+			
 			capacity_ = newSize;
 		}
 		
@@ -419,18 +407,15 @@ namespace evt {
 			if (capacity_ > count_) {
 				
 				Type* newValues = newType(count_);
-
-				if (count_ > 0) {
-					copy_(&values[0], &values[count_], &newValues[0]);
-				}
+				copy_(&values[0], &values[count_], &newValues[0]);
 				
+				deleteMemory();
 				values = newValues;
 				
 				capacity_ = count_;
 				
 				return true;
 			}
-			
 			return false;
 		}
 		
@@ -612,6 +597,7 @@ namespace evt {
 			count_ = std::move(otherArray.count_);
 			capacity_ = std::move(otherArray.capacity_);
 			
+			deleteMemory();
 			values = otherArray.values;
 			otherArray.values = nullptr;
 
@@ -701,11 +687,7 @@ namespace evt {
 			return *(&values[count_]-1);
 		}
 		
-		~Array() {
-			if (values) {
-				operator delete[](values);
-			}
-		}
+		~Array() { deleteMemory(); }
 	};
 }
 
