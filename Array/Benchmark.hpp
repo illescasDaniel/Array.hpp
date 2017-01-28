@@ -165,3 +165,51 @@ float testElementAccess() {
 		}
 	});
 }
+
+// TEST CLASS
+
+class Test {
+public:
+	int number1;
+	double number2;
+	string str;
+	
+	Test() {}
+	Test(int n1_, double n2_, string str_): number1(n1_), number2(n2_), str(str_) {}
+};
+
+std::vector<Test> test1;
+evt::Array<Test> test2;
+
+float testVectorPushBackTEST() {
+	
+	return benchmark([] {
+		
+		for (int i = 0; i < aSize; ++i) {
+			test1.push_back(Test(i, double(i), std::to_string(i)));
+		}
+	});
+}
+
+float testVectorEmplaceBackTEST() {
+	
+	vector<int> backup;
+	numbers = move(backup);
+	
+	return benchmark([] {
+		
+		for (int i = 0; i < aSize; ++i) {
+			test1.emplace_back(Test(i, double(i), std::to_string(i)));
+		}
+	});
+}
+
+float testArrayAppendTEST() {
+	
+	return benchmark([] {
+		
+		for (int i = 0; i < aSize; ++i) {
+			test2.append(Test(i, double(i), std::to_string(i)));
+		}
+	});
+}

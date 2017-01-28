@@ -5,18 +5,19 @@
 using namespace std;
 using namespace evt;
 
-class Test {
+/*
+class Test2 {
 public:
-	int a,b;	
-	Test(int a_, int b_): a(a_), b(b_) {}
-};
+	int a,b;
+	Test2(int a_, int b_): a(a_), b(b_) {}
+};*/
 
 int main() {
 	
-	Array<Test> tests;
-	tests.append(Test(1, 2));
-	tests.append(Test(3, 4));
-	cout << tests[0].a << ' ' << tests[0].b << endl;
+	/*Array<Test2> tests;
+	tests.append(Test2(1, 2));
+	tests.append(Test2(3, 4));
+	cout << tests[0].a << ' ' << tests[0].b << endl;*/
 	//
 	
 	int numbers1[3] = {1,2,3};
@@ -120,7 +121,7 @@ int main() {
 	cout << boolalpha << moreNumbers.isEmpty() << endl;
 	
 	cout << numbers.contains(99) << endl;
-
+	
 	numbers.sort();
 	
 	cout << numbers.toString() << endl;
@@ -271,7 +272,6 @@ int main() {
 	}cout << endl;
 	
 	// Array<int, 1000> aaaa;
-	
 	// Array<int> nnnn = vector<int>({1,2,3,4}); // uses the move (&&) operation
 	
 	/* BENCHMARKS */
@@ -296,4 +296,12 @@ int main() {
 	cout << "evt::Array Append elements: " << testArrayAppendElements() << "s" << endl;
 	
 	cout << "evt::Array Element access: " << testElementAccess() << "s" << endl;
+	
+	//
+	
+	cout << "\n----- TEST Class Benchmark ----\n" << endl;
+	
+	cout << "std::vector push_back: " << testVectorPushBackTEST() << "s" << endl;
+	cout << "std::vector emplace_back: " << testVectorEmplaceBackTEST() << "s" << endl;
+	cout << "evt::Array Append: " << testArrayAppendTEST() << "s" << endl;
 }
