@@ -1,12 +1,12 @@
 # **Array**.hpp
 
-[![Build Status](https://travis-ci.org/illescasDaniel/**Array**.hpp.svg?branch=master)](https://travis-ci.org/illescasDaniel/**Array**.hpp)
-[![Version](https://img.shields.io/badge/version-v1.10--beta-green.svg)](https://github.com/illescasDaniel/**Array**.hpp/releases)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/illescasDaniel/**Array**.hpp/blob/master/LICENCE) 
+[![Build Status](https://travis-ci.org/illescasDaniel/Array.hpp.svg?branch=master)](https://travis-ci.org/illescasDaniel/Array.hpp)
+[![Version](https://img.shields.io/badge/version-v1.10--beta-green.svg)](https://github.com/illescasDaniel/Array.hpp/releases)
+[![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/illescasDaniel/Array.hpp/blob/master/LICENCE) 
 
 Container to store data, similar to `std::vector` but with better syntax and performance.  
 ```diff
-- Note: if the **Array** store objects of a Class, that class needs to have a default constructor.
+- Note: if the Array store objects of a Class, that class needs to have a default constructor.
 ```
 
 ## Benchmarks
