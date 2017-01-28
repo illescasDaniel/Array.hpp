@@ -16,19 +16,20 @@
 #include <cstring>
 #include <random>
 
-// Extra functions for the "toString()" method
-namespace std {
+namespace evt {
+	
+	// Extra functions for the "toString()" method
 	inline std::string to_string(const std::string& str) { return str; }
 	inline std::string to_string(const char chr) { return std::string(1,chr); }
+	
+	template <typename Others>
+	std::string to_string(const Others other) { return std::to_string(other); }
 	
 	/* Custom "to_string()" function for X class */
 	// template <typename MyClass>
 	// inline std::string to_string(const MyClass& object) {
 	//		return object.value + ... ;
 	// }
-}
-
-namespace evt {
 	
 	// MARK: - Array Class
 	template <typename Type, std::size_t initialCapacity = 2>
@@ -61,6 +62,16 @@ namespace evt {
 		inline void assignMemoryForSize(const size_t newSize) {
 			deleteMemory();
 			values = newType(newSize);
+		}
+		
+		inline void resizeValuesToSize(const size_t newSize, bool move) {
+			Type* newValues = newType(newSize);
+			move ? std::memmove(newValues, values, sizeof(Type) * count_) : std::memcpy(newValues, values, sizeof(Type) * count_);
+			
+			deleteMemory();
+			values = newValues;
+			
+			capacity_ = newSize;
 		}
 		
 		template <typename Container>
@@ -313,14 +324,7 @@ namespace evt {
 		void append(const Type& newElement) {
 			
 			if (capacity_ == count_) {
-				
-				capacity_ = (sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1);
-				
-				Type* newValues = newType(capacity_);
-				std::memcpy(newValues, values, sizeof(Type) * count_);
-				
-				deleteMemory();
-				values = newValues;
+				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1),0);
 			}
 			values[count_] = newElement;
 			count_ += 1;
@@ -329,41 +333,11 @@ namespace evt {
 		void append(Type& newElement) {
 			
 			if (capacity_ == count_) {
-				
-				capacity_ = (sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1);
-				
-				Type* newValues = newType(capacity_);
-				std::memcpy(newValues, values, sizeof(Type) * count_);
-				
-				deleteMemory();
-				values = newValues;
+				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1),1);
 			}
 			values[count_] = newElement;
 			count_ += 1;
 		}
-		
-		void append(Type&& newElement) {
-		 
-			if (capacity_ == count_) {
-		 
-		 capacity_ = (sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1);
-		 
-		 Type* newValues = newType(capacity_);
-		 std::memmove(newValues, values, sizeof(Type) * count_);
-		 
-		 deleteMemory();
-		 values = newValues;
-			}
-			
-			if (typeid(std::string) == typeid(Type)) {
-		 values[count_] = newElement;
-			}
-			else {
-		 values[count_] = std::move(newElement);
-			}
-			
-			count_ += 1;
-		 }
 		
 		template<typename Container>
 		inline void appendElements(const Container& newElements) { (*this) += newElements; }
@@ -391,15 +365,7 @@ namespace evt {
 				count_ = newSize;
 			}
 			if (newSize > capacity_) {
-				
-				Type* newValues = newType(newSize);
-				
-				copy_(&values[0], &values[count_], &newValues[0]);
-				
-				deleteMemory();
-				values = newValues;
-				
-				capacity_ = newSize;
+				resizeValuesToSize(newSize, 0);
 			}
 		}
 		
@@ -414,29 +380,13 @@ namespace evt {
 			if (newSize < count_) {
 				count_ = newSize;
 			}
-			
-			Type* newValues = newType(newSize);
-			
-			copy_(&values[0], &values[count_], &newValues[0]);
-			
-			deleteMemory();
-			values = newValues;
-			
-			capacity_ = newSize;
+			resizeValuesToSize(newSize, 0);
 		}
 		
 		bool shrink() {
 			
 			if (capacity_ > count_) {
-				
-				Type* newValues = newType(count_);
-				copy_(&values[0], &values[count_], &newValues[0]);
-				
-				deleteMemory();
-				values = newValues;
-				
-				capacity_ = count_;
-				
+				resizeValuesToSize(count_, 0);
 				return true;
 			}
 			return false;
@@ -503,11 +453,11 @@ namespace evt {
 			for (const auto& value: *this) {
 				output += [&] {
 					if (typeid(value) == typeid(std::string)) {
-						return ("\"" + std::to_string(value) + "\"");
+						return ("\"" + evt::to_string(value) + "\"");
 					} else if (typeid(value) == typeid(char)) {
-						return ("\'" + std::to_string(value) + "\'");
+						return ("\'" + evt::to_string(value) + "\'");
 					}
-					return std::to_string(value);
+					return evt::to_string(value);
 				}();
 				
 				if (position+1 < count_) {
@@ -521,9 +471,9 @@ namespace evt {
 			for (size_t i = 0; i < count_; ++i) {
 				
 				if (typeid(values[i]) == typeid(std::string)) {
-					output += ("\"" + std::to_string(values[i]) + "\"");
+					output += ("\"" + evt::to_string(values[i]) + "\"");
 				} else if (typeid(values[i]) == typeid(char)) {
-					output += ("\'" + std::to_string(values[i]) + "\'");
+					output += ("\'" + evt::to_string(values[i]) + "\'");
 				} else {
 					output += std::to_string(values[i]);
 				}
