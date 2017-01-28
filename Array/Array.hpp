@@ -51,23 +51,23 @@ namespace evt {
 		inline void assignMemoryForSize(size_t newSize) {
 			
 			#if cplusplus14 && use_make_unique
-				values = std::make_unique<Type[]>(newSize);
+				values = std::make_unique<Type[]> { newSize };
 			#elif cplusplus11 || !use_make_unique
-				values = std::unique_ptr<Type[]>(new Type[newSize]);
+				values = std::unique_ptr<Type[]> { new Type[newSize] };
 			#endif
 			
 			capacity_ = newSize;
 		}
 		
-		inline void resizeValuesToSize(size_t newSize) {
+		inline void resizeValuesToSize(size_t newSize, bool move) {
 			
 			#if cplusplus14 && use_make_unique
-				std::unique_ptr<Type[]> newValues (std::make_unique<Type[]>(newSize));
+				std::unique_ptr<Type[]> newValues { std::make_unique<Type[]>(newSize) };
 			#elif cplusplus11 || !use_make_unique
-				std::unique_ptr<Type[]> newValues (new Type[newSize]);
+				std::unique_ptr<Type[]> newValues { new Type[newSize] };
 			#endif
 			
-			std::copy(&values[0], &values[count_], &newValues[0]);
+			move ? std::move(&values[0], &values[count_], &newValues[0]) : std::copy(&values[0], &values[count_], &newValues[0]);
 			values = std::move(newValues);
 			
 			capacity_ = newSize;
@@ -306,7 +306,7 @@ namespace evt {
 		void append(const Type& newElement) {
 			
 			if (capacity_ == count_) {
-				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1));
+				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1), 0);
 			}
 			values[count_] = newElement;
 			count_ += 1;
@@ -315,7 +315,7 @@ namespace evt {
 		void append(Type&& newElement) {
 	
 			if (capacity_ == count_) {
-				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1));
+				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1), 1);
 			}
 			values[count_] = std::move(newElement);
 			count_ += 1;
@@ -343,7 +343,7 @@ namespace evt {
 				count_ = newSize;
 			}
 			if (newSize > capacity_) {
-				resizeValuesToSize(newSize);
+				resizeValuesToSize(newSize,0);
 			}
 		}
 		
@@ -358,13 +358,13 @@ namespace evt {
 			if (newSize < count_) {
 				count_ = newSize;
 			}
-			resizeValuesToSize(newSize);
+			resizeValuesToSize(newSize,0);
 		}
 		
 		bool shrink() {
 			
 			if (capacity_ > count_) {
-				resizeValuesToSize(count_);
+				resizeValuesToSize(count_,0);
 				return true;
 			}
 			return false;
