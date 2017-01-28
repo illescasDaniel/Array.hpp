@@ -6,7 +6,7 @@
 
 Container to store data, similar to `std::vector` but with better syntax and performance.  
 ```diff
-Note: if the **Array** store objects of a Class, that class needs to have a default constructor.
+- Note: if the **Array** store objects of a Class, that class needs to have a default constructor.
 ```
 
 ## Benchmarks
