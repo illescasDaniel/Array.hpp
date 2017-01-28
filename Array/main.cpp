@@ -5,26 +5,25 @@
 using namespace std;
 using namespace evt;
 
-/*
 class Test2 {
 public:
 	int a,b;
 	Test2(int a_, int b_): a(a_), b(b_) {}
-};*/
+};
 
 int main() {
 	
-	/*Array<Test2> tests;
+	Array<Test2> tests;
 	tests.append(Test2(1, 2));
 	tests.append(Test2(3, 4));
-	cout << tests[0].a << ' ' << tests[0].b << endl;*/
+	cout << tests[0].a << ' ' << tests[0].b << endl;
 	//
 	
 	int numbers1[3] = {1,2,3};
 	
 	Array<int> numbers = numbers1; //{1,2,3};
 	cout << *(numbers.end()-1) << endl;
-
+	
 	for (const auto& number: numbers) {
 		cout << number << ' ';
 	}
@@ -174,7 +173,7 @@ int main() {
 	
 	cout << names2.toString() << endl;
 	cout << names2.count() << ' ' << names2.capacity() << endl;
-
+	
 	// Move assignment operator
 	
 	Array<int> cosa, cosa2 {1,2,3};
@@ -299,9 +298,9 @@ int main() {
 	
 	//
 	
-	cout << "\n----- TEST Class Benchmark ----\n" << endl;
+	//cout << "\n----- TEST Class Benchmark ----\n" << endl;
 	
-	cout << "std::vector push_back: " << testVectorPushBackTEST() << "s" << endl;
-	cout << "std::vector emplace_back: " << testVectorEmplaceBackTEST() << "s" << endl;
-	cout << "evt::Array Append: " << testArrayAppendTEST() << "s" << endl;
+	//cout << "std::vector push_back: " << testVectorPushBackTEST() << "s" << endl;
+	//cout << "std::vector emplace_back: " << testVectorEmplaceBackTEST() << "s" << endl;
+	//cout << "evt::Array Append: " << testArrayAppendTEST() << "s" << endl; // crashed sometimes :/
 }

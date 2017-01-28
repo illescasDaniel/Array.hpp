@@ -13,7 +13,7 @@ constexpr int insertSize = 150000;
 
 template <typename Function>
 float benchmark(const Function& function) {
-
+	
 	auto start = high_resolution_clock::now();
 	function();
 	auto end = high_resolution_clock::now();
@@ -174,7 +174,6 @@ public:
 	double number2;
 	string str;
 	
-	Test() {}
 	Test(int n1_, double n2_, string str_): number1(n1_), number2(n2_), str(str_) {}
 };
 
