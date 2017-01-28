@@ -34,20 +34,20 @@ namespace evt {
 	template <typename Type, std::size_t initialCapacity = 2>
 	class Array {
 		
-#define sizeOfArrayInMB(number_) (float((24 + (sizeof(Type)*(number_)))) / 1000000.0)
-#define newType(size_) ( static_cast<Type*>(operator new[](sizeof(Type) * (size_))) )
+		#define sizeOfArrayInMB(number_) (float((24 + (sizeof(Type)*(number_)))) / 1000000.0)
+		#define newType(size_) ( static_cast<Type*>(operator new[](sizeof(Type) * (size_))) )
 		
 		// MARK: - Attributes
 		
-#if __cplusplus >= 201100
-		Type* values { newType(2) };
-		std::size_t count_ { 0 };
-		std::size_t capacity_ { 2 };
-#else
-		Type* values;
-		std::size_t count_;
-		std::size_t capacity_;
-#endif
+		#if __cplusplus >= 201100
+			Type* values { newType(2) };
+			std::size_t count_ { 0 };
+			std::size_t capacity_ { 2 };
+		#else
+			Type* values;
+			std::size_t count_;
+			std::size_t capacity_;
+		#endif
 		
 		// MARK: - Private functions
 		
@@ -166,9 +166,9 @@ namespace evt {
 		
 		Array() {
 			
-#if __cplusplus < 201100
-			values = newType(2); count_ = 0 ; capacity_ = 2;
-#endif
+			#if __cplusplus < 201100
+				values = newType(2); count_ = 0 ; capacity_ = 2;
+			#endif
 			
 			if (initialCapacity > 2) {
 				capacity_ = initialCapacity;
@@ -179,9 +179,9 @@ namespace evt {
 		template<typename Container>
 		Array(const Container& elements) {
 			
-#if __cplusplus < 201100
-			values = newType(2); count_ = 0 ; capacity_ = 2;
-#endif
+			#if __cplusplus < 201100
+				values = newType(2); count_ = 0 ; capacity_ = 2;
+			#endif
 			
 			assignNewElements(elements);
 		}
@@ -189,24 +189,24 @@ namespace evt {
 		template<typename Container>
 		Array(Container&& elements) { assignNewElements(elements); }
 		
-#if __cplusplus >= 201100
-		Array(const std::initializer_list<Type>& elements) { assignNewElements(elements); }
-#endif
+		#if __cplusplus >= 201100
+			Array(const std::initializer_list<Type>& elements) { assignNewElements(elements); }
+		#endif
 		
 		explicit Array(const Array& otherArray) {
 			
-#if __cplusplus < 201100
+		#if __cplusplus < 201100
 			values = newType(2); count_ = 0 ; capacity_ = 2;
-#endif
+		#endif
 			
 			(*this) = otherArray;
 		}
 		
 		explicit Array(const int capacity) { // Type can't be std::size_t because it intefere with the other constructor
 			
-#if __cplusplus < 201100
-			values = newType(2); count_ = 0 ; capacity_ = 2;
-#endif
+			#if __cplusplus < 201100
+				values = newType(2); count_ = 0 ; capacity_ = 2;
+			#endif
 			
 			if (capacity > 2) {
 				capacity_ = initialCapacity;
@@ -342,7 +342,7 @@ namespace evt {
 			count_ += 1;
 		}
 		
-		/*void append(Type&& newElement) {
+		void append(Type&& newElement) {
 		 
 			if (capacity_ == count_) {
 		 
@@ -363,21 +363,21 @@ namespace evt {
 			}
 			
 			count_ += 1;
-		 }*/
+		 }
 		
 		template<typename Container>
 		inline void appendElements(const Container& newElements) { (*this) += newElements; }
 		
-#if __cplusplus >= 201100
-		inline void append(const std::initializer_list<Type>& newElements) { (*this) += newElements; }
-#endif
+		#if __cplusplus >= 201100
+			inline void append(const std::initializer_list<Type>& newElements) { (*this) += newElements; }
+		#endif
 		
 		template<typename Container>
 		inline void appendElements(Container&& newElements) { (*this) += newElements; }
 		
-#if __cplusplus >= 201100
-		inline void append(std::initializer_list<Type>&& newElements) { (*this) += newElements; }
-#endif
+		#if __cplusplus >= 201100
+			inline void append(std::initializer_list<Type>&& newElements) { (*this) += newElements; }
+		#endif
 		
 		/// Only reserves new memory if the new size if bigger than the array capacity
 		void reserve(const std::size_t newSize) {
@@ -499,7 +499,7 @@ namespace evt {
 			std::string output = "[";
 			std::size_t position = 0;
 			
-#if __cplusplus >= 201100
+			#if __cplusplus >= 201100
 			for (const auto& value: *this) {
 				output += [&] {
 					if (typeid(value) == typeid(std::string)) {
@@ -516,8 +516,7 @@ namespace evt {
 				
 				position += 1;
 			}
-			
-#else
+			#else
 			
 			for (size_t i = 0; i < count_; ++i) {
 				
@@ -535,7 +534,7 @@ namespace evt {
 				
 				position += 1;
 			}
-#endif
+			#endif
 			
 			output += "]";
 			
@@ -571,7 +570,7 @@ namespace evt {
 			return appendNewElementsMOVE(newElements);
 		}
 		
-#if __cplusplus >= 201100
+		#if __cplusplus >= 201100
 		inline Array& operator+=(const std::initializer_list<Type>& newElements) {
 			return appendNewElements(newElements);
 		}
@@ -579,29 +578,29 @@ namespace evt {
 		inline Array& operator+=(std::initializer_list<Type>&& newElements) {
 			return appendNewElementsMOVE(newElements);
 		}
-#endif
+		#endif
 		
 		template<typename Container>
 		inline bool operator==(const Container& elements) const {
 			return std::equal(&values[0], &values[count_], std::begin(elements));
 		}
 		
-#if __cplusplus >= 201100
+		#if __cplusplus >= 201100
 		inline bool operator==(const std::initializer_list<Type>& elements) const {
 			return std::equal(&values[0], &values[count_], std::begin(elements));
 		}
-#endif
+		#endif
 		
 		template<typename Container>
 		inline bool operator!=(const Container& elements) const {
 			return !( (*this) == elements );
 		}
 		
-#if __cplusplus >= 201100
+		#if __cplusplus >= 201100
 		inline bool operator!=(const std::initializer_list<Type>& elements) const {
 			return !( (*this) == elements );
 		}
-#endif
+		#endif
 		
 		Array& operator=(const Array& otherArray) {
 			
@@ -636,12 +635,12 @@ namespace evt {
 			
 			checkIfEmpty();
 			
-#ifdef __APPLE__
-			std::mt19937_64 rng(arc4random());
-#else
-			std::random_device rd;
-			std::mt19937_64 rng(rd());
-#endif
+			#ifdef __APPLE__
+				std::mt19937_64 rng(arc4random());
+			#else
+				std::random_device rd;
+				std::mt19937_64 rng(rd());
+			#endif
 			
 			std::shuffle(&values[0], &values[count_], rng);
 		}
