@@ -104,6 +104,35 @@ float testArrayInsertAtEnd() {
 	});
 }
 
+size_t middleSize = 250000;
+
+float testVectorInsertInMiddle() {
+	
+	vector<int> backup;
+	numbers = move(backup);
+	
+	return benchmark([] {
+		
+		for (int i = 0; i < middleSize; ++i) {
+			auto index = numbers.begin() + (numbers.size() / 2);
+			numbers.insert(index, i);
+		}
+	});
+}
+
+float testArrayInsertInMiddle() {
+	
+	numbers2.removeAll();
+	
+	return benchmark([] {
+		
+		for (int i = 0; i < middleSize; ++i) {
+			size_t index = numbers2.count() / 2;
+			numbers2.insert(i, index);
+		}
+	});
+}
+
 evt::Array<int> one(aSize);
 evt::Array<int> two(aSize);
 

@@ -190,6 +190,7 @@ namespace evt {
 		Array(Container&& elements) { assignNewElements(elements); }
 
 		Array(const std::initializer_list<Type>& elements) { assignNewElements(elements); }
+		Array(std::initializer_list<Type>&& elements) { assignNewElements(elements); }
 		
 		explicit Array(const Array& otherArray) { (*this) = otherArray; }
 		explicit Array(Array&& otherArray) { (*this) = otherArray; }
@@ -206,7 +207,7 @@ namespace evt {
 		inline std::size_t capacity() const { return capacity_; }
 		
 		// MARK: Manage elements
-		
+
 		void insertAt(const Type* position, const Type& newElement) {
 			
 			if (position == &values[count_]) {
@@ -241,12 +242,13 @@ namespace evt {
 		
 		void insert(const Type& newElement, const std::size_t index) {
 			
-			if (index == count_ - 1 || this->isEmpty()) {
+			if (index != 0) {
+				checkIfOutOfRange(index);
+			}
+			else if (index == count_ || this->isEmpty()) {
 				this->append(newElement);
 				return;
 			}
-
-			checkIfOutOfRange(index);
 			
 			if (capacity_ == count_) {
 				
@@ -257,9 +259,9 @@ namespace evt {
 				#elif cplusplus11 || !use_make_unique
 					std::unique_ptr<Type[]> newValues (new Type[capacity_]);
 				#endif
-				
-				std::copy(&values[0], &values[count_], &newValues[0]);
-				std::copy(&newValues[index], &newValues[count_], &newValues[index + 1]);
+
+				std::copy(&values[0], &values[index], &newValues[0]);
+				std::copy(&values[index], &values[count_], &newValues[index+1]);
 				
 				values = std::move(newValues);
 			}
@@ -273,12 +275,13 @@ namespace evt {
 		
 		void insert(Type&& newElement, const std::size_t index) {
 			
-			if (index == count_ - 1 || this->isEmpty()) {
+			if (index != 0) {
+				checkIfOutOfRange(index);
+			}
+			else if (index == count_ || this->isEmpty()) {
 				this->append(newElement);
 				return;
 			}
-			
-			checkIfOutOfRange(index);
 			
 			if (capacity_ == count_) {
 				
@@ -290,8 +293,8 @@ namespace evt {
 					std::unique_ptr<Type[]> newValues (new Type[capacity_]);
 				#endif
 				
-				std::copy(&values[0], &values[count_], &newValues[0]);
-				std::copy(&newValues[index], &newValues[count_], &newValues[index + 1]);
+				std::move(&values[0], &values[index], &newValues[0]);
+				std::move(&values[index], &values[count_], &newValues[index+1]);
 				
 				values = std::move(newValues);
 			}

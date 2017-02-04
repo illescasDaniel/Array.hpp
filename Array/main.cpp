@@ -287,12 +287,15 @@ int main() {
 	
 	cout << "std::vector Insert at beginning: " << testVectorInsertAtBeginning() << "s" << endl;
 	cout << "evt::Array Insert at beginning: " << testArrayInsertAtBeginning() << "s" << endl;
-	
-	cout << "evt::Array Remove first: " << testArrayRemoveFirst() << "s" << endl;
+
+	cout << "std::vector Insert in the middle: " << testVectorInsertInMiddle() << "s" << endl;
+	cout << "evt::Array Insert in the middle: " << testArrayInsertInMiddle() << "s" << endl;
 	
 	cout << "std::vector Insert at end: " << testVectorInsertAtEnd() << "s" << endl;
 	cout << "evt::Array Insert at end: " << testArrayInsertAtEnd() << "s" << endl;
 	
+	cout << "evt::Array Remove first: " << testArrayRemoveFirst() << "s" << endl;
+
 	cout << "evt::Array Append elements: " << testArrayAppendElements() << "s" << endl;
 	
 	cout << "evt::Array Element access: " << testElementAccess() << "s" << endl;
