@@ -195,6 +195,16 @@ float testElementAccess() {
 	});
 }
 
+float testFindElement() {
+	
+	return benchmark([] {
+		
+		for (int i = 0; i < 30000; ++i) {
+			numbers2.contains(i);
+		}
+	});
+}
+
 // TEST CLASS
 
 class Test {

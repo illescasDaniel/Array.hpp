@@ -20,6 +20,11 @@ int main() {
 	cout << tests[0].a << ' ' << tests[0].b << endl;*/
 	//
 	
+	Array<int> test1;
+	cout << test1.sorted() << endl;
+	cout << test1.contains(1) << endl;
+	cin.ignore();
+	
 	int numbers1[3] = {1,2,3};
 	
 	Array<int> numbers = numbers1; //{1,2,3};
@@ -294,11 +299,13 @@ int main() {
 	cout << "std::vector Insert at end: " << testVectorInsertAtEnd() << "s" << endl;
 	cout << "evt::Array Insert at end: " << testArrayInsertAtEnd() << "s" << endl;
 	
-	cout << "evt::Array Remove first: " << testArrayRemoveFirst() << "s" << endl;
+	//cout << "evt::Array Remove first: " << testArrayRemoveFirst() << "s" << endl;
 
 	cout << "evt::Array Append elements: " << testArrayAppendElements() << "s" << endl;
 	
 	cout << "evt::Array Element access: " << testElementAccess() << "s" << endl;
+	
+	cout << "evt::Array Element find: " << testFindElement() << "s" << endl;
 	
 	//
 	

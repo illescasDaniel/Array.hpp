@@ -59,7 +59,7 @@ namespace evt {
 			capacity_ = newSize;
 		}
 		
-		inline void resizeValuesToSize(size_t newSize, bool move) {
+		inline void resizeValuesToSize(size_t newSize, bool move = 0) {
 			
 			#if cplusplus14 && use_make_unique
 				std::unique_ptr<Type[]> newValues { std::make_unique<Type[]>(newSize) };
@@ -309,7 +309,7 @@ namespace evt {
 		void append(const Type& newElement) {
 			
 			if (capacity_ == count_) {
-				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1), 0);
+				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1));
 			}
 			values[count_] = newElement;
 			count_ += 1;
@@ -346,7 +346,7 @@ namespace evt {
 				count_ = newSize;
 			}
 			if (newSize > capacity_) {
-				resizeValuesToSize(newSize,0);
+				resizeValuesToSize(newSize);
 			}
 		}
 		
@@ -361,13 +361,13 @@ namespace evt {
 			if (newSize < count_) {
 				count_ = newSize;
 			}
-			resizeValuesToSize(newSize,0);
+			resizeValuesToSize(newSize);
 		}
 		
 		bool shrink() {
 			
 			if (capacity_ > count_) {
-				resizeValuesToSize(count_,0);
+				resizeValuesToSize(count_);
 				return true;
 			}
 			return false;
@@ -412,8 +412,12 @@ namespace evt {
 		}
 
 		bool contains(const Type& element) const {
-			checkIfEmpty();
-			return (std::find(&values[0], &values[count_], element)) != &values[count_];
+			
+			for (const auto& elm: (*this)) {
+				if (element == elm) { return true; }
+			}
+			
+			return false;
 		}
 		
 		inline bool isEmpty() const {
@@ -449,6 +453,10 @@ namespace evt {
 			output += "]";
 			
 			return output;
+		}
+		
+		friend std::ostream& operator<<(std::ostream& os, const evt::Array<Type>& arr) {
+			return os << arr.toString();
 		}
 		
 		// Convert Array to other types
@@ -535,7 +543,7 @@ namespace evt {
 		
 		void shuffle() {
 			
-			checkIfEmpty();
+			if (this->isEmpty()) { return; }
 			
 			#ifdef __APPLE__
 				std::mt19937_64 rng(arc4random());
@@ -549,7 +557,9 @@ namespace evt {
 		
 		Array shuffled() const {
 			
-			checkIfEmpty();
+			if (this->isEmpty()) {
+				return *this;
+			}
 			
 			Array otherArray(*this);
 			otherArray.shuffle();
@@ -560,20 +570,20 @@ namespace evt {
 		// MARK: Sort
 		
 		void sort() {
-			checkIfEmpty();
 			std::sort(&values[0], &values[count_]);
 		}
 		
 		template <typename Function>
 		void sort(const Function& compareFunction) {
-			checkIfEmpty();
 			std::sort(&values[0], &values[count_], compareFunction);
 		}
 		
 		template <typename Function>
 		Array sorted(const Function& compareFunction) const {
 			
-			checkIfEmpty();
+			if (this->isEmpty()) {
+				return *this;
+			}
 			
 			Array otherArray(*this);
 			otherArray.sort(compareFunction);
@@ -583,7 +593,9 @@ namespace evt {
 		
 		Array sorted() const {
 			
-			checkIfEmpty();
+			if (this->isEmpty()) {
+				return *this;
+			}
 			
 			Array otherArray(*this);
 			otherArray.sort();
