@@ -265,12 +265,13 @@ namespace evt {
 		
 		void insert(const Type& newElement, const std::size_t index) {
 			
-			if (index == count_ - 1 || this->isEmpty()) {
+			if (index != 0) {
+				checkIfOutOfRange(index);
+			}
+			else if (index == count_ || this->isEmpty()) {
 				this->append(newElement);
 				return;
 			}
-			
-			checkIfOutOfRange(index);
 			
 			if (capacity_ == count_) {
 				
@@ -278,8 +279,8 @@ namespace evt {
 				
 				Type* newValues = newType(capacity_);
 				
-				copy_(&values[0], &values[count_], &newValues[0]);
-				copy_(&newValues[index], &newValues[count_], &newValues[index + 1]);
+				copy_(&values[0], &values[index], &newValues[0]);
+				copy_(&values[index], &values[count_], &newValues[index+1]);
 				
 				deleteMemory();
 				values = newValues;
@@ -294,21 +295,22 @@ namespace evt {
 		
 		void insert(Type&& newElement, const std::size_t index) {
 			
-			if (index == count_ - 1 || this->isEmpty()) {
+			if (index != 0) {
+				checkIfOutOfRange(index);
+			}
+			else if (index == count_ || this->isEmpty()) {
 				this->append(newElement);
 				return;
 			}
-			
-			checkIfOutOfRange(index);
 			
 			if (capacity_ == count_) {
 				
 				capacity_ = (sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1);
 				
 				Type* newValues = newType(capacity_);
-				
-				copy_(&values[0], &values[count_], &newValues[0]);
-				copy_(&newValues[index], &newValues[count_], &newValues[index + 1]);
+			
+				move_(&values[0], &values[index], &newValues[0]);
+				move_(&values[index], &values[count_], &newValues[index+1]);
 				
 				deleteMemory();
 				values = newValues;
