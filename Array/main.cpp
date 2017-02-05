@@ -5,25 +5,11 @@
 using namespace std;
 using namespace evt;
 
-/*
-class Test2 {
-public:
-	int a,b;
-	Test2(int a_, int b_): a(a_), b(b_) {}
-};*/
-
 int main() {
-	
-	/*Array<Test2> tests;
-	tests.append(Test2(1, 2));
-	tests.append(Test2(3, 4));
-	cout << tests[0].a << ' ' << tests[0].b << endl;*/
-	//
 	
 	Array<int> test1;
 	cout << test1.sorted() << endl;
 	cout << test1.contains(1) << endl;
-	cin.ignore();
 	
 	int numbers1[3] = {1,2,3};
 	
