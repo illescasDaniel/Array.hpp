@@ -116,7 +116,7 @@ float testArrayInsertAtEnd() {
 	}, 10);
 }
 
-size_t middleSize = 250000;
+constexpr int middleSize = 250000;
 
 float testVectorInsertInMiddle() {
 	
