@@ -5,8 +5,6 @@
 #define cplusplus14 (__cplusplus >= 201400)
 #define cplusplus11 (__cplusplus >= 201100)
 
-#define DISTANCE_(iteratorFirst_, iteratorLast_) ((iteratorLast_)-(iteratorFirst_))
-
 #include <initializer_list>
 #include <algorithm>
 #include <stdexcept>
@@ -51,7 +49,7 @@ namespace evt {
 		inline void assignMemoryForSize(size_t newSize) {
 			
 			#if cplusplus14 && use_make_unique
-				values = std::make_unique<Type[]> { newSize };
+				values = std::make_unique<Type[]>(newSize);
 			#elif cplusplus11 || !use_make_unique
 				values = std::unique_ptr<Type[]> { new Type[newSize] };
 			#endif
@@ -76,7 +74,7 @@ namespace evt {
 		template <typename Container>
 		void assignNewElements(const Container& elements) {
 			
-			count_ = DISTANCE_(std::begin(elements), std::end(elements));
+			count_ = std::distance(std::begin(elements), std::end(elements));
 			
 			if (count_ > 2) {
 				assignMemoryForSize(count_);
@@ -87,7 +85,7 @@ namespace evt {
 		template <typename Container>
 		void assignNewElements(Container&& elements) {
 			
-			count_ = DISTANCE_(std::begin(elements), std::end(elements));
+			count_ = std::distance(std::begin(elements), std::end(elements));
 			
 			if (count_ > 2) {
 				assignMemoryForSize(count_);
@@ -98,7 +96,7 @@ namespace evt {
 		template <typename Container>
 		Array& appendNewElements(const Container& newElements) {
 			
-			std::size_t countOfContainer = DISTANCE_(std::begin(newElements), std::end(newElements));
+			std::size_t countOfContainer = std::distance(std::begin(newElements), std::end(newElements));
 			
 			if (capacity_ >= (count_ + countOfContainer)) {
 				std::copy(std::begin(newElements), std::end(newElements), &values[count_]);
@@ -131,7 +129,7 @@ namespace evt {
 		template <typename Container>
 		Array& appendNewElementsMOVE(Container&& newElements) {
 			
-			std::size_t countOfContainer = DISTANCE_(std::begin(newElements), std::end(newElements));
+			std::size_t countOfContainer = std::distance(std::begin(newElements), std::end(newElements));
 			
 			if (capacity_ >= (count_ + countOfContainer)) {
 				std::move(std::begin(newElements), std::end(newElements), &values[count_]);
@@ -385,8 +383,13 @@ namespace evt {
 			count_ = 0;
 		}
 		
-		void removeAt(const std::size_t index, const bool shrinkIfEmpty = true) {
+		inline void removeAt(const std::size_t index, const bool shrinkIfEmpty = true) {
 		
+			if (index == count_ - 1) {
+				removeLast();
+				return;
+			}
+			
 			if (count_ == 2 && shrinkIfEmpty) {
 				shrink();
 			}
@@ -407,8 +410,8 @@ namespace evt {
 				:	(throw std::length_error("Array is empty (lenght == 0)")));
 		}
 		
-		inline void removeFirst() {
-			removeAt(0);
+		inline void removeFirst(const bool shrinkIfEmpty = true) {
+			removeAt(0, shrinkIfEmpty);
 		}
 
 		bool contains(const Type& element) const {
@@ -416,7 +419,6 @@ namespace evt {
 			for (const auto& elm: (*this)) {
 				if (element == elm) { return true; }
 			}
-			
 			return false;
 		}
 		
@@ -501,7 +503,16 @@ namespace evt {
 			return std::equal(&values[0], &values[count_], std::begin(elements));
 		}
 		
+		template<typename Container>
+		inline bool operator==(Container&& elements) const {
+			return std::equal(&values[0], &values[count_], std::begin(elements));
+		}
+		
 		inline bool operator==(const std::initializer_list<Type>& elements) const {
+			return std::equal(&values[0], &values[count_], std::begin(elements));
+		}
+		
+		inline bool operator==(std::initializer_list<Type>&& elements) const {
 			return std::equal(&values[0], &values[count_], std::begin(elements));
 		}
 		
@@ -510,7 +521,16 @@ namespace evt {
 			return !( (*this) == elements );
 		}
 		
+		template<typename Container>
+		inline bool operator!=(Container&& elements) const {
+			return !( (*this) == elements );
+		}
+		
 		inline bool operator!=(const std::initializer_list<Type>& elements) const {
+			return !( (*this) == elements );
+		}
+		
+		inline bool operator!=(std::initializer_list<Type>&& elements) const {
 			return !( (*this) == elements );
 		}
 		
@@ -568,18 +588,12 @@ namespace evt {
 		}
 		
 		// MARK: Sort
-		
-		void sort() {
-			std::sort(&values[0], &values[count_]);
-		}
-		
-		template <typename Function>
-		void sort(const Function& compareFunction) {
+	
+		void sort(std::function<bool(Type&,Type&)> compareFunction = std::less_equal<Type>()) {
 			std::sort(&values[0], &values[count_], compareFunction);
 		}
 		
-		template <typename Function>
-		Array sorted(const Function& compareFunction) const {
+		Array sorted(std::function<bool(Type&,Type&)> compareFunction = std::less_equal<Type>()) const {
 			
 			if (this->isEmpty()) {
 				return *this;
@@ -587,18 +601,6 @@ namespace evt {
 			
 			Array otherArray(*this);
 			otherArray.sort(compareFunction);
-			
-			return otherArray;
-		}
-		
-		Array sorted() const {
-			
-			if (this->isEmpty()) {
-				return *this;
-			}
-			
-			Array otherArray(*this);
-			otherArray.sort();
 			
 			return otherArray;
 		}
@@ -626,4 +628,6 @@ namespace evt {
 }
 
 #undef sizeOfArrayInMB
-#undef DISTANCE_
+#undef use_make_unique
+#undef cplusplus14
+#undef cplusplus11

@@ -7,8 +7,8 @@ using namespace evt;
 
 int main() {
 	
-	Array<int> test1;
-	cout << test1.sorted() << endl;
+	Array<int> test1 = {1,2,4,3};
+	cout << test1.sorted(greater_equal<int>()) << endl;
 	cout << test1.contains(1) << endl;
 	
 	int numbers1[3] = {1,2,3};
@@ -266,11 +266,11 @@ int main() {
 	// Array<int> nnnn = vector<int>({1,2,3,4}); // uses the move (&&) operation
 	
 	/* BENCHMARKS */
-	
+
 	cout << "\n------- BENCHMARKS -------\n" << endl;
 	
-	cout << "std::vector push_back: " << testVectorPushBack() << "s" << endl;
-	cout << "std::vector emplace_back: " << testVectorEmplaceBack() << "s" << endl;
+	//cout << "std::vector push_back: " << testVectorPushBack() << "s" << endl;
+	//cout << "std::vector emplace_back: " << testVectorEmplaceBack() << "s" << endl;
 	cout << "evt::Array Append: " << testArrayAppend() << "s" << endl;
 	
 	cout << "std::vector Removal: " << testVectorRemoval() << "s" << endl;
@@ -285,7 +285,7 @@ int main() {
 	cout << "std::vector Insert at end: " << testVectorInsertAtEnd() << "s" << endl;
 	cout << "evt::Array Insert at end: " << testArrayInsertAtEnd() << "s" << endl;
 	
-	//cout << "evt::Array Remove first: " << testArrayRemoveFirst() << "s" << endl;
+	// cout << "evt::Array Remove first: " << testArrayRemoveFirst() << "s" << endl;
 
 	cout << "evt::Array Append elements: " << testArrayAppendElements() << "s" << endl;
 	

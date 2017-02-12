@@ -12,125 +12,137 @@ constexpr int aSize = 30000000;
 constexpr int insertSize = 150000;
 
 template <typename Function>
-float benchmark(const Function& function) {
-
-	auto start = high_resolution_clock::now();
-	function();
-	auto end = high_resolution_clock::now();
+float benchmark(const Function& function, size_t iterations = 1) {
 	
-	return float(duration_cast<milliseconds>(end - start).count()) / float(1000);
+	float averageTime = 0.0;
+	
+	for (size_t i = 0; i < iterations; ++i) {
+		
+		auto start = std::chrono::high_resolution_clock::now();
+		function();
+		auto end = std::chrono::high_resolution_clock::now();
+		
+		averageTime += float(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()) / float(1000);
+	}
+	
+	return averageTime / float(iterations);
 }
 
 float testVectorPushBack() {
 	
 	return benchmark([] {
 		
+		vector<int> backup;
+		numbers = move(backup);
+	
 		for (int i = 0; i < aSize; ++i) {
 			numbers.push_back(i);
 		}
-	});
+	}, 10);
 }
 
 float testVectorEmplaceBack() {
 	
-	vector<int> backup;
-	numbers = move(backup); // Reset the internal capacity to 0 and remove the elements
-	
 	return benchmark([] {
+		
+		vector<int> backup;
+		numbers = move(backup);
 		
 		for (int i = 0; i < aSize; ++i) {
 			numbers.emplace_back(i);
 		}
-	});
+	}, 10);
 }
 
 float testArrayAppend() {
 	
 	return benchmark([] {
 		
+		numbers2.removeAll();
+		
 		for (int i = 0; i < aSize; ++i) {
 			numbers2.append(i);
 		}
-	});
+	}, 10);
 }
 
 float testVectorInsertAtBeginning() {
-	
-	vector<int> backup;
-	numbers = move(backup);
-	
+
 	return benchmark([] {
+		
+		vector<int> backup;
+		numbers = move(backup);
 		
 		for (int i = 0; i < insertSize; ++i) {
 			numbers.insert(numbers.begin(), i);
 		}
-	});
+	}, 5);
 }
 
 float testArrayInsertAtBeginning() {
 	
-	numbers2.removeAll();
-	
 	return benchmark([] {
+		
+		numbers2.removeAll();
 		
 		for (int i = 0; i < insertSize; ++i) {
 			numbers2.insertAt(numbers2.begin(), i);
 		}
-	});
+	}, 5);
 }
 
 float testVectorInsertAtEnd() {
 	
-	vector<int> backup;
-	numbers = move(backup);
-	
 	return benchmark([] {
+		
+		vector<int> backup;
+		numbers = move(backup);
 		
 		for (int i = 0; i < aSize; ++i) {
 			numbers.insert(numbers.end(), i);
 		}
-	});
+	}, 10);
 }
 
 float testArrayInsertAtEnd() {
 	
-	numbers2.removeAll();
-	
 	return benchmark([] {
+		
+		numbers2.removeAll();
 		
 		for (int i = 0; i < aSize; ++i) {
 			numbers2.insertAt(numbers2.end(), i);
 		}
-	});
+	}, 10);
 }
 
 size_t middleSize = 250000;
 
 float testVectorInsertInMiddle() {
 	
-	vector<int> backup;
-	numbers = move(backup);
-	
 	return benchmark([] {
+		
+		vector<int> backup;
+		numbers = move(backup);
 		
 		for (int i = 0; i < middleSize; ++i) {
 			auto index = numbers.begin() + (numbers.size() / 2);
 			numbers.insert(index, i);
 		}
-	});
+	}, 5);
 }
 
 float testArrayInsertInMiddle() {
 	
-	numbers2.removeAll();
-	
 	return benchmark([] {
+		
+		numbers2.removeAll();
 		
 		for (int i = 0; i < middleSize; ++i) {
 			size_t index = numbers2.count() / 2;
 			numbers2.insert(i, index);
 		}
-	});
+	}, 5);
 }
 
 evt::Array<int> one(aSize);
@@ -146,7 +158,7 @@ float testArrayAppendElements() {
 		two.append(aSize - i);
 	}
 	
-	return benchmark([](){
+	return benchmark([] {
 		one += two;
 	});
 	
@@ -178,7 +190,7 @@ float testArrayRemoveFirst() {
 	
 	return benchmark([] {
 		
-		for (int i = 0; i < insertSize; ++i) {
+		for (int i = 0; i < 1000; ++i) {
 			numbers2.removeFirst();
 		}
 	});
@@ -192,7 +204,7 @@ float testElementAccess() {
 			numbers2[i];
 			//(*numbers2 + i);
 		}
-	});
+	}, 10);
 }
 
 float testFindElement() {
@@ -202,7 +214,7 @@ float testFindElement() {
 		for (int i = 0; i < 30000; ++i) {
 			numbers2.contains(i);
 		}
-	});
+	}, 10);
 }
 
 // TEST CLASS
@@ -224,31 +236,36 @@ float testVectorPushBackTEST() {
 	
 	return benchmark([] {
 		
+		vector<Test> backup;
+		test1 = move(backup);
+		
 		for (int i = 0; i < aSize; ++i) {
 			test1.push_back(Test(i, double(i), std::to_string(i)));
 		}
-	});
+	}, 5);
 }
 
 float testVectorEmplaceBackTEST() {
 	
-	vector<int> backup;
-	numbers = move(backup);
-	
 	return benchmark([] {
+		
+		vector<Test> backup;
+		test1 = move(backup);
 		
 		for (int i = 0; i < aSize; ++i) {
 			test1.emplace_back(Test(i, double(i), std::to_string(i)));
 		}
-	});
+	}, 5);
 }
 
 float testArrayAppendTEST() {
 	
 	return benchmark([] {
 		
+		test2.removeAll();
+		
 		for (int i = 0; i < aSize; ++i) {
 			test2.append(Test(i, double(i), std::to_string(i)));
 		}
-	});
+	}, 5);
 }
