@@ -28,7 +28,7 @@ namespace evt {
 	// }
 	
 	// MARK: - Array Class
-	template <typename Type, constexpr std::size_t initialCapacity = 2>
+	template <typename Type, std::size_t initialCapacity = 2>
 	class Array {
 		
 		#define sizeOfArrayInMB(number_) (float((24 + (sizeof(Type)*(number_)))) / 1000000.0)
