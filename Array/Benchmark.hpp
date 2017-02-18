@@ -104,8 +104,8 @@ float testArrayInsertAtEnd() {
 	});
 }
 
-evt::Array<int> one(aSize);
-evt::Array<int> two(aSize);
+evt::Array<int,aSize> one;
+evt::Array<int,aSize> two;
 
 float testArrayAppendElements() {
 	
@@ -173,7 +173,7 @@ public:
 	int number1;
 	double number2;
 	string str;
-	
+	Test() { }
 	Test(int n1_, double n2_, string str_): number1(n1_), number2(n2_), str(str_) {}
 };
 

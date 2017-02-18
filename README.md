@@ -1,12 +1,12 @@
 # Array.hpp
 
 [![Build Status](https://travis-ci.org/illescasDaniel/Array.hpp.svg?branch=dev)](https://travis-ci.org/illescasDaniel/Array.hpp)
-[![Version](https://img.shields.io/badge/version-v1.11.1--alpha-green.svg)](https://github.com/illescasDaniel/Array.hpp/releases)
+[![Version](https://img.shields.io/badge/version-v1.13.4--dev-green.svg)](https://github.com/illescasDaniel/Array.hpp/releases)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/illescasDaniel/Array.hpp/blob/master/LICENSE) 
 
 Container to store data, similar to `std::vector` but with better syntax and performance.  
 ```diff
-- Note: if the Array store strings (maybe with other classes too), sometimes it crash :(
+- Note: if the Array store objects of a Class, that class needs to have a default constructor.
 ```
 
 ## Benchmarks
