@@ -194,9 +194,8 @@ namespace evt {
 		explicit Array(Array&& otherArray) { (*this) = otherArray; }
 		
 		explicit Array(const int capacity) { // Type can't be std::size_t because it intefere with the other constructor
-
 			if (capacity > 2) {
-				assignMemoryForSize(initialCapacity);
+				assignMemoryForSize(capacity);
 			}
 		}
 		
