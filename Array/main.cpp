@@ -7,9 +7,23 @@ using namespace evt;
 
 int main() {
 	
+	Array<int, 3> test0;
+	cout << test0.count() << ' ' << test0.capacity() << endl;
+	
+	test0.append(10);
+	cout << test0.toString() << endl;
+	cout << test0 << endl;
+	
+	cout << test0.count() << ' ' << test0.capacity() << endl;
+	
+	//cin.ignore();
+	
 	Array<int> test1 = {1,2,4,3};
 	cout << test1.sorted(greater_equal<int>()) << endl;
 	cout << test1.contains(1) << endl;
+	cout << test1.toString() << endl;
+	test1.append(12);
+	cout << test1 << endl;
 	
 	int numbers1[3] = {1,2,3};
 	
@@ -269,8 +283,8 @@ int main() {
 
 	cout << "\n------- BENCHMARKS -------\n" << endl;
 	
-	//cout << "std::vector push_back: " << testVectorPushBack() << "s" << endl;
-	//cout << "std::vector emplace_back: " << testVectorEmplaceBack() << "s" << endl;
+	cout << "std::vector push_back: " << testVectorPushBack() << "s" << endl;
+	cout << "std::vector emplace_back: " << testVectorEmplaceBack() << "s" << endl;
 	cout << "evt::Array Append: " << testArrayAppend() << "s" << endl;
 	
 	cout << "std::vector Removal: " << testVectorRemoval() << "s" << endl;

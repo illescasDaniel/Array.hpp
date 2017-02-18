@@ -28,23 +28,24 @@ namespace evt {
 	// }
 	
 	// MARK: - Array Class
-	template <typename Type, std::size_t initialCapacity = 2>
+	template <typename Type, constexpr std::size_t initialCapacity = 2>
 	class Array {
 		
 		#define sizeOfArrayInMB(number_) (float((24 + (sizeof(Type)*(number_)))) / 1000000.0)
+		#define initialCapacity_ ((initialCapacity > 2) ? initialCapacity : 2)
 		
 		// MARK: - Attributes
 		
 		#if cplusplus14 && use_make_unique
-			std::unique_ptr<Type[]> values { std::make_unique<Type[]>(2) };
+			std::unique_ptr<Type[]> values { std::make_unique<Type[]>(initialCapacity_) };
 		#elif cplusplus11 || !use_make_unique
-			std::unique_ptr<Type[]> values { new Type[2] };
+			std::unique_ptr<Type[]> values { new Type[initialCapacity_] };
 		#endif
 
 		std::size_t count_ { 0 };
-		std::size_t capacity_ { 2 };
+		std::size_t capacity_ { initialCapacity_ };
 		
-		// MARK: - Private FUnctions
+		// MARK: - Private Functions
 		
 		inline void assignMemoryForSize(size_t newSize) {
 			
@@ -175,11 +176,7 @@ namespace evt {
 		
 		// MARK: Constructors
 		
-		Array() {
-			if (initialCapacity > 2) {
-				assignMemoryForSize(initialCapacity);
-			}
-		}
+		Array() { }
 		
 		template<typename Container>
 		Array(const Container& elements) { assignNewElements(elements); }
@@ -192,12 +189,6 @@ namespace evt {
 		
 		explicit Array(const Array& otherArray) { (*this) = otherArray; }
 		explicit Array(Array&& otherArray) { (*this) = otherArray; }
-		
-		explicit Array(const int capacity) { // Type can't be std::size_t because it intefere with the other constructor
-			if (capacity > 2) {
-				assignMemoryForSize(capacity);
-			}
-		}
 		
 		inline std::size_t size() const  { return count_; }
 		inline std::size_t count() const { return count_; }
@@ -456,13 +447,13 @@ namespace evt {
 			return output;
 		}
 		
-		friend std::ostream& operator<<(std::ostream& os, const evt::Array<Type>& arr) {
+		friend std::ostream& operator<<(std::ostream& os, const evt::Array<Type,initialCapacity>& arr) {
 			return os << arr.toString();
 		}
 		
 		// Convert Array to other types
 		template <typename Container>
-		static Container to(const Array<Type>& elements) {
+		static Container to(const Array& elements) {
 			Container cont(elements.count());
 			std::copy(std::begin(elements), std::end(elements), std::begin(cont));
 			return cont;
@@ -630,3 +621,4 @@ namespace evt {
 #undef use_make_unique
 #undef cplusplus14
 #undef cplusplus11
+#undef initialCapacity_

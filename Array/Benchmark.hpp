@@ -145,8 +145,8 @@ float testArrayInsertInMiddle() {
 	}, 5);
 }
 
-evt::Array<int> one(aSize);
-evt::Array<int> two(aSize);
+evt::Array<int,aSize> one;
+evt::Array<int,aSize> two;
 
 float testArrayAppendElements() {
 	
@@ -190,7 +190,7 @@ float testArrayRemoveFirst() {
 	
 	return benchmark([] {
 		
-		for (int i = 0; i < 1000; ++i) {
+		for (size_t i = 0; i < 1000; ++i) {
 			numbers2.removeFirst();
 		}
 	});
