@@ -484,6 +484,12 @@ namespace evt {
 			return os << arr.toString();
 		}
 		
+		#if __cplusplus >= 201100
+		friend std::ostream& operator<<(std::ostream& os, evt::Array<Type, initialCapacity>&& arr) {
+			return os << arr.toString();
+		}
+		#endif
+		
 		// Convert Array to other types
 		template <typename Container>
 		static Container to(const Array& elements) {
