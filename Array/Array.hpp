@@ -95,6 +95,7 @@ namespace evt {
 			copy_(std::begin(elements), std::end(elements), &values[0]);
 		}
 		
+		#if __cplusplus >= 201100
 		template <typename Container>
 		void assignNewElements(Container&& elements) {
 			
@@ -106,36 +107,6 @@ namespace evt {
 				assignMemoryForSize(capacity_);
 			}
 			std::memmove(&values[0], &elements[0], sizeof(Type) * count_);
-		}
-		
-		template <typename Container>
-		Array& appendNewElements(const Container& newElements) {
-			
-			std::size_t countOfContainer = DISTANCE_(std::begin(newElements), std::end(newElements));
-			
-			if (capacity_ >= (count_ + countOfContainer)) {
-				copy_(std::begin(newElements), std::end(newElements), &values[count_]);
-			}
-			else if (countOfContainer > 0) {
-				
-				capacity_ = countOfContainer + count_;
-				
-				while (capacity_ < (count_ + countOfContainer)) {
-					capacity_ += 2;
-				}
-				
-				Type* newValues = new Type[capacity_];
-				
-				copy_(&values[0], &values[count_], &newValues[0]);
-				copy_(std::begin(newElements), std::end(newElements), &newValues[count_]);
-				
-				deleteMemory();
-				values = newValues;
-			}
-			
-			count_ += countOfContainer;
-			
-			return *this;
 		}
 		
 		template <typename Container>
@@ -167,7 +138,38 @@ namespace evt {
 			
 			return *this;
 		}
+		#endif
 		
+		template <typename Container>
+		Array& appendNewElements(const Container& newElements) {
+			
+			std::size_t countOfContainer = DISTANCE_(std::begin(newElements), std::end(newElements));
+			
+			if (capacity_ >= (count_ + countOfContainer)) {
+				copy_(std::begin(newElements), std::end(newElements), &values[count_]);
+			}
+			else if (countOfContainer > 0) {
+				
+				capacity_ = countOfContainer + count_;
+				
+				while (capacity_ < (count_ + countOfContainer)) {
+					capacity_ += 2;
+				}
+				
+				Type* newValues = new Type[capacity_];
+				
+				copy_(&values[0], &values[count_], &newValues[0]);
+				copy_(std::begin(newElements), std::end(newElements), &newValues[count_]);
+				
+				deleteMemory();
+				values = newValues;
+			}
+			
+			count_ += countOfContainer;
+			
+			return *this;
+		}
+
 		inline void checkIfEmpty() const {
 			if (count_ == 0) {
 				throw std::length_error("Array is empty (lenght == 0)");
@@ -188,22 +190,19 @@ namespace evt {
 		
 		template<typename Container>
 		Array(const Container& elements) {
-			initializeArray();
 			assignNewElements(elements);
 		}
 		
+		#if __cplusplus >= 201100
 		template<typename Container>
 		Array(Container&& elements) { assignNewElements(elements); }
 		
-		#if __cplusplus >= 201100
-			Array(const std::initializer_list<Type>& elements) { assignNewElements(elements); }
+		Array(const std::initializer_list<Type>& elements) { assignNewElements(elements); }
 		#endif
 		
 		explicit Array(const Array& otherArray) {
-			initializeArray();
 			(*this) = otherArray;
 		}
-
 		
 		inline std::size_t size() const  { return count_; }
 		inline std::size_t count() const { return count_; }
@@ -227,6 +226,7 @@ namespace evt {
 			}
 		}
 		
+		#if __cplusplus >= 201100
 		void insertAt(const Type* position, Type&& newElement) {
 			
 			if (position == &values[count_]) {
@@ -242,6 +242,7 @@ namespace evt {
 				throw std::out_of_range("Index out of range");
 			}
 		}
+		#endif
 		
 		void insert(const Type& newElement, const std::size_t index) {
 			
@@ -273,6 +274,7 @@ namespace evt {
 			count_ += 1;
 		}
 		
+		#if __cplusplus >= 201100
 		void insert(Type&& newElement, const std::size_t index) {
 			
 			if (index != 0) {
@@ -303,6 +305,16 @@ namespace evt {
 			count_ += 1;
 		}
 		
+		void append(Type&& newElement) {
+			
+			if (capacity_ == count_) {
+				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1),1);
+			}
+			values[count_] = newElement;
+			count_ += 1;
+		}
+		#endif
+		
 		void append(const Type& newElement) {
 			
 			if (capacity_ == count_) {
@@ -312,27 +324,15 @@ namespace evt {
 			count_ += 1;
 		}
 		
-		void append(Type&& newElement) {
-			
-			if (capacity_ == count_) {
-				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1),1);
-			}
-			values[count_] = newElement;
-			count_ += 1;
-		}
-		
 		template<typename Container>
 		inline void appendElements(const Container& newElements) { (*this) += newElements; }
 		
 		#if __cplusplus >= 201100
-			inline void append(const std::initializer_list<Type>& newElements) { (*this) += newElements; }
-		#endif
-		
 		template<typename Container>
 		inline void appendElements(Container&& newElements) { (*this) += newElements; }
 		
-		#if __cplusplus >= 201100
-			inline void append(std::initializer_list<Type>&& newElements) { (*this) += newElements; }
+		inline void append(const std::initializer_list<Type>& newElements) { (*this) += newElements; }
+		inline void append(std::initializer_list<Type>&& newElements) { (*this) += newElements; }
 		#endif
 		
 		/// Only reserves new memory if the new size if bigger than the array capacity
@@ -508,12 +508,12 @@ namespace evt {
 			return appendNewElements(newElements);
 		}
 		
+		#if __cplusplus >= 201100
 		template<typename Container>
 		inline Array& operator+=(Container&& newElements) {
 			return appendNewElementsMOVE(newElements);
 		}
 		
-		#if __cplusplus >= 201100
 		inline Array& operator+=(const std::initializer_list<Type>& newElements) {
 			return appendNewElements(newElements);
 		}
@@ -521,19 +521,12 @@ namespace evt {
 		inline Array& operator+=(std::initializer_list<Type>&& newElements) {
 			return appendNewElementsMOVE(newElements);
 		}
-		#endif
 		
 		template<typename Container>
 		inline bool operator==(Container&& elements) const {
 			return std::equal(&values[0], &values[count_], std::begin(elements));
 		}
-		
-		template<typename Container>
-		inline bool operator==(const Container& elements) const {
-			return std::equal(&values[0], &values[count_], std::begin(elements));
-		}
-		
-		#if __cplusplus >= 201100
+
 		inline bool operator==(std::initializer_list<Type>&& elements) const {
 			return std::equal(&values[0], &values[count_], std::begin(elements));
 		}
@@ -544,8 +537,8 @@ namespace evt {
 		#endif
 		
 		template<typename Container>
-		inline bool operator!=(Container&& elements) const {
-			return !( (*this) == elements );
+		inline bool operator==(const Container& elements) const {
+			return std::equal(&values[0], &values[count_], std::begin(elements));
 		}
 		
 		template<typename Container>
@@ -554,25 +547,17 @@ namespace evt {
 		}
 		
 		#if __cplusplus >= 201100
+		template<typename Container>
+		inline bool operator!=(Container&& elements) const {
+			return !( (*this) == elements );
+		}
+		
 		inline bool operator!=(const std::initializer_list<Type>& elements) const {
 			return !( (*this) == elements );
 		}
 		
 		inline bool operator!=(std::initializer_list<Type>&& elements) const {
 			return !( (*this) == elements );
-		}
-		#endif
-		
-		Array& operator=(const Array& otherArray) {
-			
-			count_ = otherArray.count_;
-			capacity_ = otherArray.capacity_;
-			
-			assignMemoryForSize(capacity_);
-			
-			copy_(otherArray.begin(), otherArray.end(), &values[0]);
-			
-			return *this;
 		}
 		
 		Array& operator=(Array&& otherArray) {
@@ -586,6 +571,19 @@ namespace evt {
 			
 			otherArray.count_ = 0;
 			otherArray.capacity_ = 0;
+			
+			return *this;
+		}
+		#endif
+		
+		Array& operator=(const Array& otherArray) {
+			
+			count_ = otherArray.count_;
+			capacity_ = otherArray.capacity_;
+			
+			assignMemoryForSize(capacity_);
+			
+			copy_(otherArray.begin(), otherArray.end(), &values[0]);
 			
 			return *this;
 		}
