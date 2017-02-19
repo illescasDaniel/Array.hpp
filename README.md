@@ -6,7 +6,7 @@
 
 Container to store data, similar to `std::vector` but with better syntax and performance.  
 ```diff
-+ Note: this versions is compatible
++ Note: this versions should be compatible with all c++ versions 
 ```
 
 ## Benchmarks
