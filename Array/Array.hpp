@@ -451,6 +451,10 @@ namespace evt {
 			return os << arr.toString();
 		}
 		
+		friend std::ostream& operator<<(std::ostream& os, evt::Array<Type,initialCapacity>&& arr) {
+			return os << arr.toString();
+		}
+		
 		// Convert Array to other types
 		template <typename Container>
 		static Container to(const Array& elements) {
