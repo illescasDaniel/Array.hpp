@@ -412,6 +412,14 @@ namespace evt {
 			return false;
 		}
 		
+		bool contains(Type&& element) const {
+			
+			for (const auto& elm: (*this)) {
+				if (element == elm) { return true; }
+			}
+			return false;
+		}
+		
 		inline bool isEmpty() const {
 			return (count_ == 0);
 		}
@@ -458,6 +466,14 @@ namespace evt {
 		// Convert Array to other types
 		template <typename Container>
 		static Container to(const Array& elements) {
+			Container cont(elements.count());
+			std::copy(std::begin(elements), std::end(elements), std::begin(cont));
+			return cont;
+		}
+		
+		template <typename Container>
+		static Container to(Array&& elements) {
+			std::cout << "&&!!" << std::endl;
 			Container cont(elements.count());
 			std::copy(std::begin(elements), std::end(elements), std::begin(cont));
 			return cont;

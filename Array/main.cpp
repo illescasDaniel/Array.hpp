@@ -7,6 +7,9 @@ using namespace evt;
 
 int main() {
 	
+	Array<string, 4> lollol {"one", "two", "three", "four" };
+	cout << lollol.toString() << endl;
+	
 	Array<int, 3> test0;
 	cout << test0.count() << ' ' << test0.capacity() << endl;
 	
@@ -21,6 +24,11 @@ int main() {
 	Array<int> test1 = {1,2,4,3};
 	cout << test1.sorted(greater_equal<int>()) << endl;
 	cout << test1.contains(1) << endl;
+	
+	test1.contains(1000);
+	int asdfasdf = 10000;
+	test1.contains(move(asdfasdf));
+	
 	cout << test1.toString() << endl;
 	test1.append(12);
 	cout << test1 << endl;
