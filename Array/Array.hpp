@@ -106,10 +106,6 @@ namespace evt {
 
 				capacity_ = countOfContainer + count_;
 				
-				while (capacity_ < (count_ + countOfContainer)) {
-					capacity_ += 2;
-				}
-				
 				#if cplusplus14 && use_make_unique
 					auto newValues = std::make_unique<Type[]>(capacity_);
 				#elif cplusplus11 || !use_make_unique
@@ -138,10 +134,6 @@ namespace evt {
 			else if (countOfContainer > 0) {
 				
 				capacity_ = countOfContainer + count_;
-				
-				while (capacity_ < (count_ + countOfContainer)) {
-					capacity_ += 2;
-				}
 				
 				#if cplusplus14 && use_make_unique
 					auto newValues = std::make_unique<Type[]>(capacity_);
