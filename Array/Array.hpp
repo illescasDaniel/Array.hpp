@@ -473,7 +473,6 @@ namespace evt {
 		
 		template <typename Container>
 		static Container to(Array&& elements) {
-			std::cout << "&&!!" << std::endl;
 			Container cont(elements.count());
 			std::copy(std::begin(elements), std::end(elements), std::begin(cont));
 			return cont;
