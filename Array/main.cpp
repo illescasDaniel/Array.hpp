@@ -7,14 +7,10 @@ using namespace evt;
 
 int main() {
 	
-	vector<int> toRemove = {3,4};
-	
-	cout << Array<int>{1,2,3}.toString() << endl;
-	
 	Array<int> testArray1 {1,2,3,4,5,3,7,3,4,9};
 	Array<int> testBlabla = {3,4};
-	//cout << (testArray1 + testBlabla) << endl;
-	testArray1.appendElements(testBlabla);
+	cout << (testArray1 - testBlabla) << endl;
+	//testArray1.appendElements(testBlabla);
 	cout << testArray1 << endl;
 	
 	cout << boolalpha << (testBlabla < testArray1) << endl;

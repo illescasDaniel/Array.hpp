@@ -527,6 +527,13 @@ namespace evt {
 		}
 
 		template <typename Container>
+		inline Array operator-(const Container& newElements) const {
+			Array otherArray(*this);
+			otherArray -= newElements;
+			return otherArray;
+		}
+		
+		template <typename Container>
 		inline Array operator+(const Container& newElements) const {
 			Array otherArray(*this);
 			otherArray += newElements;
