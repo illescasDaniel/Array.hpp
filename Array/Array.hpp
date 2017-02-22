@@ -47,7 +47,7 @@ namespace evt {
 		
 		// MARK: - Private Functions
 		
-		inline void assignMemoryForSize(size_t newSize) {
+		inline void assignMemoryForSize(std::size_t newSize) {
 			
 			#if cplusplus14 && use_make_unique
 				values = std::make_unique<Type[]>(newSize);
@@ -58,7 +58,7 @@ namespace evt {
 			capacity_ = newSize;
 		}
 		
-		inline void resizeValuesToSize(size_t newSize, bool move = 0) {
+		inline void resizeValuesToSize(std::size_t newSize, bool move = 0) {
 			
 			#if cplusplus14 && use_make_unique
 				std::unique_ptr<Type[]> newValues { std::make_unique<Type[]>(newSize) };
@@ -84,7 +84,7 @@ namespace evt {
 		}
 		
 		template <typename Container>
-		void assignNewElements(Container&& elements) {
+		void assignNewElementsMOVE(Container&& elements) {
 			
 			count_ = std::distance(std::begin(elements), std::end(elements));
 			
@@ -92,6 +92,42 @@ namespace evt {
 				assignMemoryForSize(count_);
 			}
 			std::move(std::begin(elements), std::end(elements), &values[0]);
+		}
+		
+		template <typename Container>
+		Array& removeElements(const Container& newElements) {
+			
+			std::size_t elementsFound = 0;
+			std::size_t countOfContainer = std::distance(std::begin(newElements), std::end(newElements));
+			std::unique_ptr<std::size_t[]> elementsPosition(new std::size_t[countOfContainer]);
+			
+			auto newElement = std::begin(newElements);
+			
+			do {
+				elementsFound = 0;
+				newElement = std::begin(newElements);
+				
+				for (std::size_t index = 0; index < count_; ++index) {
+					
+					if (values[index] == *newElement) {
+						elementsPosition[elementsFound] = index;
+						elementsFound += 1;
+						++newElement;
+					}
+					else if (elementsFound != newElements.size()) {
+						elementsFound = 0;
+						newElement = std::begin(newElements);
+					} else { break; }
+				}
+				
+				if (elementsFound == newElements.size()) {
+					for (std::size_t i = 0; i < newElements.size(); ++i) {
+						this->removeAt(elementsPosition[0]);
+					}
+				}
+			} while(elementsFound == newElements.size());
+			
+			return *this;
 		}
 		
 		template <typename Container>
@@ -174,10 +210,9 @@ namespace evt {
 		Array(const Container& elements) { assignNewElements(elements); }
 		
 		template<typename Container>
-		Array(Container&& elements) { assignNewElements(elements); }
+		Array(Container&& elements) { assignNewElementsMOVE(elements); }
 
-		Array(const std::initializer_list<Type>& elements) { assignNewElements(elements); }
-		Array(std::initializer_list<Type>&& elements) { assignNewElements(elements); }
+		Array(std::initializer_list<Type> elements) { assignNewElements(elements); }
 		
 		explicit Array(const Array& otherArray) { (*this) = otherArray; }
 		explicit Array(Array&& otherArray) { (*this) = otherArray; }
@@ -304,15 +339,13 @@ namespace evt {
 			count_ += 1;
 		}
 		
-		template<typename Container>
-		inline void appendElements(const Container& newElements) { (*this) += newElements; }
-		
-		inline void append(const std::initializer_list<Type>& newElements) { (*this) += newElements; }
+		inline void append(std::initializer_list<Type> newElements) { appendNewElements(newElements); }
 		
 		template<typename Container>
-		inline void appendElements(Container&& newElements) { (*this) += newElements; }
+		inline void appendElements(const Container& newElements) { appendNewElements(newElements); }
 		
-		inline void append(std::initializer_list<Type>&& newElements) { (*this) += newElements; }
+		template<typename Container>
+		inline void appendElements(Container&& newElements) { appendNewElementsMOVE(newElements); }
 		
 		/// Only reserves new memory if the new size if bigger than the array capacity
 		void reserve(const std::size_t newSize) {
@@ -395,17 +428,24 @@ namespace evt {
 		inline void removeFirst(const bool shrinkIfEmpty = true) {
 			removeAt(0, shrinkIfEmpty);
 		}
-
-		bool contains(const Type& element) const {
-			
-			for (const auto& elm: (*this)) {
-				if (element == elm) { return true; }
+		
+		inline void removeSubrange(const std::size_t startPosition, const std::size_t endPosition, bool lessEqual = true) {
+			for (std::size_t i = startPosition; lessEqual ? (i <= endPosition) : (i < endPosition); ++i) {
+				this->removeAt(startPosition);
 			}
-			return false;
 		}
 		
-		bool contains(Type&& element) const {
+		inline void removeSubrange(std::initializer_list<int> position, bool lessEqual = true) {
 			
+			std::size_t startPosition = *std::begin(position);
+			std::size_t endPosition = *(std::end(position)-1);
+			
+			for (std::size_t i = startPosition; lessEqual ? (i <= endPosition) : (i < endPosition); ++i) {
+				this->removeAt(startPosition);
+			}
+		}
+
+		bool contains(const Type& element) const {
 			for (const auto& elm: (*this)) {
 				if (element == elm) { return true; }
 			}
@@ -451,10 +491,6 @@ namespace evt {
 			return os << arr.toString();
 		}
 		
-		friend std::ostream& operator<<(std::ostream& os, evt::Array<Type,initialCapacity>&& arr) {
-			return os << arr.toString();
-		}
-		
 		// Convert Array to other types
 		template <typename Container>
 		static Container to(const Array& elements) {
@@ -466,7 +502,7 @@ namespace evt {
 		template <typename Container>
 		static Container to(Array&& elements) {
 			Container cont(elements.count());
-			std::copy(std::begin(elements), std::end(elements), std::begin(cont));
+			std::move(std::begin(elements), std::end(elements), std::begin(cont));
 			return cont;
 		}
 		
@@ -481,58 +517,116 @@ namespace evt {
 			return values[index];
 		}
 		
-		template<typename Container>
+		template <typename Container>
+		inline Array& operator-=(const Container& newElements) {
+			return removeElements(newElements);
+		}
+		
+		inline Array& operator-=(std::initializer_list<Type> newElements) {
+			return removeElements(newElements);
+		}
+
+		template <typename Container>
+		inline Array operator+(const Container& newElements) const {
+			Array otherArray(*this);
+			otherArray += newElements;
+			return otherArray;
+		}
+		
+		template <typename Container>
 		inline Array& operator+=(const Container& newElements) {
 			return appendNewElements(newElements);
 		}
 		
-		template<typename Container>
+		template <typename Container>
 		inline Array& operator+=(Container&& newElements) {
 			return appendNewElementsMOVE(newElements);
 		}
 		
-		inline Array& operator+=(const std::initializer_list<Type>& newElements) {
+		inline Array& operator+=(std::initializer_list<Type> newElements) {
 			return appendNewElements(newElements);
 		}
 		
-		inline Array& operator+=(std::initializer_list<Type>&& newElements) {
-			return appendNewElementsMOVE(newElements);
-		}
-		
-		template<typename Container>
+		template <typename Container>
 		inline bool operator==(const Container& elements) const {
 			return std::equal(&values[0], &values[count_], std::begin(elements));
 		}
-		
-		template<typename Container>
-		inline bool operator==(Container&& elements) const {
-			return std::equal(&values[0], &values[count_], std::begin(elements));
-		}
-		
-		inline bool operator==(const std::initializer_list<Type>& elements) const {
-			return std::equal(&values[0], &values[count_], std::begin(elements));
-		}
-		
-		inline bool operator==(std::initializer_list<Type>&& elements) const {
-			return std::equal(&values[0], &values[count_], std::begin(elements));
-		}
-		
-		template<typename Container>
+
+		template <typename Container>
 		inline bool operator!=(const Container& elements) const {
 			return !( (*this) == elements );
 		}
 		
-		template<typename Container>
-		inline bool operator!=(Container&& elements) const {
-			return !( (*this) == elements );
+		template <typename Container>
+		inline bool operator <(const Container& elements) {
+			
+			std::size_t countOfContainer = std::distance(std::begin(elements), std::end(elements));
+			std::size_t smallerSize = (count_ < countOfContainer) ? count_ : countOfContainer;
+			
+			auto arrayElement = std::begin(*this);
+			auto containerElement = std::begin(elements);
+			
+			for (size_t i = 0; i < smallerSize; ++i, ++arrayElement, ++containerElement) {
+				if (arrayElement != containerElement) {
+					return arrayElement < containerElement;
+				}
+			}
+			
+			return count_ < countOfContainer;
 		}
 		
-		inline bool operator!=(const std::initializer_list<Type>& elements) const {
-			return !( (*this) == elements );
+		template <typename Container>
+		inline bool operator <=(const Container& elements) {
+			
+			std::size_t countOfContainer = std::distance(std::begin(elements), std::end(elements));
+			std::size_t smallerSize = (count_ < countOfContainer) ? count_ : countOfContainer;
+			
+			auto arrayElement = std::begin(*this);
+			auto containerElement = std::begin(elements);
+			
+			for (size_t i = 0; i < smallerSize; ++i, ++arrayElement, ++containerElement) {
+				if (arrayElement != containerElement) {
+					return arrayElement < containerElement;
+				}
+			}
+			
+			return count_ <= countOfContainer;
 		}
 		
-		inline bool operator!=(std::initializer_list<Type>&& elements) const {
-			return !( (*this) == elements );
+		template <typename Container>
+		inline bool operator >(const Container& elements) {
+			
+			std::size_t countOfContainer = std::distance(std::begin(elements), std::end(elements));
+			std::size_t smallerSize = (count_ < countOfContainer) ? count_ : countOfContainer;
+			
+			auto arrayElement = std::begin(*this);
+			auto containerElement = std::begin(elements);
+			
+			for (size_t i = 0; i < smallerSize; ++i, ++arrayElement, ++containerElement) {
+				if (arrayElement != containerElement) {
+					return arrayElement > containerElement;
+				}
+			}
+			
+			return count_ > countOfContainer;
+		}
+		
+		template <typename Container>
+		inline bool operator >=(const Container& elements) {
+			
+			std::size_t countOfContainer = std::distance(std::begin(elements), std::end(elements));
+			std::size_t smallerSize = (count_ < countOfContainer) ? count_ : countOfContainer;
+			
+			auto arrayElement = std::begin(*this);
+			auto containerElement = std::begin(elements);
+			
+			for (size_t i = 0; i < smallerSize; ++i, ++arrayElement, ++containerElement) {
+				if (arrayElement != containerElement) {
+					return arrayElement > containerElement;
+				}
+			}
+			
+			return count_ >= countOfContainer;
 		}
 		
 		Array& operator=(const Array& otherArray) {

@@ -7,8 +7,29 @@ using namespace evt;
 
 int main() {
 	
-	Array<string, 4> lollol {"one", "two", "three", "four" };
-	cout << lollol.toString() << endl;
+	vector<int> toRemove = {3,4};
+	
+	cout << Array<int>{1,2,3}.toString() << endl;
+	
+	Array<int> testArray1 {1,2,3,4,5,3,7,3,4,9};
+	Array<int> testBlabla = {3,4};
+	//cout << (testArray1 + testBlabla) << endl;
+	testArray1.appendElements(testBlabla);
+	cout << testArray1 << endl;
+	
+	cout << boolalpha << (testBlabla < testArray1) << endl;
+	cin.ignore();
+	//testArray1 -= toRemove;
+	cout << testArray1 << endl;
+	//
+	//testArray1.removeSubrange(2, 4);
+	testArray1.removeSubrange({2,4});
+	cout << testArray1 << endl;
+	
+	Array<string, 4> strings1 {"one", "two", "three", "four" };
+	cout << strings1 << endl;
+	Array<string, 2> strings2 {"five", "six" };
+	cout << strings1 + strings2 << endl;
 	
 	Array<int, 3> test0;
 	cout << test0.count() << ' ' << test0.capacity() << endl;
@@ -279,7 +300,7 @@ int main() {
 	
 	vector<int> a = Array<int>::to<vector<int>>(numbers2);
 	cout << "a size: " << a.size() << endl;
-	
+
 	for (const auto& element: a) {
 		cout << element << ' ';
 	}cout << endl;
