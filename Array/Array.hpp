@@ -517,6 +517,11 @@ namespace evt {
 			return values[index];
 		}
 		
+		inline Type& operator[](const std::size_t index) const {
+			checkIfOutOfRange(index);
+			return values[index];
+		}
+		
 		template <typename Container>
 		inline Array& operator-=(const Container& newElements) {
 			return removeElements(newElements);
@@ -717,12 +722,22 @@ namespace evt {
 			return &values[count_];
 		}
 		
-		inline Type first() const {
+		inline Type& first() {
 			checkIfEmpty();
 			return *(&values[0]);
 		}
 		
-		inline Type last() const {
+		inline Type& last() {
+			checkIfEmpty();
+			return *(&values[count_]-1);
+		}
+		
+		inline Type& first() const {
+			checkIfEmpty();
+			return *(&values[0]);
+		}
+		
+		inline Type& last() const {
 			checkIfEmpty();
 			return *(&values[count_]-1);
 		}

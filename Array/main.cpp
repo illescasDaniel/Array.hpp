@@ -6,15 +6,17 @@ using namespace std;
 using namespace evt;
 
 int main() {
-	
+
 	Array<int> testArray1 {1,2,3,4,5,3,7,3,4,9};
+	testArray1.last() = 10;
+	cout << testArray1.last() << endl;
+	
 	Array<int> testBlabla = {3,4};
 	cout << (testArray1 - testBlabla) << endl;
 	//testArray1.appendElements(testBlabla);
 	cout << testArray1 << endl;
 	
 	cout << boolalpha << (testBlabla < testArray1) << endl;
-	cin.ignore();
 	//testArray1 -= toRemove;
 	cout << testArray1 << endl;
 	//
