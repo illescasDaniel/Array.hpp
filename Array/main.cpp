@@ -7,7 +7,19 @@ using namespace evt;
 
 int main() {
 
-	Array<int> testArray1 {1,2,3,4,5,3,7,3,4,9};
+	Array<int> testArray1 {1,2,3,4,5,6,7,3,4,9,10,11,12};
+	
+	cout << testArray1 << ' ' << testArray1.count() << ' ' << testArray1.capacity() << endl;
+	
+	testArray1.assignRange(0,3);
+	testArray1.removeAt(1);
+	cout << testArray1 << ' ' << testArray1.count() << ' ' << testArray1.capacity() << endl;
+	
+	testArray1.assignRange(0,1);
+	
+	cout << testArray1 << ' ' << testArray1.count() << ' ' << testArray1.capacity() << endl;
+
+	//
 	testArray1.last() = 10;
 	cout << testArray1.last() << endl;
 	
@@ -45,14 +57,14 @@ int main() {
 	
 	cout << "C: " << Array<int>(testBlabla2).toString() << ' ' << testBlabla2.size() << ' ' << testBlabla2.capacity() << endl;
 	cout << "B: " << testBlabla << ' ' << testBlabla.count() << ' ' << testBlabla.capacity() << endl;
-	//
-	cin.ignore();
 	
 	cout << boolalpha << (testBlabla < testArray1) << endl;
 	//testArray1 -= toRemove;
 	cout << testArray1 << endl;
 	//
 	//testArray1.removeSubrange(2, 4);
+	testArray1 = {1,2,3,4,5,6,7,8,9};
+	
 	testArray1.removeSubrange({2,4});
 	cout << testArray1 << endl;
 	

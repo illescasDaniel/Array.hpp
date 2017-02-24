@@ -46,7 +46,7 @@ namespace evt {
 		std::size_t capacity_ { initialCapacity_ };
 		
 		// MARK: - Private Functions
-		
+
 		inline void assignMemoryAndCapacityForSize(std::size_t newSize) {
 			
 			#if cplusplus14 && use_make_unique
@@ -321,6 +321,28 @@ namespace evt {
 			count_ += 1;
 		}
 		
+		void assignRange(std::size_t first, std::size_t last) {
+			
+			if (first > last) {
+				checkIfOutOfRange(first);
+				std::size_t auxFirst = last;
+				last = first;
+				first = auxFirst;
+			}
+			checkIfOutOfRange(last);
+			
+			std::copy(&values[first], &values[last+1], &values[0]);
+			
+			std::size_t newCount = last-first + 1;
+			
+			if (newCount < (count_ / 4.0)) {
+				resize(newCount);
+			}
+			else {
+				count_ = newCount;
+			}
+		}
+		
 		void append(const Type& newElement) {
 			
 			if (capacity_ == count_) {
@@ -364,7 +386,7 @@ namespace evt {
 			}
 		}
 		
-		/// Only reserves new memory if the new size if bigger than the array count
+		/// Only reserves new memory if the new size if smaller than the array count
 		void resize(std::size_t newSize) {
 			
 			if (newSize == 0 && count_ > 0) {
@@ -415,15 +437,28 @@ namespace evt {
 			
 			std::copy(&values[index + 1], &values[count_], &values[index]);
 			
-			count_ -= 1;
+			if (count_ - 1 < (capacity_ / 4.0)) {
+				resize(count_ - 1);
+			}
+			else {
+				count_ -= 1;
+			}
 		}
 		
 		void removeLast(const bool shrinkIfEmpty = true) {
-			(count_ == 2 && shrinkIfEmpty) ?
-				(shrink(), count_ -= 1)
-			:	((count_ != 0) ?
-					(count_ -= 1)
-				:	(throw std::length_error("Array is empty (lenght == 0)")));
+			
+			if (count_ == 2 && shrinkIfEmpty) {
+				shrink();
+			}
+			
+			checkIfEmpty();
+			
+			if (count_ - 1 < (capacity_ / 4.0)) {
+				resize(count_ - 1);
+			}
+			else {
+				count_ -= 1;
+			}
 		}
 		
 		inline void removeFirst(const bool shrinkIfEmpty = true) {
