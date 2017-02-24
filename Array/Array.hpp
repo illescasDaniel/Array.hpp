@@ -1,6 +1,6 @@
 #pragma once
 
-// make_unique is "safer", but unique_ptr is faster; you decide
+// make_unique is "safer" and only for c++14 and above, unique_ptr is faster and available since c++11; you decide
 #define use_make_unique false
 #define cplusplus14 (__cplusplus >= 201400)
 #define cplusplus11 (__cplusplus >= 201100)
@@ -47,7 +47,7 @@ namespace evt {
 		
 		// MARK: - Private Functions
 		
-		inline void assignMemoryForSize(std::size_t newSize) {
+		inline void assignMemoryAndCapacityForSize(std::size_t newSize) {
 			
 			#if cplusplus14 && use_make_unique
 				values = std::make_unique<Type[]>(newSize);
@@ -78,7 +78,7 @@ namespace evt {
 			count_ = std::distance(std::begin(elements), std::end(elements));
 			
 			if (count_ > 2) {
-				assignMemoryForSize(count_);
+				assignMemoryAndCapacityForSize(count_);
 			}
 			std::copy(std::begin(elements), std::end(elements), &values[0]);
 		}
@@ -89,7 +89,7 @@ namespace evt {
 			count_ = std::distance(std::begin(elements), std::end(elements));
 			
 			if (count_ > 2) {
-				assignMemoryForSize(count_);
+				assignMemoryAndCapacityForSize(count_);
 			}
 			std::move(std::begin(elements), std::end(elements), &values[0]);
 		}
@@ -340,6 +340,7 @@ namespace evt {
 		}
 		
 		inline void append(std::initializer_list<Type> newElements) { appendNewElements(newElements); }
+		inline void appendElements(std::initializer_list<Type> newElements) { appendNewElements(newElements); }
 		
 		template<typename Container>
 		inline void appendElements(const Container& newElements) { appendNewElements(newElements); }
@@ -393,7 +394,7 @@ namespace evt {
 		void removeAll(const bool keepCapacity = false) {
 			
 			if (!keepCapacity) {
-				assignMemoryForSize(1);
+				assignMemoryAndCapacityForSize(1);
 			}
 			count_ = 0;
 		}
@@ -429,13 +430,13 @@ namespace evt {
 			removeAt(0, shrinkIfEmpty);
 		}
 		
-		inline void removeSubrange(const std::size_t startPosition, const std::size_t endPosition, bool lessEqual = true) {
+		void removeSubrange(const std::size_t startPosition, const std::size_t endPosition, bool lessEqual = true) {
 			for (std::size_t i = startPosition; lessEqual ? (i <= endPosition) : (i < endPosition); ++i) {
 				this->removeAt(startPosition);
 			}
 		}
 		
-		inline void removeSubrange(std::initializer_list<int> position, bool lessEqual = true) {
+		void removeSubrange(std::initializer_list<int> position, bool lessEqual = true) {
 			
 			std::size_t startPosition = *std::begin(position);
 			std::size_t endPosition = *(std::end(position)-1);
@@ -444,8 +445,30 @@ namespace evt {
 				this->removeAt(startPosition);
 			}
 		}
+		
+		void swap(Array& otherArray) {
+			
+			std::unique_ptr<Type[]> auxValues = std::move(this->values);
+			std::size_t auxCount = this->count_;
+			std::size_t auxCapacity = this->capacity_;
+			
+			this->values = std::move(otherArray.values);
+			this->count_ = otherArray.count_;
+			this->capacity_ = otherArray.capacity_;
+			
+			otherArray.values = std::move(auxValues);
+			otherArray.count_ = auxCount;
+			otherArray.capacity_ = auxCapacity;
+		}
+		
+		template <typename Container>
+		void swap(Container& container) {
+			Array otherArray(container);
+			swap(otherArray);
+			container = Array::to<Container>(otherArray);
+		}
 
-		bool contains(const Type& element) const {
+		inline bool contains(const Type& element) const {
 			for (const auto& elm: (*this)) {
 				if (element == elm) { return true; }
 			}
@@ -646,7 +669,7 @@ namespace evt {
 			count_ = otherArray.count_;
 			capacity_ = otherArray.capacity_;
 			
-			assignMemoryForSize(capacity_);
+			assignMemoryAndCapacityForSize(capacity_);
 			std::copy(otherArray.begin(), otherArray.end(), &values[0]);
 			
 			return *this;

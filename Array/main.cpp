@@ -14,7 +14,39 @@ int main() {
 	Array<int> testBlabla = {3,4};
 	cout << (testArray1 - testBlabla) << endl;
 	//testArray1.appendElements(testBlabla);
+	
+	cout << "A: " << testArray1 << ' ' << testArray1.count() << ' ' << testArray1.capacity() << endl;
+	cout << "B: " << testBlabla << ' ' << testBlabla.count() << ' ' << testBlabla.capacity() << endl;
+	testArray1.swap(testBlabla);
+	cout << "A: " << testArray1 << ' ' << testArray1.count() << ' ' << testArray1.capacity() << endl;
+	cout << "B: " << testBlabla << ' ' << testBlabla.count() << ' ' << testBlabla.capacity() << endl;
+	
+	testArray1.append(100);
+	testArray1.appendElements({1,2,3,4});
+	
+	testArray1.removeLast();
+	
 	cout << testArray1 << endl;
+	std::swap(testArray1, testBlabla);
+	
+	cout << "A: " << testArray1 << ' ' << testArray1.count() << ' ' << testArray1.capacity() << endl;
+	cout << "B: " << testBlabla << ' ' << testBlabla.count() << ' ' << testBlabla.capacity() << endl;
+	
+	testArray1.append(9999);
+	
+	cout << "A: " << testArray1 << ' ' << testArray1.count() << ' ' << testArray1.capacity() << endl;
+	
+	vector<int> testBlabla2 {1,2,3,4,5};
+	
+	cout << "C: " << Array<int>(testBlabla2).toString() << ' ' << testBlabla2.size() << ' ' << testBlabla2.capacity() << endl;
+	cout << "B: " << testBlabla << ' ' << testBlabla.count() << ' ' << testBlabla.capacity() << endl;
+	
+	testBlabla.swap(testBlabla2);
+	
+	cout << "C: " << Array<int>(testBlabla2).toString() << ' ' << testBlabla2.size() << ' ' << testBlabla2.capacity() << endl;
+	cout << "B: " << testBlabla << ' ' << testBlabla.count() << ' ' << testBlabla.capacity() << endl;
+	//
+	cin.ignore();
 	
 	cout << boolalpha << (testBlabla < testArray1) << endl;
 	//testArray1 -= toRemove;
