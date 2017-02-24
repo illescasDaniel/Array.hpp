@@ -1,7 +1,7 @@
 # **Array**.hpp
 
 [![Build Status](https://travis-ci.org/illescasDaniel/Array.hpp.svg?branch=master)](https://travis-ci.org/illescasDaniel/Array.hpp)
-[![Version](https://img.shields.io/badge/version-v1.16--beta-green.svg)](https://github.com/illescasDaniel/Array.hpp/releases)
+[![Version](https://img.shields.io/badge/version-v1.17-green.svg)](https://github.com/illescasDaniel/Array.hpp/releases)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/illescasDaniel/Array.hpp/blob/master/LICENCE) 
 
 Container to store data, similar to `std::vector` but with better syntax and performance.  
@@ -46,3 +46,7 @@ evt::**Array** Insert at end: **0.183s**
 std::vector push_back: 4.693s  
 std::vector emplace_back: 4.677s  
 evt::**Array** Append: **4.503s**  
+
+## API Documentation
+
+<img src="Array.png" width="800">

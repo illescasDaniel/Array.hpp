@@ -31,6 +31,7 @@
 		652291371E1EB93C00AC2D8E /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; name = .travis.yml; path = ../.travis.yml; sourceTree = "<group>"; };
 		6522913B1E1EBFFB00AC2D8E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		6522913C1E1EC01800AC2D8E /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
+		65D085241E60F87C00562D74 /* Array.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Array.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +75,7 @@
 		652291391E1EBBC900AC2D8E /* Github */ = {
 			isa = PBXGroup;
 			children = (
+				65D085241E60F87C00562D74 /* Array.png */,
 				6522913C1E1EC01800AC2D8E /* LICENSE */,
 				6522913B1E1EBFFB00AC2D8E /* README.md */,
 				652291361E1EB8BF00AC2D8E /* Makefile */,

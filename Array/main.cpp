@@ -7,8 +7,12 @@ using namespace evt;
 
 int main() {
 
-	Array<int> testArray1 {1,2,3,4,5,6,7,3,4,9,10,11,12};
+	Array<int> testArray1 {1,2,3,4,5,6,7,8,9,10,11,12};
+
+	cout << testArray1 << endl;
+	cin.ignore();
 	
+	/*
 	cout << testArray1 << ' ' << testArray1.count() << ' ' << testArray1.capacity() << endl;
 	
 	testArray1.assignRange(0,3);
@@ -349,7 +353,7 @@ int main() {
 	
 	// Array<int, 1000> aaaa;
 	// Array<int> nnnn = vector<int>({1,2,3,4}); // uses the move (&&) operation
-	
+	*/
 	/* BENCHMARKS */
 
 	cout << "\n------- BENCHMARKS -------\n" << endl;
