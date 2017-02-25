@@ -633,7 +633,7 @@ namespace evt {
 			return !( (*this) == elements );
 		}
 		
-		// Returns true if the contents of the array are lexicographically less than the contents of the container
+		/// Returns true if the contents of the array are lexicographically less than the contents of the container
 		template <typename Container>
 		inline bool operator<(const Container& elements) {
 			

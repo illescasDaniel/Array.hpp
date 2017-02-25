@@ -47,6 +47,6 @@ std::vector push_back: 4.693s
 std::vector emplace_back: 4.677s  
 evt::**Array** Append: **4.503s**  
 
-## API Documentation
+## API Reference
 
 <img src="Array.png" width="800">
