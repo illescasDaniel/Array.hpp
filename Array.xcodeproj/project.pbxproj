@@ -23,7 +23,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		652166541E69E5F800F2ECA0 /* Array.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Array.png; sourceTree = SOURCE_ROOT; };
+		652166551E69E9B600F2ECA0 /* Array.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Array.png; sourceTree = SOURCE_ROOT; };
 		6522912A1E1E71CD00AC2D8E /* Array */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Array; sourceTree = BUILT_PRODUCTS_DIR; };
 		6522912D1E1E71CD00AC2D8E /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		652291341E1E724400AC2D8E /* Array.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Array.hpp; sourceTree = "<group>"; };
@@ -75,7 +75,7 @@
 		652291391E1EBBC900AC2D8E /* Github */ = {
 			isa = PBXGroup;
 			children = (
-				652166541E69E5F800F2ECA0 /* Array.png */,
+				652166551E69E9B600F2ECA0 /* Array.png */,
 				6522913C1E1EC01800AC2D8E /* LICENSE */,
 				6522913B1E1EBFFB00AC2D8E /* README.md */,
 				652291361E1EB8BF00AC2D8E /* Makefile */,
