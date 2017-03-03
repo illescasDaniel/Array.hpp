@@ -39,7 +39,7 @@ namespace evt {
 		
 		// MARK: - Private Functions
 		
-		inline double sizeOfArrayInMB(double currentCapacity) {
+		inline double sizeOfArrayInMB(const double currentCapacity) {
 			return (sizeof(Type)*(currentCapacity)) / 1000000;
 		}
 
@@ -55,7 +55,7 @@ namespace evt {
 			capacity_ = newSize;
 		}
 		
-		inline auto newArrayOfSize(sizeType newSize) {
+		inline auto newArrayOfSize(const sizeType newSize) {
 			
 			#if (__cplusplus >= 201400) && use_make_unique
 				auto newValues { std::make_unique<Type[]>(newSize) };
@@ -67,7 +67,7 @@ namespace evt {
 		}
 		
 		/// Resizes the array to a given size
-		inline void resizeValuesToSize(sizeType newSize, bool move = 0) {
+		inline void resizeValuesToSize(const sizeType newSize, bool move = 0) {
 	
 			auto newValues = newArrayOfSize(newSize);
 			
@@ -379,7 +379,7 @@ namespace evt {
 		}
 		
 		/// Only reserves new memory if the new size if smaller than the array count
-		void resize(sizeType newSize) {
+		void resize(const sizeType newSize) {
 			
 			if (newSize == 0 && count_ > 0) {
 				removeAll();
@@ -503,6 +503,27 @@ namespace evt {
 				if (element == elm) { return true; }
 			} 
 			return false;
+		}
+		
+		/// Returns the index of the first ocurrence of the element. Last position if the element isn't found
+		sizeType find(const Type& element) const {
+			return (std::find(&values[0], &values[count_], element) - &values[0]);
+		}
+		
+		/// Returns an Array with all the ocurrences of the element
+		Array<sizeType> findAll(const Type& element) const {
+			
+			Array<sizeType> positions;
+			sizeType position = 0;
+			
+			for (const auto& value: (*this)) {
+				if (element == value) {
+					positions.append(position);
+				}
+				position += 1;
+			}
+			
+			return positions;
 		}
 		
 		std::string toString() const {

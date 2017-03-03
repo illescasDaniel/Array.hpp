@@ -7,7 +7,10 @@ using namespace evt;
 
 int main() {
 
-	Array<int> testArray1 {1,2,3,4,5,6,7,8,9,10,11,12};
+	Array<int> testArray1 {1,2,3,4,5,6,7,8,9,10,1,12};
+	
+	cout << testArray1.find(13) << endl;
+	cout << testArray1.findAll(13) << endl;
 
 	cout << testArray1 << ' ' << testArray1.count() << ' ' << testArray1.capacity() << endl;
 	
