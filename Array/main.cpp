@@ -7,7 +7,11 @@ using namespace evt;
 
 int main() {
 
-	Array<int> testArray1 {1,2,3,4,5,6,7,8,9,10,1,12};
+	Array<int> testArray1 {1,2,3,4,5,6,7,8,9,10,1,12,3,4};
+	
+	testArray1.removeElements({3,4}, true);
+	
+	cout << testArray1 << endl;
 	
 	cout << testArray1.find(13) << endl;
 	cout << testArray1.findAll(13) << endl;

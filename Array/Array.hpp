@@ -101,42 +101,6 @@ namespace evt {
 		}
 		
 		template <typename Container>
-		Array& removeElements(const Container& newElements) {
-			
-			sizeType elementsFound = 0;
-			sizeType countOfContainer = std::distance(std::begin(newElements), std::end(newElements));
-			std::unique_ptr<sizeType[]> elementsPosition(new sizeType[countOfContainer]);
-			
-			auto newElement = std::begin(newElements);
-			
-			do {
-				elementsFound = 0;
-				newElement = std::begin(newElements);
-				
-				for (sizeType index = 0; index < count_; ++index) {
-					
-					if (values[index] == *newElement) {
-						elementsPosition[elementsFound] = index;
-						elementsFound += 1;
-						++newElement;
-					}
-					else if (elementsFound != newElements.size()) {
-						elementsFound = 0;
-						newElement = std::begin(newElements);
-					} else { break; }
-				}
-				
-				if (elementsFound == newElements.size()) {
-					for (sizeType i = 0; i < newElements.size(); ++i) {
-						this->removeAt(elementsPosition[0]);
-					}
-				}
-			} while(elementsFound == newElements.size());
-			
-			return *this;
-		}
-		
-		template <typename Container>
 		Array& appendNewElements(const Container& newElements) {
 			
 			sizeType countOfContainer = std::distance(std::begin(newElements), std::end(newElements));
@@ -182,6 +146,42 @@ namespace evt {
 			}
 			
 			count_ += countOfContainer;
+			
+			return *this;
+		}
+		
+		template <typename Container>
+		Array& removeElementsFromContainer(const Container& newElements, bool onlyFirstAppearance = false) {
+			
+			sizeType elementsFound = 0;
+			sizeType countOfContainer = std::distance(std::begin(newElements), std::end(newElements));
+			std::unique_ptr<sizeType[]> elementsPosition(new sizeType[countOfContainer]);
+			
+			auto newElement = std::begin(newElements);
+			
+			do {
+				elementsFound = 0;
+				newElement = std::begin(newElements);
+				
+				for (sizeType index = 0; index < count_; ++index) {
+					
+					if (values[index] == *newElement) {
+						elementsPosition[elementsFound] = index;
+						elementsFound += 1;
+						++newElement;
+					}
+					else if (elementsFound != newElements.size()) {
+						elementsFound = 0;
+						newElement = std::begin(newElements);
+					} else { break; }
+				}
+				
+				if (elementsFound == newElements.size()) {
+					for (sizeType i = 0; i < newElements.size(); ++i) {
+						this->removeAt(elementsPosition[0]);
+					}
+				}
+			} while((elementsFound == newElements.size()) && !onlyFirstAppearance);
 			
 			return *this;
 		}
@@ -489,6 +489,15 @@ namespace evt {
 			otherArray.values = std::move(auxValues);
 			otherArray.count_ = auxCount;
 			otherArray.capacity_ = auxCapacity;
+		}
+		
+		template <typename Container>
+		Array& removeElements(const Container& newElements, bool onlyFirstAppearance = false) {
+			return removeElementsFromContainer(newElements);
+		}
+		
+		Array& removeElements(InitializerList newElements, bool onlyFirstAppearance = false) {
+			return removeElementsFromContainer(newElements);
 		}
 		
 		template <typename Container>
