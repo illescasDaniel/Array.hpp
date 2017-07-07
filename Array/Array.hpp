@@ -21,8 +21,8 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
-
-*/
+ 
+ */
 
 #pragma once
 
@@ -38,16 +38,19 @@
 
 namespace evt {
 	
-	// Extra functions for the "toString()" method
-	inline std::string to_string(const std::string& str) { return str; }
-	inline std::string to_string(const char chr) { return std::string(1,chr); }
+	namespace internalPrintEVT {
 		
-	template <typename Others>
-	inline std::string to_string(const Others other) { return std::to_string(other); }
-	/* Place your custom "to_string()" function/s here for other classes. Use templates if you want. */
+		// Extra functions for the "toString()" method
+		inline std::string to_string(const std::string& str) { return str; }
+		inline std::string to_string(const char chr) { return std::string(1,chr); }
+		
+		template <typename Others>
+		inline std::string to_string(const Others other) { return std::to_string(other); }
+		/* Place your custom "to_string()" function/s here for other classes. Use templates if you want. */
+	}
 	
 	// MARK: - Array Class
-
+	
 	template <typename Type, std::size_t initialCapacity = 2>
 	class Array {
 		
@@ -68,33 +71,33 @@ namespace evt {
 		inline double sizeOfArrayInMB(const double currentCapacity) {
 			return (sizeof(Type)*(currentCapacity)) / 1000000;
 		}
-
+		
 		/// Assigns new memory, also updates the new capacity.
 		inline void assignMemoryAndCapacityForSize(sizeType newSize) {
 			
-			#if (__cplusplus >= 201400) && use_make_unique
-				values = std::make_unique<Type[]>(newSize);
-			#elif cplusplus11 || !use_make_unique
-				values = Pointer { new Type[newSize] };
-			#endif
+		#if (__cplusplus >= 201400) && use_make_unique
+			values = std::make_unique<Type[]>(newSize);
+		#elif cplusplus11 || !use_make_unique
+			values = Pointer { new Type[newSize] };
+		#endif
 			
 			capacity_ = newSize;
 		}
 		
 		inline auto newArrayOfSize(const sizeType newSize) {
 			
-			#if (__cplusplus >= 201400) && use_make_unique
-				auto newValues { std::make_unique<Type[]>(newSize) };
-			#elif (__cplusplus >= 201100) || !use_make_unique
-				Pointer newValues { new Type[newSize] };
-			#endif
+		#if (__cplusplus >= 201400) && use_make_unique
+			auto newValues { std::make_unique<Type[]>(newSize) };
+		#elif (__cplusplus >= 201100) || !use_make_unique
+			Pointer newValues { new Type[newSize] };
+		#endif
 			
 			return newValues;
 		}
 		
 		/// Resizes the array to a given size
 		inline void resizeValuesToSize(const sizeType newSize, bool move = 0) {
-	
+			
 			auto newValues = newArrayOfSize(newSize);
 			
 			move ? std::move(&values[0], &values[count_], &newValues[0]) : std::copy(&values[0], &values[count_], &newValues[0]);
@@ -135,14 +138,14 @@ namespace evt {
 				std::copy(std::begin(newElements), std::end(newElements), &values[count_]);
 			}
 			else if (countOfContainer > 0) {
-
+				
 				capacity_ = countOfContainer + count_;
 				
 				auto newValues = newArrayOfSize(capacity_);
 				
 				std::copy(&values[0], &values[count_], &newValues[0]);
 				std::copy(std::begin(newElements), std::end(newElements), &newValues[count_]);
-	
+				
 				values = std::move(newValues);
 			}
 			
@@ -164,7 +167,7 @@ namespace evt {
 				capacity_ = countOfContainer + count_;
 				
 				auto newValues = newArrayOfSize(capacity_);
-
+				
 				std::move(&values[0], &values[count_], &newValues[0]);
 				std::move(std::begin(newElements), std::end(newElements), &newValues[count_]);
 				
@@ -236,9 +239,9 @@ namespace evt {
 		template<typename Container>
 		Array(const Container& elements) { assignNewElements(elements); }
 		
-		template<typename Container>
+		template <typename Container, typename = typename std::enable_if<!std::is_same<Container, Type>::type>>
 		Array(Container&& elements) { assignNewElementsMOVE(elements); }
-
+		
 		// MARK: Capacity
 		
 		inline sizeType size() const  { return count_; }
@@ -248,7 +251,7 @@ namespace evt {
 		inline bool isEmpty() const { return (count_ == 0); }
 		
 		// MARK: Manage elements
-
+		
 		void insertAt(const Type* position, const Type& newElement) {
 			
 			if (position == &values[count_]) {
@@ -294,9 +297,9 @@ namespace evt {
 			if (capacity_ == count_) {
 				
 				capacity_ = (sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1);
-
+				
 				auto newValues = newArrayOfSize(capacity_);
-
+				
 				std::copy(&values[0], &values[index], &newValues[0]);
 				std::copy(&values[index], &values[count_], &newValues[index+1]);
 				
@@ -371,7 +374,7 @@ namespace evt {
 		}
 		
 		void append(Type&& newElement) {
-	
+			
 			if (capacity_ == count_) {
 				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1), 1);
 			}
@@ -443,7 +446,7 @@ namespace evt {
 		}
 		
 		inline void removeAt(const sizeType index, const bool shrinkIfEmpty = true) {
-		
+			
 			if (index == count_ - 1) {
 				removeLast();
 				return;
@@ -532,11 +535,11 @@ namespace evt {
 			swap(otherArray);
 			container = Array::to<Container>(otherArray);
 		}
-
+		
 		inline bool contains(const Type& element) const {
 			for (const auto& elm: (*this)) {
 				if (element == elm) { return true; }
-			} 
+			}
 			return false;
 		}
 		
@@ -562,7 +565,7 @@ namespace evt {
 		}
 		
 		std::string toString() const {
-		
+			
 			if (this->isEmpty()) {
 				return "[]";
 			}
@@ -571,14 +574,14 @@ namespace evt {
 			sizeType position = 0;
 			
 			for (const auto& value: *this) {
-					output += [&] {
-						if (typeid(value) == typeid(std::string)) {
-							return ("\"" + evt::to_string(value) + "\"");
-						} else if (typeid(value) == typeid(char)) {
-							return ("\'" + evt::to_string(value) + "\'");
-						}
-						return evt::to_string(value);
-					}();
+				output += [&] {
+					if (typeid(value) == typeid(std::string)) {
+						return ("\"" + evt::internalPrintEVT::to_string(value) + "\"");
+					} else if (typeid(value) == typeid(char)) {
+						return ("\'" + evt::internalPrintEVT::to_string(value) + "\'");
+					}
+					return evt::internalPrintEVT::to_string(value);
+				}();
 				
 				if (position+1 < count_) {
 					output += ", ";
@@ -647,7 +650,7 @@ namespace evt {
 		inline Array& operator-=(InitializerList newElements) {
 			return removeElements(newElements);
 		}
-
+		
 		/// Returns a subrange of elements
 		template <typename Container>
 		inline Array operator-(const Container& newElements) const {
@@ -683,7 +686,7 @@ namespace evt {
 			if (count_ != countOfContainer) { return false; }
 			return std::equal(&values[0], &values[count_], std::begin(elements));
 		}
-
+		
 		template <typename Container>
 		inline bool operator!=(const Container& elements) const {
 			return !( (*this) == elements );
@@ -779,6 +782,19 @@ namespace evt {
 		Array& operator=(Array&& otherArray) {
 			
 			if (this != &otherArray) {
+				count_ = otherArray.count_;
+				capacity_ = otherArray.capacity_;
+				
+				assignMemoryAndCapacityForSize(capacity_);
+				std::move(otherArray.begin(), otherArray.end(), &values[0]);
+			}
+			
+			return *this;
+		}
+		
+		void moveFrom(Array&& otherArray) {
+			
+			if (this != &otherArray) {
 				values = std::move(otherArray.values);
 				capacity_ = otherArray.capacity_;
 				count_ = otherArray.count_;
@@ -786,8 +802,6 @@ namespace evt {
 				otherArray.capacity_ = 0;
 				otherArray.count_ = 0;
 			}
-			
-			return *this;
 		}
 		
 		// MARK: Shuffle
@@ -802,7 +816,7 @@ namespace evt {
 				std::random_device rd;
 				std::mt19937_64 rng(rd());
 			#endif
-
+			
 			std::shuffle(&values[0], &values[count_], rng);
 		}
 		
@@ -819,7 +833,7 @@ namespace evt {
 		}
 		
 		// MARK: Sort
-	
+		
 		void sort(std::function<bool(Type&,Type&)> compareFunction = std::less_equal<Type>()) {
 			std::sort(&values[0], &values[count_], compareFunction);
 		}
@@ -870,3 +884,5 @@ namespace evt {
 
 #undef use_make_unique
 #undef initialCapacity_
+
+
