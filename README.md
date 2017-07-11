@@ -13,43 +13,43 @@ Container to store data, similar to `std::vector` but with better syntax and per
 
 **-O0**:
 
-std::vector push_back: 0.688659s
-std::vector emplace_back: 0.716044s
-evt::**Array** Append: **0.20434s**
-std::vector Removal: 0.545444s
-evt::**Array** Removal: **0.225306s**
-std::vector Insert at beginning: 1.58625s
-evt::Array Insert at beginning: 1.6258s
-std::vector Insert in the middle: 2.13889s
-evt::Array Insert in the middle: 2.14317s
-std::vector Insert at end: 1.26026s
-evt::**Array** Insert at end: **0.421712s**
+std::vector push_back: 0.688659s<br>
+std::vector emplace_back: 0.716044s<br>
+evt::**Array** Append: **0.20434s**<br>
+std::vector Removal: 0.545444s<br>
+evt::**Array** Removal: **0.225306s**<br>
+std::vector Insert at beginning: 1.58625s<br>
+evt::Array Insert at beginning: 1.6258s<br>
+std::vector Insert in the middle: 2.13889s<br>
+evt::Array Insert in the middle: 2.14317s<br>
+std::vector Insert at end: 1.26026s<br>
+evt::**Array** Insert at end: **0.421712s**<br>
 
 - TEST Class Benchmark (int,double,string)
 
-std::vector push_back: 7.47206s
-std::vector emplace_back: 7.25572s
-evt::**Array** Append: **7.00413s**
+std::vector push_back: 7.47206s<br>
+std::vector emplace_back: 7.25572s<br>
+evt::**Array** Append: **7.00413s**<br>
 
 **-Ofast:**
 
-std::vector push_back: 0.155405s
-std::vector emplace_back: 0.147155s
-evt::**Array** Append: **0.0795583s**
-std::vector Removal: 4.4e-08s
-evt::Array Removal: 0.12843s
-std::vector Insert at beginning: 1.61507s
-evt::**Array** Insert at beginning: **1.5651s**
-std::vector Insert in the middle: 2.10976s
-evt::Array Insert in the middle: 2.203s
-std::vector Insert at end: 0.209195s
-evt::**Array** Insert at end: **0.181815s**
+std::vector push_back: 0.155405s<br>
+std::vector emplace_back: 0.147155s<br>
+evt::**Array** Append: **0.0795583s**<br>
+std::vector Removal: 4.4e-08s<br>
+evt::Array Removal: 0.12843s<br>
+std::vector Insert at beginning: 1.61507s<br>
+evt::**Array** Insert at beginning: **1.5651s**<br>
+std::vector Insert in the middle: 2.10976s<br>
+evt::Array Insert in the middle: 2.203s<br>
+std::vector Insert at end: 0.209195s<br>
+evt::**Array** Insert at end: **0.181815s**<br>
 
 - TEST Class Benchmark (int,double,string)
 
-std::vector push_back: 4.9516s
-std::vector emplace_back: 4.81552s
-evt::**Array** Append: **4.40035s**
+std::vector push_back: 4.9516s<br>
+std::vector emplace_back: 4.81552s<br>
+evt::**Array** Append: **4.40035s**<br>
 
 
 ## API Reference
