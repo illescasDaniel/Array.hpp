@@ -2,7 +2,7 @@
  
  The MIT License (MIT)
  
- Copyright (c) 2017 Daniel Illescas Romero
+ Copyright (c) 2017 Daniel Illescas Romero <https://github.com/illescasDaniel>
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -72,7 +72,7 @@ namespace evt {
 		
 		// MARK: - Private Functions
 		
-		inline double sizeOfArrayInMB(const double currentCapacity) {
+		inline double sizeOfArrayInMB(const double currentCapacity) const {
 			return (sizeof(Type)*(currentCapacity)) / 1000000;
 		}
 		
@@ -91,10 +91,10 @@ namespace evt {
 			}
 		}
 		
-		inline auto newArrayOfSize(const sizeType newSize) {
+		inline Pointer newArrayOfSize(const sizeType newSize) const {
 			
 			#if (__cplusplus >= 201400) && use_make_unique
-				auto newValues { std::make_unique<Type[]>(newSize) };
+				Pointer newValues { std::make_unique<Type[]>(newSize) };
 			#elif (__cplusplus >= 201100) || !use_make_unique
 				Pointer newValues { new Type[newSize] };
 			#endif
@@ -105,7 +105,7 @@ namespace evt {
 		/// Resizes the array to a given size
 		inline void resizeValuesToSize(const sizeType newSize, bool move = 0) {
 			
-			auto newValues = newArrayOfSize(newSize);
+			Pointer newValues = newArrayOfSize(newSize);
 			
 			move ? std::move(&values[0], &values[count_], &newValues[0]) : std::copy(&values[0], &values[count_], &newValues[0]);
 			values = std::move(newValues);
@@ -713,8 +713,8 @@ namespace evt {
 			auto containerElement = std::begin(elements);
 			
 			for (sizeType i = 0; i < smallerSize; ++i, ++arrayElement, ++containerElement) {
-				if (arrayElement != containerElement) {
-					return arrayElement < containerElement;
+				if (*arrayElement != *containerElement) {
+					return *arrayElement < *containerElement;
 				}
 			}
 			
@@ -731,15 +731,15 @@ namespace evt {
 			auto containerElement = std::begin(elements);
 			
 			for (sizeType i = 0; i < smallerSize; ++i, ++arrayElement, ++containerElement) {
-				if (arrayElement != containerElement) {
-					return arrayElement < containerElement;
+				if (*arrayElement != *containerElement) {
+					return *arrayElement < *containerElement;
 				}
 			}
 			
 			return count_ <= countOfContainer;
 		}
 		
-		// Returns true if the contents of the array are lexicographically greater than the contents of the container
+		/// Returns true if the contents of the array are lexicographically greater than the contents of the container
 		template <typename Container>
 		inline bool operator>(const Container& elements) {
 			
@@ -750,8 +750,8 @@ namespace evt {
 			auto containerElement = std::begin(elements);
 			
 			for (sizeType i = 0; i < smallerSize; ++i, ++arrayElement, ++containerElement) {
-				if (arrayElement != containerElement) {
-					return arrayElement > containerElement;
+				if (*arrayElement != *containerElement) {
+					return *arrayElement > *containerElement;
 				}
 			}
 			
@@ -768,8 +768,8 @@ namespace evt {
 			auto containerElement = std::begin(elements);
 			
 			for (sizeType i = 0; i < smallerSize; ++i, ++arrayElement, ++containerElement) {
-				if (arrayElement != containerElement) {
-					return arrayElement > containerElement;
+				if (*arrayElement != *containerElement) {
+					return *arrayElement > *containerElement;
 				}
 			}
 			
