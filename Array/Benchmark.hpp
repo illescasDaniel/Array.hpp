@@ -22,7 +22,7 @@ float benchmark(const Function& function, size_t iterations = 1) {
 		function();
 		auto end = std::chrono::high_resolution_clock::now();
 		
-		averageTime += float(std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()) / float(1000);
+		averageTime += float(std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()) / float(1000000000);
 	}
 	
 	return averageTime / float(iterations);
@@ -38,7 +38,7 @@ float testVectorPushBack() {
 		for (int i = 0; i < aSize; ++i) {
 			numbers.push_back(i);
 		}
-	}, 10);
+	}, 20);
 }
 
 float testVectorEmplaceBack() {
@@ -51,7 +51,7 @@ float testVectorEmplaceBack() {
 		for (int i = 0; i < aSize; ++i) {
 			numbers.emplace_back(i);
 		}
-	}, 10);
+	}, 20);
 }
 
 float testArrayAppend() {
@@ -63,7 +63,7 @@ float testArrayAppend() {
 		for (int i = 0; i < aSize; ++i) {
 			numbers2.append(i);
 		}
-	}, 10);
+	}, 20);
 }
 
 float testVectorInsertAtBeginning() {

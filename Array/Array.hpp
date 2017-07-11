@@ -36,6 +36,10 @@
 #include <memory>
 #include <random>
 
+#if (__cplusplus >= 201406)
+	#include <experimental/optional>
+#endif
+
 namespace evt {
 	
 	namespace internalPrintEVT {
@@ -73,24 +77,27 @@ namespace evt {
 		}
 		
 		/// Assigns new memory, also updates the new capacity.
-		inline void assignMemoryAndCapacityForSize(sizeType newSize) {
+		inline void assignMemoryAndCapacityForSize(sizeType newSize, bool forceResize = false) {
 			
-		#if (__cplusplus >= 201400) && use_make_unique
-			values = std::make_unique<Type[]>(newSize);
-		#elif cplusplus11 || !use_make_unique
-			values = Pointer { new Type[newSize] };
-		#endif
-			
-			capacity_ = newSize;
+			if (forceResize or capacity_ < newSize) {
+				
+				#if (__cplusplus >= 201400) && use_make_unique
+					values = std::make_unique<Type[]>(newSize);
+				#elif cplusplus11 || !use_make_unique
+					values = Pointer { new Type[newSize] };
+				#endif
+				
+				capacity_ = newSize;
+			}
 		}
 		
 		inline auto newArrayOfSize(const sizeType newSize) {
 			
-		#if (__cplusplus >= 201400) && use_make_unique
-			auto newValues { std::make_unique<Type[]>(newSize) };
-		#elif (__cplusplus >= 201100) || !use_make_unique
-			Pointer newValues { new Type[newSize] };
-		#endif
+			#if (__cplusplus >= 201400) && use_make_unique
+				auto newValues { std::make_unique<Type[]>(newSize) };
+			#elif (__cplusplus >= 201100) || !use_make_unique
+				Pointer newValues { new Type[newSize] };
+			#endif
 			
 			return newValues;
 		}
@@ -109,23 +116,15 @@ namespace evt {
 		/// Replaces the content of the array with other elements
 		template <typename Container>
 		void assignNewElements(const Container& elements) {
-			
 			count_ = std::distance(std::begin(elements), std::end(elements));
-			
-			if (count_ > 2) {
-				assignMemoryAndCapacityForSize(count_);
-			}
+			assignMemoryAndCapacityForSize(count_);
 			std::copy(std::begin(elements), std::end(elements), &values[0]);
 		}
 		
 		template <typename Container>
 		void assignNewElementsMOVE(Container&& elements) {
-			
 			count_ = std::distance(std::begin(elements), std::end(elements));
-			
-			if (count_ > 2) {
-				assignMemoryAndCapacityForSize(count_);
-			}
+			assignMemoryAndCapacityForSize(count_);
 			std::move(std::begin(elements), std::end(elements), &values[0]);
 		}
 		
@@ -440,7 +439,7 @@ namespace evt {
 		void removeAll(const bool keepCapacity = false) {
 			
 			if (!keepCapacity) {
-				assignMemoryAndCapacityForSize(1);
+				assignMemoryAndCapacityForSize(2, true);
 			}
 			count_ = 0;
 		}
@@ -624,6 +623,17 @@ namespace evt {
 			return this->operator==(elements);
 		}
 		
+		#if (__cplusplus >= 201406)
+				
+			inline std::experimental::optional<Type> at(const sizeType index) const {
+				if (index >= count_) {
+					return std::experimental::nullopt;
+				} else {
+					return values[index];
+				}
+			}
+		#endif
+		
 		// MARK: Operators overload
 		
 		/// Returns the pointer of the array
@@ -770,9 +780,8 @@ namespace evt {
 			
 			if (this != &otherArray) {
 				count_ = otherArray.count_;
-				capacity_ = otherArray.capacity_;
 				
-				assignMemoryAndCapacityForSize(capacity_);
+				assignMemoryAndCapacityForSize(otherArray.capacity_);
 				std::copy(otherArray.begin(), otherArray.end(), &values[0]);
 			}
 			
@@ -783,9 +792,8 @@ namespace evt {
 			
 			if (this != &otherArray) {
 				count_ = otherArray.count_;
-				capacity_ = otherArray.capacity_;
 				
-				assignMemoryAndCapacityForSize(capacity_);
+				assignMemoryAndCapacityForSize(otherArray.capacity_);
 				std::move(otherArray.begin(), otherArray.end(), &values[0]);
 			}
 			

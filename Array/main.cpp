@@ -5,8 +5,30 @@
 using namespace std;
 using namespace evt;
 
-int main() {
+#if (__cplusplus >= 201406)
+	#include <experimental/optional>
+	using namespace experimental;
+#endif
 
+int main() {
+	
+	Array<int> test00 {1,2,3,4,54,5};
+	cout << test00.count() << " " << test00.capacity() << endl;
+	
+	Array<int,60> test22 {1,2,3,4};
+	cout << test22.count() << " " << test22.capacity() << endl;
+	
+	test22 = test00;
+	cout << test22.count() << " " << test22.capacity() << endl;
+	
+	/* C++17 example */
+	
+	#if (__cplusplus >= 201406)
+		cout << test22.at(10).value_or(0) << endl;
+		cout << test22.at(3).value_or(0) << endl;
+	#endif
+	/* */
+	
 	Array<int> testArray1 {1,2,3,4,5,6,7,8,9,10,1,12,3,4};
 	
 	testArray1.removeElements({3,4}, true);
@@ -357,7 +379,7 @@ int main() {
 	// Array<int, 1000> aaaa;
 	// Array<int> nnnn = vector<int>({1,2,3,4}); // uses the move (&&) operation
 	
-	/* BENCHMARKS */
+	// BENCHMARKS
 
 	cout << "\n------- BENCHMARKS -------\n" << endl;
 	
@@ -384,7 +406,7 @@ int main() {
 	cout << "evt::Array Element access: " << testElementAccess() << "s" << endl;
 	
 	cout << "evt::Array Element find: " << testFindElement() << "s" << endl;
-	
+ 
 	//
 	
 	cout << "\n----- TEST Class Benchmark ----\n" << endl;

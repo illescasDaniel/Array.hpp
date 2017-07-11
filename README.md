@@ -1,7 +1,7 @@
 # **Array**.hpp
 
 [![Build Status](https://travis-ci.org/illescasDaniel/Array.hpp.svg?branch=master)](https://travis-ci.org/illescasDaniel/Array.hpp)
-[![Version](https://img.shields.io/badge/version-v1.20-green.svg)](https://github.com/illescasDaniel/Array.hpp/releases)
+[![Version](https://img.shields.io/badge/version-v1.21-green.svg)](https://github.com/illescasDaniel/Array.hpp/releases)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg?maxAge=2592000)](https://github.com/illescasDaniel/Array.hpp/blob/master/LICENCE) 
 
 Container to store data, similar to `std::vector` but with better syntax and performance.  
@@ -13,39 +13,44 @@ Container to store data, similar to `std::vector` but with better syntax and per
 
 **-O0**:
 
-std::vector push_back: 0.797s  
-std::vector emplace_back: 0.749s  
-evt::**Array** Append: **0.218s**  
-std::vector Removal: 0.584s  
-evt::**Array** Removal: **0.123s**  
-std::vector Insert at beginning: 1.62s  
-evt::**Array** Insert at beginning: **1.61s**  
-std::vector Insert at end: 1.302s  
-evt::**Array** Insert at end: **0.435s**  
+std::vector push_back: 0.688659s
+std::vector emplace_back: 0.716044s
+evt::**Array** Append: **0.20434s**
+std::vector Removal: 0.545444s
+evt::**Array** Removal: **0.225306s**
+std::vector Insert at beginning: 1.58625s
+evt::Array Insert at beginning: 1.6258s
+std::vector Insert in the middle: 2.13889s
+evt::Array Insert in the middle: 2.14317s
+std::vector Insert at end: 1.26026s
+evt::**Array** Insert at end: **0.421712s**
 
-- TEST Class Benchmark (int,double,string)  
+- TEST Class Benchmark (int,double,string)
 
-std::vector push_back: 7.409s  
-std::vector emplace_back: 7.059s  
-evt::**Array** Append: **6.518s**  
+std::vector push_back: 7.47206s
+std::vector emplace_back: 7.25572s
+evt::**Array** Append: **7.00413s**
 
-**-O2:**  
+**-Ofast:**
 
-std::vector push_back: 0.173s  
-std::vector emplace_back: 0.14s  
-evt::**Array** Append: **0.076s**  
-std::vector Removal: 0s  
-evt::**Array** Removal: **0.07s**  
-std::vector Insert at beginning: 1.568s  
-evt::**Array** Insert at beginning: **1.579s**  
-std::vector Insert at end: 0.189s  
-evt::**Array** Insert at end: **0.183s**  
+std::vector push_back: 0.155405s
+std::vector emplace_back: 0.147155s
+evt::**Array** Append: **0.0795583s**
+std::vector Removal: 4.4e-08s
+evt::Array Removal: 0.12843s
+std::vector Insert at beginning: 1.61507s
+evt::**Array** Insert at beginning: **1.5651s**
+std::vector Insert in the middle: 2.10976s
+evt::Array Insert in the middle: 2.203s
+std::vector Insert at end: 0.209195s
+evt::**Array** Insert at end: **0.181815s**
 
-- TEST Class Benchmark (int,double,string)  
+- TEST Class Benchmark (int,double,string)
 
-std::vector push_back: 4.693s  
-std::vector emplace_back: 4.677s  
-evt::**Array** Append: **4.503s**  
+std::vector push_back: 4.9516s
+std::vector emplace_back: 4.81552s
+evt::**Array** Append: **4.40035s**
+
 
 ## API Reference
 
