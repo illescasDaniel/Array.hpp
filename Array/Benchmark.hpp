@@ -12,23 +12,33 @@ constexpr int aSize = 30000000;
 constexpr int insertSize = 150000;
 
 template <typename Function>
-float benchmark(const Function& function) {
+float benchmark(const Function& function, size_t iterations = 1) {
 	
-	auto start = high_resolution_clock::now();
-	function();
-	auto end = high_resolution_clock::now();
+	float averageTime = 0.0;
 	
-	return float(duration_cast<milliseconds>(end - start).count()) / float(1000);
+	for (size_t i = 0; i < iterations; ++i) {
+		
+		auto start = std::chrono::high_resolution_clock::now();
+		function();
+		auto end = std::chrono::high_resolution_clock::now();
+		
+		averageTime += float(std::chrono::duration_cast<std::chrono::nanoseconds>(end - start).count()) / float(1000000000);
+	}
+	
+	return averageTime / float(iterations);
 }
 
 float testVectorPushBack() {
 	
 	return benchmark([] {
 		
+		vector<int> backup;
+		numbers = move(backup); // Reset the internal capacity to 0 and remove the elements
+		
 		for (int i = 0; i < aSize; ++i) {
 			numbers.push_back(i);
 		}
-	});
+	}, 10);
 }
 
 float testVectorEmplaceBack() {
@@ -41,17 +51,19 @@ float testVectorEmplaceBack() {
 		for (int i = 0; i < aSize; ++i) {
 			numbers.emplace_back(i);
 		}
-	});
+	}, 10);
 }
 
 float testArrayAppend() {
 	
 	return benchmark([] {
 		
+		numbers2.removeAll();
+		
 		for (int i = 0; i < aSize; ++i) {
 			numbers2.append(i);
 		}
-	});
+	}, 10);
 }
 
 float testVectorInsertAtBeginning() {
