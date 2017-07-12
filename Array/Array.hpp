@@ -46,8 +46,9 @@ namespace evt {
 		inline std::string to_string(const std::string& str) { return str; }
 		inline std::string to_string(const char chr) { return std::string(1,chr); }
 		
-		template <typename Others>
-		inline std::string to_string(const Others& other) { return other.toString(); }
+		template <typename Fundamental, typename = typename std::enable_if<std::is_fundamental<Fundamental>::value,bool>::type>
+		inline std::string to_string(const Fundamental& fundamental) { return std::to_string(fundamental); }
+		
 		/* Place your custom "to_string()" function/s here for other classes. Use templates if you want. */
 	}
 	
@@ -177,7 +178,7 @@ namespace evt {
 		}
 		
 		template <typename Container>
-		Array& removeElementsFromContainer(const Container& newElements, bool onlyFirstAppearance = false) {
+		Array& removeElementsFromContainer(const Container& newElements, bool onlyFirstOccurrence = false) {
 			
 			sizeType elementsFound = 0;
 			sizeType countOfContainer = std::distance(std::begin(newElements), std::end(newElements));
@@ -207,7 +208,7 @@ namespace evt {
 						this->removeAt(elementsPosition[0]);
 					}
 				}
-			} while((elementsFound == newElements.size()) && !onlyFirstAppearance);
+			} while((elementsFound == newElements.size()) && !onlyFirstOccurrence);
 			
 			return *this;
 		}
@@ -518,12 +519,12 @@ namespace evt {
 		}
 		
 		template <typename Container>
-		Array& removeElements(const Container& newElements, bool onlyFirstAppearance = false) {
-			return removeElementsFromContainer(newElements);
+		Array& removeElements(const Container& newElements, bool onlyFirstOccurrence = false) {
+			return removeElementsFromContainer(newElements, onlyFirstOccurrence);
 		}
 		
-		Array& removeElements(InitializerList newElements, bool onlyFirstAppearance = false) {
-			return removeElementsFromContainer(newElements);
+		Array& removeElements(InitializerList newElements, bool onlyFirstOccurrence = false) {
+			return removeElementsFromContainer(newElements, onlyFirstOccurrence);
 		}
 		
 		template <typename Container>
