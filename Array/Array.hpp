@@ -33,14 +33,15 @@
 #include <typeinfo>
 #include <memory>
 #include <random>
+#include <functional>
 
 #if (__cplusplus >= 201406)
-	#include <experimental/optional>
+#include <experimental/optional>
 #endif
 
 namespace evt {
 	
-	namespace internalPrintEVT {
+	namespace internalArrayPrintEVT {
 		
 		// Extra functions for the "toString()" method
 		inline std::string to_string(const std::string& str) { return str; }
@@ -61,7 +62,7 @@ namespace evt {
 		typedef std::size_t sizeType;
 		typedef std::unique_ptr<Type[]> Pointer;
 		typedef std::initializer_list<Type> InitializerList;
-		#define initialCapacity_ ((initialCapacity > 2) ? initialCapacity : 2)
+#define initialCapacity_ ((initialCapacity > 2) ? initialCapacity : 2)
 		
 		// MARK: - Attributes
 		
@@ -80,11 +81,11 @@ namespace evt {
 			
 			if (forceResize or capacity_ < newSize) {
 				
-				#if (__cplusplus >= 201400) && use_make_unique
-					values = std::make_unique<Type[]>(newSize);
-				#elif cplusplus11 || !use_make_unique
-					values = Pointer { new Type[newSize] };
-				#endif
+#if (__cplusplus >= 201400) && use_make_unique
+				values = std::make_unique<Type[]>(newSize);
+#elif (__cplusplus >= 201100) || !use_make_unique
+				values = Pointer { new Type[newSize] };
+#endif
 				
 				capacity_ = newSize;
 			}
@@ -92,11 +93,11 @@ namespace evt {
 		
 		inline Pointer newArrayOfSize(const sizeType newSize) const {
 			
-			#if (__cplusplus >= 201400) && use_make_unique
-				Pointer newValues { std::make_unique<Type[]>(newSize) };
-			#elif (__cplusplus >= 201100) || !use_make_unique
-				Pointer newValues { new Type[newSize] };
-			#endif
+#if (__cplusplus >= 201400) && use_make_unique
+			Pointer newValues { std::make_unique<Type[]>(newSize) };
+#elif (__cplusplus >= 201100) || !use_make_unique
+			Pointer newValues { new Type[newSize] };
+#endif
 			
 			return newValues;
 		}
@@ -178,7 +179,7 @@ namespace evt {
 		}
 		
 		template <typename Container>
-		Array& removeElementsFromContainer(const Container& newElements, bool onlyFirstOccurrence = false) {
+		Array& removeElementsFromContainer(const Container& newElements, bool onlyFirstOcurrence = false) {
 			
 			sizeType elementsFound = 0;
 			sizeType countOfContainer = std::distance(std::begin(newElements), std::end(newElements));
@@ -208,7 +209,7 @@ namespace evt {
 						this->removeAt(elementsPosition[0]);
 					}
 				}
-			} while((elementsFound == newElements.size()) && !onlyFirstOccurrence);
+			} while((elementsFound == newElements.size()) && !onlyFirstOcurrence);
 			
 			return *this;
 		}
@@ -519,12 +520,12 @@ namespace evt {
 		}
 		
 		template <typename Container>
-		Array& removeElements(const Container& newElements, bool onlyFirstOccurrence = false) {
-			return removeElementsFromContainer(newElements, onlyFirstOccurrence);
+		Array& removeElements(const Container& newElements, bool onlyFirstOcurrence = false) {
+			return removeElementsFromContainer(newElements, onlyFirstOcurrence);
 		}
 		
-		Array& removeElements(InitializerList newElements, bool onlyFirstOccurrence = false) {
-			return removeElementsFromContainer(newElements, onlyFirstOccurrence);
+		Array& removeElements(InitializerList newElements, bool onlyFirstOcurrence = false) {
+			return removeElementsFromContainer(newElements, onlyFirstOcurrence);
 		}
 		
 		template <typename Container>
@@ -574,11 +575,11 @@ namespace evt {
 			for (const auto& value: *this) {
 				output += [&] {
 					if (typeid(value) == typeid(std::string)) {
-						return ("\"" + evt::internalPrintEVT::to_string(value) + "\"");
+						return ("\"" + evt::internalArrayPrintEVT::to_string(value) + "\"");
 					} else if (typeid(value) == typeid(char)) {
-						return ("\'" + evt::internalPrintEVT::to_string(value) + "\'");
+						return ("\'" + evt::internalArrayPrintEVT::to_string(value) + "\'");
 					}
-					return evt::internalPrintEVT::to_string(value);
+					return evt::internalArrayPrintEVT::to_string(value);
 				}();
 				
 				if (position+1 < count_) {
@@ -622,15 +623,16 @@ namespace evt {
 			return this->operator==(elements);
 		}
 		
-		#if (__cplusplus >= 201406)
-			inline std::experimental::optional<Type> at(const sizeType index) const {
-				if (index >= count_) {
-					return std::experimental::nullopt;
-				} else {
-					return values[index];
-				}
+#if (__cplusplus >= 201406)
+		
+		inline std::experimental::optional<Type> at(const sizeType index) const {
+			if (index >= count_) {
+				return std::experimental::nullopt;
+			} else {
+				return values[index];
 			}
-		#endif
+		}
+#endif
 		
 		// MARK: Operators overload
 		
@@ -816,12 +818,12 @@ namespace evt {
 			
 			if (this->isEmpty()) { return; }
 			
-				#ifdef __APPLE__
-					std::mt19937_64 rng(arc4random());
-				#else
-					std::random_device rd;
-					std::mt19937_64 rng(rd());
-				#endif
+#ifdef __APPLE__
+			std::mt19937_64 rng(arc4random());
+#else
+			std::random_device rd;
+			std::mt19937_64 rng(rd());
+#endif
 			
 			std::shuffle(&values[0], &values[count_], rng);
 		}
@@ -840,11 +842,11 @@ namespace evt {
 		
 		// MARK: Sort
 		
-		void sort(std::function<bool(Type&,Type&)> compareFunction = std::less_equal<Type>()) {
+		void sort(const std::function<bool(Type&,Type&)>& compareFunction = std::less_equal<Type>()) {
 			std::sort(&values[0], &values[count_], compareFunction);
 		}
 		
-		Array sorted(std::function<bool(Type&,Type&)> compareFunction = std::less_equal<Type>()) const {
+		Array sorted(const std::function<bool(Type&,Type&)>& compareFunction = std::less_equal<Type>()) const {
 			
 			if (this->isEmpty()) {
 				return *this;
@@ -890,3 +892,6 @@ namespace evt {
 
 #undef use_make_unique
 #undef initialCapacity_
+
+
+
