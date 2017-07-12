@@ -14,13 +14,13 @@ int main() {
 	
 	boolalpha(cout);
 	
-	Array<int> test1 {1,2,3,4,1};
-	Array<int> test2 {1,2,3,5};
+	Array<int> test1000 {1,2,3,4,1};
+	Array<int> test2000 {1,2,3,5};
 	
-	cout << (test1 < test2) << endl;
-	cout << (test1.count() < test2.count()) << endl;
+	cout << (test1000 < test2000) << endl;
+	cout << (test1000.count() < test2000.count()) << endl;
 	
-	/*Array<int> test00 {1,2,3,4,54,5};
+	Array<int> test00 {1,2,3,4,54,5};
 	cout << test00.count() << " " << test00.capacity() << endl;
 	
 	Array<int,60> test22 {1,2,3,4};
@@ -32,6 +32,7 @@ int main() {
 	// C++17 example
 	
 	#if (__cplusplus >= 201406)
+		cout << "C++17" << endl;
 		cout << test22.at(10).value_or(0) << endl;
 		cout << test22.at(3).value_or(0) << endl;
 	#endif
@@ -382,14 +383,14 @@ int main() {
 
 	for (const auto& element: a) {
 		cout << element << ' ';
-	}cout << endl;*/
+	}cout << endl;
 	
 	// Array<int, 1000> aaaa;
 	// Array<int> nnnn = vector<int>({1,2,3,4}); // uses the move (&&) operation
 	
 	// BENCHMARKS
 
-	/*cout << "\n------- BENCHMARKS -------\n" << endl;
+	cout << "\n------- BENCHMARKS -------\n" << endl;
 	
 	cout << "std::vector push_back: " << testVectorPushBack() << "s" << endl;
 	cout << "std::vector emplace_back: " << testVectorEmplaceBack() << "s" << endl;
@@ -421,5 +422,5 @@ int main() {
 	
 	cout << "std::vector push_back: " << testVectorPushBackTEST() << "s" << endl;
 	cout << "std::vector emplace_back: " << testVectorEmplaceBackTEST() << "s" << endl;
-	cout << "evt::Array Append: " << testArrayAppendTEST() << "s" << endl;*/
+	cout << "evt::Array Append: " << testArrayAppendTEST() << "s" << endl;
 }

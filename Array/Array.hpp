@@ -1,5 +1,4 @@
 /*
- 
  The MIT License (MIT)
  
  Copyright (c) 2017 Daniel Illescas Romero <https://github.com/illescasDaniel>
@@ -21,7 +20,6 @@
  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  SOFTWARE.
- 
  */
 
 #pragma once
@@ -49,7 +47,7 @@ namespace evt {
 		inline std::string to_string(const char chr) { return std::string(1,chr); }
 		
 		template <typename Others>
-		inline std::string to_string(const Others other) { return std::to_string(other); }
+		inline std::string to_string(const Others& other) { return other.toString(); }
 		/* Place your custom "to_string()" function/s here for other classes. Use templates if you want. */
 	}
 	
@@ -624,7 +622,6 @@ namespace evt {
 		}
 		
 		#if (__cplusplus >= 201406)
-				
 			inline std::experimental::optional<Type> at(const sizeType index) const {
 				if (index >= count_) {
 					return std::experimental::nullopt;
@@ -818,12 +815,12 @@ namespace evt {
 			
 			if (this->isEmpty()) { return; }
 			
-			#ifdef __APPLE__
-				std::mt19937_64 rng(arc4random());
-			#else
-				std::random_device rd;
-				std::mt19937_64 rng(rd());
-			#endif
+				#ifdef __APPLE__
+					std::mt19937_64 rng(arc4random());
+				#else
+					std::random_device rd;
+					std::mt19937_64 rng(rd());
+				#endif
 			
 			std::shuffle(&values[0], &values[count_], rng);
 		}
@@ -892,5 +889,3 @@ namespace evt {
 
 #undef use_make_unique
 #undef initialCapacity_
-
-
