@@ -10,7 +10,17 @@ using namespace evt;
 	using namespace experimental;
 #endif
 
+class Test2 {
+public:
+	int a = 0, b = 0;
+	Test2() {}
+	Test2(int a, int b): a(a), b(b) {}
+};
+
 int main() {
+	
+	Array<Test2> tests;
+	tests.append(Test2(1, 29));
 	
 	boolalpha(cout);
 	
