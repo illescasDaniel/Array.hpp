@@ -25,7 +25,7 @@ evt::Array Insert in the middle: 2.14317s<br>
 std::vector Insert at end: 1.26026s<br>
 evt::**Array** Insert at end: **0.421712s**<br>
 
-- TEST Class Benchmark (int,double,string)
+- TEST Class Benchmark (int, double, string)
 
 std::vector push_back: 7.47206s<br>
 std::vector emplace_back: 7.25572s<br>
@@ -45,7 +45,7 @@ evt::Array Insert in the middle: 2.203s<br>
 std::vector Insert at end: 0.209195s<br>
 evt::**Array** Insert at end: **0.181815s**<br>
 
-- TEST Class Benchmark (int,double,string)
+- TEST Class Benchmark (int, double, string)
 
 std::vector push_back: 4.9516s<br>
 std::vector emplace_back: 4.81552s<br>
