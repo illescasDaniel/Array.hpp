@@ -41,10 +41,36 @@ int main() {
 	
 	// C++17 example
 	
+	Array<int> numbersArr {1,2,3,4,5};
+	if (numbersArr.find(3) != numbersArr.count()) {
+		cout << "Found!!" << endl;;
+	}
+	
+	cout << numbersArr.first() << " " << numbersArr.last() << endl;
+	
 	#if (__cplusplus >= 201406)
+	
+		cout << numbersArr.filter([](const int& number){
+			return number >= 3;
+		}) << endl;
+	
+		auto firstEven = numbersArr.first([](const int& number) {
+			return number % 2 == 0;
+		});
+		cout << firstEven.value_or(0) << endl;
+	
+		if (const auto firstOdd = numbersArr.first([](const int& n) { return n % 2 == 1; })) { // Optional
+			cout << firstOdd.value_or(0) << endl;
+		}
+	
+		if (const auto lastEven = numbersArr.last([](const int& n) { return n % 2 == 0; })) {
+			cout << lastEven.value_or(0) << endl;
+		}
+	 
 		cout << "C++17" << endl;
 		cout << test22.at(10).value_or(0) << endl;
 		cout << test22.at(3).value_or(0) << endl;
+	
 	#endif
 	//
 	

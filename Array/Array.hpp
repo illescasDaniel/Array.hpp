@@ -630,7 +630,38 @@ namespace evt {
 			return this->operator==(elements);
 		}
 		
+		Array filter(const std::function<bool(const Type&)>& filterFunction) const {
+			Array filteredArray;
+			for (const auto& element: *this) {
+				if (filterFunction(element)) {
+					filteredArray.append(element);
+				}
+			}
+			return filteredArray;
+		}
+		
 #if (__cplusplus >= 201406)
+		
+		inline std::experimental::optional<Type> first(const std::function<bool(const Type&)>& filterFunction) const {
+			for (const auto& element: *this) {
+				if (filterFunction(element)) {
+					return element;
+				}
+			}
+			return std::experimental::nullopt;
+		}
+		
+		inline std::experimental::optional<Type> last(const std::function<bool(const Type&)>& filterFunction) const {
+			
+			std::experimental::optional<Type> optElement;
+			
+			for (const auto& element: *this) {
+				if (filterFunction(element)) {
+					optElement = element;
+				}
+			}
+			return optElement;
+		}
 		
 		inline std::experimental::optional<Type> at(const SizeType index) const {
 			if (index >= count_) {
