@@ -421,6 +421,10 @@ int main() {
 		cout << element << ' ';
 	}cout << endl;
 	
+	Array<string> someStrings {"daniel", "test", "daniel", "john", "null", "macOS"};
+	cout << someStrings.countOf("daniel") << endl;
+	cout << someStrings.countOf([](const string& str){ return str.length() > 4; }) << endl;
+	
 	// Array<int, 1000> aaaa;
 	// Array<int> nnnn = vector<int>({1,2,3,4}); // uses the move (&&) operation
 	

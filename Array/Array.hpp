@@ -543,7 +543,7 @@ namespace evt {
 		}
 		
 		inline bool contains(const Type& element) const {
-			for (const auto& elm: (*this)) {
+			for (const Type& elm: (*this)) {
 				if (element == elm) { return true; }
 			}
 			return false;
@@ -552,6 +552,10 @@ namespace evt {
 		/// Returns the index of the first ocurrence of the element. Last position if the element isn't found
 		SizeType find(const Type& element) const {
 			return (std::find(&values[0], &values[count_], element) - &values[0]);
+		}
+		
+		SizeType findIf(const std::function<bool(const Type&)>& findFunction) const {
+			return (std::find_if(&values[0], &values[count_], findFunction) - &values[0]);
 		}
 		
 		/// Returns an Array with all the ocurrences of the element
@@ -638,6 +642,14 @@ namespace evt {
 				}
 			}
 			return filteredArray;
+		}
+		
+		SizeType countOf(const std::function<bool(const Type&)>& countOfFunction) const {
+			return std::count_if(this->begin(), this->end(), countOfFunction);
+		}
+		
+		SizeType countOf(const Type& value) const {
+			return std::count(this->begin(), this->end(), value);
 		}
 		
 #if (__cplusplus >= 201406)
