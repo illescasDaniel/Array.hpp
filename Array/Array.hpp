@@ -39,6 +39,12 @@
 #include <experimental/optional>
 #endif
 
+#if (__cplusplus > 201103)
+#define CONSTEXPR constexpr
+#else
+#define CONSTEXPR
+#endif
+
 namespace evt {
 	
 	namespace internalArrayPrintEVT {
@@ -246,7 +252,7 @@ namespace evt {
 		Array(const Container& elements) { assignNewElements(elements); }
 		
 		template <typename Container, typename = typename std::enable_if<!std::is_same<Container, Type>::type>>
-		Array(Container&& elements) { assignNewElementsMOVE(elements); }
+		Array(Container&& elements) { assignNewElementsMOVE(std::move(elements)); }
 		
 		// MARK: Capacity
 		
@@ -370,7 +376,7 @@ namespace evt {
 			}
 		}
 		
-		constexpr void append(const Type& newElement) {
+		CONSTEXPR void append(const Type& newElement) {
 			
 			if (capacity_ == count_) {
 				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1));
@@ -379,7 +385,7 @@ namespace evt {
 			count_ += 1;
 		}
 		
-		constexpr void append(Type&& newElement) {
+		CONSTEXPR void append(Type&& newElement) {
 			
 			if (capacity_ == count_) {
 				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1), 1);
@@ -395,7 +401,7 @@ namespace evt {
 		inline void appendElements(const Container& newElements) { appendNewElements(newElements); }
 		
 		template<typename Container>
-		inline void appendElements(Container&& newElements) { appendNewElementsMOVE(newElements); }
+		inline void appendElements(Container&& newElements) { appendNewElementsMOVE(std::move(newElements)); }
 		
 		/// Only reserves new memory if the new size if bigger than the array capacity
 		void reserve(const SizeType newSize) {
@@ -443,7 +449,7 @@ namespace evt {
 		}
 		
 		/// Removes all elements in array, capacity will be 1 if desired
-		constexpr void removeAll(const bool keepCapacity = false) {
+		CONSTEXPR void removeAll(const bool keepCapacity = false) {
 			
 			if (!keepCapacity) {
 				assignMemoryAndCapacityForSize(2, true);
@@ -728,7 +734,7 @@ namespace evt {
 		
 		template <typename Container>
 		inline Array& operator+=(Container&& newElements) {
-			return appendNewElementsMOVE(newElements);
+			return appendNewElementsMOVE(std::move(newElements));
 		}
 		
 		inline Array& operator+=(InitializerList newElements) {

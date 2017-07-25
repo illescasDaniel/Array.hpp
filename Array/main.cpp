@@ -432,7 +432,7 @@ int main() {
 
 	cout << "\n------- BENCHMARKS -------\n" << endl;
 	
-	cout << "std::vector push_back: " << testVectorPushBack() << "s" << endl;
+	/*cout << "std::vector push_back: " << testVectorPushBack() << "s" << endl;
 	cout << "std::vector emplace_back: " << testVectorEmplaceBack() << "s" << endl;
 	cout << "evt::Array Append: " << testArrayAppend() << "s" << endl;
 	
@@ -455,7 +455,7 @@ int main() {
 	cout << "evt::Array Element access: " << testElementAccess() << "s" << endl;
 	
 	cout << "evt::Array Element find: " << testFindElement() << "s" << endl;
- 
+ */
 	//
 	
 	cout << "\n----- TEST Class Benchmark ----\n" << endl;

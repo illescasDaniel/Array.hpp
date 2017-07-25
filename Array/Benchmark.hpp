@@ -224,12 +224,14 @@ float testFindElement() {
 
 class Test {
 public:
+	
 	int number1;
 	double number2;
+	size_t number3;
 	string str;
 	
 	Test() {}
-	Test(int n1_, double n2_, string str_): number1(n1_), number2(n2_), str(str_) {}
+	Test(int n1_, double n2_, size_t n3_, string str_): number1(n1_), number2(n2_), number3(n3_), str(str_) {}
 };
 
 std::vector<Test> test1;
@@ -243,7 +245,7 @@ float testVectorPushBackTEST() {
 		test1 = move(backup);
 		
 		for (int i = 0; i < aSize; ++i) {
-			test1.push_back(Test(i, double(i), std::to_string(i)));
+			test1.push_back(Test(i, double(i), size_t(i), std::to_string(i)));
 		}
 	}, 5);
 }
@@ -256,7 +258,7 @@ float testVectorEmplaceBackTEST() {
 		test1 = move(backup);
 		
 		for (int i = 0; i < aSize; ++i) {
-			test1.emplace_back(Test(i, double(i), std::to_string(i)));
+			test1.emplace_back(Test(i, double(i), size_t(i), std::to_string(i)));
 		}
 	}, 5);
 }
@@ -268,7 +270,7 @@ float testArrayAppendTEST() {
 		test2.removeAll();
 		
 		for (int i = 0; i < aSize; ++i) {
-			test2.append(Test(i, double(i), std::to_string(i)));
+			test2.append(Test(i, double(i), size_t(i), std::to_string(i)));
 		}
 	}, 5);
 }
