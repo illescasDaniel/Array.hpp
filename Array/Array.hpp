@@ -36,6 +36,7 @@
 #if (__cplusplus >= 201406)
 	#include <experimental/optional>
 #endif
+
 #if (__cplusplus > 201103)
 	#define CONSTEXPR constexpr
 #else
