@@ -148,8 +148,8 @@ float testArrayInsertInMiddle() {
 	}, 5);
 }
 
-evt::Array<int,aSize> one;
-evt::Array<int,aSize> two;
+evt::Array<int> one(aSize);
+evt::Array<int> two(aSize);
 
 float testArrayAppendElements() {
 	
@@ -274,3 +274,4 @@ float testArrayAppendTEST() {
 		}
 	}, 5);
 }
+

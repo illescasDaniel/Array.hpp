@@ -19,6 +19,19 @@ public:
 
 int main() {
 	
+	Array<int> numbers11 {1,2,3,4};
+	Array<int> numbers22 ({5,6,7,8}, 90);
+	Array<int> numbers3 (100000);
+	
+	cout << numbers11 << ' ' << numbers11.size() << ' ' << numbers11.capacity() << endl;
+	cout << numbers22 << ' ' << numbers22.size() << ' ' << numbers22.capacity() << endl;
+	cout << numbers3 << ' ' << numbers3.size() << ' ' << numbers3.capacity() << endl;
+	
+	vector<int> numbers4 {1,3,4,7};
+	Array<int> numbers5 (numbers4, 97);
+	
+	cout << numbers5 << ' ' << numbers5.count() << ' ' << numbers5.capacity() << endl;
+	
 	Array<Test2> tests;
 	tests.append(Test2(1, 29));
 	
@@ -33,7 +46,7 @@ int main() {
 	Array<int> test00 {1,2,3,4,54,5};
 	cout << test00.count() << " " << test00.capacity() << endl;
 	
-	Array<int,60> test22 {1,2,3,4};
+	Array<int> test22 ({1,2,3,4}, 60);
 	cout << test22.count() << " " << test22.capacity() << endl;
 	
 	test22 = test00;
@@ -142,12 +155,12 @@ int main() {
 	testArray1.removeSubrange({2,4});
 	cout << testArray1 << endl;
 	
-	Array<string, 4> strings1 {"one", "two", "three", "four" };
+	Array<string> strings1 {"one", "two", "three", "four" };
 	cout << strings1 << endl;
-	Array<string, 2> strings2 {"five", "six" };
+	Array<string> strings2 {"five", "six" };
 	cout << strings1 + strings2 << endl;
 	
-	Array<int, 3> test0;
+	Array<int> test0(3);
 	cout << test0.count() << ' ' << test0.capacity() << endl;
 	
 	test0.append(10);
@@ -431,9 +444,9 @@ int main() {
 	// BENCHMARKS
 
 	cout << "\n------- BENCHMARKS -------\n" << endl;
-	
-	/*cout << "std::vector push_back: " << testVectorPushBack() << "s" << endl;
-	cout << "std::vector emplace_back: " << testVectorEmplaceBack() << "s" << endl;
+
+	cout << "std::vector push_back: " << testVectorPushBack() << "s" << endl;
+	//cout << "std::vector emplace_back: " << testVectorEmplaceBack() << "s" << endl;
 	cout << "evt::Array Append: " << testArrayAppend() << "s" << endl;
 	
 	cout << "std::vector Removal: " << testVectorRemoval() << "s" << endl;
@@ -455,9 +468,9 @@ int main() {
 	cout << "evt::Array Element access: " << testElementAccess() << "s" << endl;
 	
 	cout << "evt::Array Element find: " << testFindElement() << "s" << endl;
- */
+ 
 	//
-	
+	//cout << sizeof(Array<int>) << endl;
 	cout << "\n----- TEST Class Benchmark ----\n" << endl;
 	
 	cout << "std::vector push_back: " << testVectorPushBackTEST() << "s" << endl;

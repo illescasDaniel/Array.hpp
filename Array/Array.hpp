@@ -24,9 +24,6 @@
 
 #pragma once
 
-// make_unique is "safer" and only for c++14 and above, unique_ptr is faster and available since c++11; you decide
-#define use_make_unique false
-
 #include <initializer_list>
 #include <algorithm>
 #include <stdexcept>
@@ -34,15 +31,14 @@
 #include <memory>
 #include <random>
 #include <functional>
+#include <iterator>
 
 #if (__cplusplus >= 201406)
-#include <experimental/optional>
-#endif
-
-#if (__cplusplus > 201103)
-#define CONSTEXPR constexpr
+	#include <experimental/optional>
+#elif (__cplusplus > 201103)
+	#define CONSTEXPR constexpr
 #else
-#define CONSTEXPR
+	#define CONSTEXPR inline
 #endif
 
 namespace evt {
@@ -62,63 +58,39 @@ namespace evt {
 			
 			return std::to_string(arithmeticValue);
 		}
-		
 		/* Place your custom "to_string()" function/s here for other classes. Use templates if you want. */
 	}
 	
 	// MARK: - Array Class
 	
-	template <typename Type, std::size_t initialCapacity = 2>
+	template <typename Type>
 	class Array {
 		
 		// Types and macros
 		typedef std::size_t SizeType;
 		typedef std::unique_ptr<Type[]> Pointer;
 		typedef std::initializer_list<Type> InitializerList;
-#define initialCapacity_ ((initialCapacity > 2) ? initialCapacity : 2)
 		
 		// MARK: - Attributes
 		
-		Pointer values { new Type[initialCapacity_] };
+		Pointer values { new Type[2] };
 		SizeType count_ { 0 };
-		SizeType capacity_ { initialCapacity_ };
+		SizeType capacity_ { 2 };
 		
 		// MARK: - Private Functions
-		
-		inline double sizeOfArrayInMB(const double currentCapacity) const {
-			return (sizeof(Type)*(currentCapacity)) / 1000000;
-		}
-		
+	
 		/// Assigns new memory, also updates the new capacity.
 		inline void assignMemoryAndCapacityForSize(SizeType newSize, bool forceResize = false) {
-			
 			if (forceResize or capacity_ < newSize) {
-				
-#if (__cplusplus >= 201400) && use_make_unique
-				values = std::make_unique<Type[]>(newSize);
-#elif (__cplusplus >= 201100) || !use_make_unique
 				values = Pointer { new Type[newSize] };
-#endif
-				
 				capacity_ = newSize;
 			}
-		}
-		
-		inline Pointer newArrayOfSize(const SizeType newSize) const {
-			
-#if (__cplusplus >= 201400) && use_make_unique
-			Pointer newValues { std::make_unique<Type[]>(newSize) };
-#elif (__cplusplus >= 201100) || !use_make_unique
-			Pointer newValues { new Type[newSize] };
-#endif
-			
-			return newValues;
 		}
 		
 		/// Resizes the array to a given size
 		inline void resizeValuesToSize(const SizeType newSize, bool move = 0) {
 			
-			Pointer newValues = newArrayOfSize(newSize);
+			Pointer newValues { new Type[newSize] };
 			
 			move ? std::move(&values[0], &values[count_], &newValues[0]) : std::copy(&values[0], &values[count_], &newValues[0]);
 			values = std::move(newValues);
@@ -126,18 +98,21 @@ namespace evt {
 			capacity_ = newSize;
 		}
 		
+		template <typename MagicContainer>
+		void assignNewMagicElements(MagicContainer&& elements, const std::size_t initialCapacity = 2) {
+			count_ = std::distance(std::begin(elements), std::end(elements));
+			assignMemoryAndCapacityForSize((count_ > initialCapacity) ? count_ : initialCapacity);
+			assignNewElements(std::forward<MagicContainer>(elements));
+		}
+		
 		/// Replaces the content of the array with other elements
 		template <typename Container>
 		void assignNewElements(const Container& elements) {
-			count_ = std::distance(std::begin(elements), std::end(elements));
-			assignMemoryAndCapacityForSize(count_);
 			std::copy(std::begin(elements), std::end(elements), &values[0]);
 		}
 		
 		template <typename Container>
-		void assignNewElementsMOVE(Container&& elements) {
-			count_ = std::distance(std::begin(elements), std::end(elements));
-			assignMemoryAndCapacityForSize(count_);
+		void assignNewElements(Container&& elements) {
 			std::move(std::begin(elements), std::end(elements), &values[0]);
 		}
 		
@@ -153,7 +128,7 @@ namespace evt {
 				
 				capacity_ = countOfContainer + count_;
 				
-				auto newValues = newArrayOfSize(capacity_);
+				Pointer newValues { new Type[capacity_] };
 				
 				std::copy(&values[0], &values[count_], &newValues[0]);
 				std::copy(std::begin(newElements), std::end(newElements), &newValues[count_]);
@@ -178,7 +153,7 @@ namespace evt {
 				
 				capacity_ = countOfContainer + count_;
 				
-				auto newValues = newArrayOfSize(capacity_);
+				Pointer newValues { new Type[capacity_] };
 				
 				std::move(&values[0], &values[count_], &newValues[0]);
 				std::move(std::begin(newElements), std::end(newElements), &newValues[count_]);
@@ -239,20 +214,37 @@ namespace evt {
 			}
 		}
 		
+		void assignArrayWithOptionalInitialCapacity(const Array& otherArray, const size_t initialCapacity = 2) {
+			if (this != &otherArray) {
+				count_ = otherArray.count();
+				SizeType capacity = (otherArray.count() > initialCapacity) ? otherArray.count() : initialCapacity;
+				assignMemoryAndCapacityForSize(capacity);
+				std::copy(otherArray.begin(), otherArray.end(), &values[0]);
+			}
+		}
+		
+		void assignArrayWithOptionalInitialCapacity(Array&& otherArray, const size_t initialCapacity = 2) {
+			if (this != &otherArray) {
+				count_ = otherArray.count();
+				SizeType capacity = (otherArray.count() > initialCapacity) ? otherArray.count() : initialCapacity;
+				assignMemoryAndCapacityForSize(capacity);
+				std::move(otherArray.begin(), otherArray.end(), &values[0]);
+			}
+		}
+		
 	public:
 		
 		// MARK: Constructors
 		
 		Array() { }
-		Array(InitializerList elements) { assignNewElements(elements); }
-		Array(const Array& otherArray) { (*this) = otherArray; }
-		Array(Array&& otherArray) { (*this) = otherArray; }
+		Array(const int initialCapacity) { assignMemoryAndCapacityForSize((initialCapacity > 0) ? initialCapacity : 2); }
+		Array(const SizeType initialCapacity) { assignMemoryAndCapacityForSize(initialCapacity); }
+		Array(InitializerList&& elements, SizeType initialCapacity = 2) { assignNewMagicElements(elements, initialCapacity); }
+		Array(const Array& otherArray, SizeType initialCapacity = 2) { assignArrayWithOptionalInitialCapacity(otherArray, initialCapacity); }
+		Array(Array&& otherArray, SizeType initialCapacity = 2) { assignArrayWithOptionalInitialCapacity(std::move(otherArray), initialCapacity); }
 		
-		template<typename Container>
-		Array(const Container& elements) { assignNewElements(elements); }
-		
-		template <typename Container, typename = typename std::enable_if<!std::is_same<Container, Type>::type>>
-		Array(Container&& elements) { assignNewElementsMOVE(std::move(elements)); }
+		template <typename Container, typename = typename std::enable_if<!std::is_same<Container,Array>::value && !std::is_same<Container,Type>::value>::type>
+		Array(Container&& elements, SizeType initialCapacity = 2) { assignNewMagicElements(elements, initialCapacity); }
 		
 		// MARK: Capacity
 		
@@ -296,7 +288,7 @@ namespace evt {
 			}
 		}
 		
-		void insert(const Type& newElement, const SizeType index) {
+		void insert(const Type& newElement, const SizeType index, const SizeType capacityResizeFactor = 2) {
 			
 			if (index != 0) {
 				checkIfOutOfRange(index);
@@ -308,9 +300,9 @@ namespace evt {
 			
 			if (capacity_ == count_) {
 				
-				capacity_ = (sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1);
+				capacity_ *= capacityResizeFactor;
 				
-				auto newValues = newArrayOfSize(capacity_);
+				Pointer newValues { new Type[capacity_] };
 				
 				std::copy(&values[0], &values[index], &newValues[0]);
 				std::copy(&values[index], &values[count_], &newValues[index+1]);
@@ -325,7 +317,7 @@ namespace evt {
 			count_ += 1;
 		}
 		
-		void insert(Type&& newElement, const SizeType index) {
+		void insert(Type&& newElement, const SizeType index, const SizeType capacityResizeFactor = 2) {
 			
 			if (index != 0) {
 				checkIfOutOfRange(index);
@@ -337,9 +329,9 @@ namespace evt {
 			
 			if (capacity_ == count_) {
 				
-				capacity_ = (sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1);
+				capacity_ *= capacityResizeFactor;
 				
-				auto newValues = newArrayOfSize(capacity_);
+				Pointer newValues { new Type[capacity_] };
 				
 				std::move(&values[0], &values[index], &newValues[0]);
 				std::move(&values[index], &values[count_], &newValues[index+1]);
@@ -376,26 +368,26 @@ namespace evt {
 			}
 		}
 		
-		CONSTEXPR void append(const Type& newElement) {
+		CONSTEXPR void append(const Type& newElement, const SizeType capacityResizeFactor = 2) {
 			
 			if (capacity_ == count_) {
-				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1));
+				resizeValuesToSize(capacity_ * capacityResizeFactor);
 			}
 			values[count_] = newElement;
 			count_ += 1;
 		}
 		
-		CONSTEXPR void append(Type&& newElement) {
+		CONSTEXPR void append(Type&& newElement, const SizeType capacityResizeFactor = 2) {
 			
 			if (capacity_ == count_) {
-				resizeValuesToSize((sizeOfArrayInMB(capacity_) < 500) ? (capacity_ << 2) : (capacity_ << 1), 1);
+				resizeValuesToSize(capacity_ * capacityResizeFactor, 1);
 			}
 			values[count_] = std::move(newElement);
 			count_ += 1;
 		}
 		
-		inline void append(InitializerList newElements) { appendNewElements(newElements); }
-		inline void appendElements(InitializerList newElements) { appendNewElements(newElements); }
+		inline void append(InitializerList&& newElements) { appendNewElements(newElements); }
+		inline void appendElements(InitializerList&& newElements) { appendNewElements(newElements); }
 		
 		template<typename Container>
 		inline void appendElements(const Container& newElements) { appendNewElements(newElements); }
@@ -612,7 +604,7 @@ namespace evt {
 		}
 		
 		/// Returns an ostream that contains the array elements
-		friend std::ostream& operator<<(std::ostream& os, const evt::Array<Type,initialCapacity>& arr) {
+		friend std::ostream& operator<<(std::ostream& os, const evt::Array<Type>& arr) {
 			return os << arr.toString();
 		}
 		
@@ -940,9 +932,3 @@ namespace evt {
 		}
 	};
 }
-
-#undef use_make_unique
-#undef initialCapacity_
-
-
-
