@@ -84,7 +84,7 @@ namespace evt {
 		/// Assigns new memory, also updates the new capacity.
 		inline void assignMemoryAndCapacityForSize(SizeType newSize, bool forceResize = false) {
 			if (forceResize or capacity_ < newSize) {
-				values = Pointer { new Type[newSize] };
+				values = std::move(Pointer { new Type[newSize] });
 				capacity_ = newSize;
 			}
 		}
@@ -277,13 +277,13 @@ namespace evt {
 		void insertAt(const Type* position, Type&& newElement) {
 			
 			if (position == &values[count_]) {
-				this->append(newElement);
+				this->append(std::move(newElement));
 			}
 			else if (position == &values[0]) {
-				this->insert(newElement, 0);
+				this->insert(std::move(newElement), 0);
 			}
 			else if (position > &values[0] && position < &values[count_]) {
-				this->insert(newElement, position - &values[0]);
+				this->insert(std::move(newElement), position - &values[0]);
 			}
 			else {
 				throw std::out_of_range("Index out of range");
@@ -325,7 +325,7 @@ namespace evt {
 				checkIfOutOfRange(index);
 			}
 			else if (index == count_ || this->isEmpty()) {
-				this->append(newElement);
+				this->append(std::move(newElement));
 				return;
 			}
 			
@@ -382,7 +382,7 @@ namespace evt {
 		CONSTEXPR void append(Type&& newElement, const SizeType capacityResizeFactor = 2) {
 			
 			if (capacity_ == count_) {
-				resizeValuesToSize(capacity_ * capacityResizeFactor, 1);
+				resizeValuesToSize(capacity_ * capacityResizeFactor, true);
 			}
 			values[count_] = std::move(newElement);
 			count_ += 1;
@@ -444,7 +444,6 @@ namespace evt {
 		
 		/// Removes all elements in array, capacity will be 1 if desired
 		CONSTEXPR void removeAll(const bool keepCapacity = false) {
-			
 			if (!keepCapacity) {
 				assignMemoryAndCapacityForSize(2, true);
 			}
@@ -514,16 +513,11 @@ namespace evt {
 		void swap(Array& otherArray) {
 			
 			Pointer auxValues = std::move(this->values);
-			SizeType auxCount = this->count_;
-			SizeType auxCapacity = this->capacity_;
-			
 			this->values = std::move(otherArray.values);
-			this->count_ = otherArray.count_;
-			this->capacity_ = otherArray.capacity_;
-			
 			otherArray.values = std::move(auxValues);
-			otherArray.count_ = auxCount;
-			otherArray.capacity_ = auxCapacity;
+			
+			std::swap(this->count_, otherArray.count_);
+			std::swap(this->capacity_, otherArray.count_);
 		}
 		
 		template <typename Container>
@@ -538,7 +532,7 @@ namespace evt {
 		template <typename Container>
 		void swap(Container& container) {
 			Array otherArray(container);
-			swap(otherArray);
+			this->swap(otherArray);
 			container = Array::to<Container>(otherArray);
 		}
 		
@@ -630,7 +624,7 @@ namespace evt {
 			return (*this == elements);
 		}
 		
-		bool equal(InitializerList elements) const {
+		bool equal(InitializerList&& elements) const {
 			return this->operator==(elements);
 		}
 		
