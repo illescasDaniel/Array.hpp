@@ -31,7 +31,6 @@
 		652291371E1EB93C00AC2D8E /* .travis.yml */ = {isa = PBXFileReference; lastKnownFileType = text; name = .travis.yml; path = ../.travis.yml; sourceTree = "<group>"; };
 		6522913B1E1EBFFB00AC2D8E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		6522913C1E1EC01800AC2D8E /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = SOURCE_ROOT; };
-		65339D891F4997F200106C4B /* Array.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Array.png; sourceTree = "<group>"; };
 		65339D8B1F49990500106C4B /* _array_8hpp_source.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = _array_8hpp_source.html; sourceTree = "<group>"; };
 		65339D8C1F49990500106C4B /* annotated.html */ = {isa = PBXFileReference; lastKnownFileType = text.html; path = annotated.html; sourceTree = "<group>"; };
 		65339D8D1F49990500106C4B /* bc_s.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bc_s.png; sourceTree = "<group>"; };
@@ -107,6 +106,7 @@
 		65339DD41F49990500106C4B /* tab_h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_h.png; sourceTree = "<group>"; };
 		65339DD51F49990500106C4B /* tab_s.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = tab_s.png; sourceTree = "<group>"; };
 		65339DD61F49990500106C4B /* tabs.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = tabs.css; sourceTree = "<group>"; };
+		65339DD71F499A1900106C4B /* Array.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Array.png; sourceTree = SOURCE_ROOT; };
 		65A82BA81F157E5400F748F8 /* Array.profdata */ = {isa = PBXFileReference; lastKnownFileType = file; path = Array.profdata; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -124,6 +124,7 @@
 		652291211E1E71CD00AC2D8E = {
 			isa = PBXGroup;
 			children = (
+				65339D8A1F49990500106C4B /* docs */,
 				6522912C1E1E71CD00AC2D8E /* Array */,
 				6522912B1E1E71CD00AC2D8E /* Products */,
 				65A82BA71F157E5400F748F8 /* OptimizationProfiles */,
@@ -144,7 +145,6 @@
 				652291341E1E724400AC2D8E /* Array.hpp */,
 				652291351E1E784400AC2D8E /* Benchmark.hpp */,
 				6522912D1E1E71CD00AC2D8E /* main.cpp */,
-				65339D8A1F49990500106C4B /* docs */,
 				652291391E1EBBC900AC2D8E /* Github */,
 			);
 			path = Array;
@@ -153,7 +153,7 @@
 		652291391E1EBBC900AC2D8E /* Github */ = {
 			isa = PBXGroup;
 			children = (
-				65339D891F4997F200106C4B /* Array.png */,
+				65339DD71F499A1900106C4B /* Array.png */,
 				6522913C1E1EC01800AC2D8E /* LICENSE */,
 				6522913B1E1EBFFB00AC2D8E /* README.md */,
 				652291361E1EB8BF00AC2D8E /* Makefile */,
