@@ -19,6 +19,9 @@ public:
 
 int main() {
 	
+	Array<int> numbers__(6, 3);
+	cout << numbers__ << endl;
+	
 	Array<int> numbers11 {1,2,3,4};
 	Array<int> numbers22 ({5,6,7,8}, 90);
 	Array<int> numbers3 (100000);

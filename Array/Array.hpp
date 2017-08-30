@@ -244,8 +244,15 @@ namespace evt {
 		Array(InitializerList&& elements, SizeType initialCapacity = 2) { assignNewMagicElements(elements, initialCapacity); }
 		Array(const Array& otherArray, SizeType initialCapacity = 2) { assignArrayWithOptionalInitialCapacity(otherArray, initialCapacity); }
 		Array(Array&& otherArray, SizeType initialCapacity = 2) { assignArrayWithOptionalInitialCapacity(std::move(otherArray), initialCapacity); }
+		Array(const SizeType count, const Type& initialValue) {
+			assignMemoryAndCapacityForSize(count);
+			this->count_ = count;
+			Type n {initialValue};
+			std::generate(this->begin(), this->end(), [&n]{ return n++; });
+		}
 		
-		template <typename Container, typename = typename std::enable_if<!std::is_same<Container,Array>::value && !std::is_same<Container,Type>::value>::type>
+		template <typename Container, typename = typename std::enable_if<!std::is_same<Container,Array>::value && !std::is_same<Container,Type>::value
+		&& !std::is_arithmetic<Container>::value>::type>
 		Array(Container&& elements, SizeType initialCapacity = 2) { assignNewMagicElements(elements, initialCapacity); }
 		
 		// MARK: Capacity
