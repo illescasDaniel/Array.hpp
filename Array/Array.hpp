@@ -90,11 +90,10 @@ namespace evt {
 		}
 		
 		/// Resizes the array to a given size
-		inline void resizeValuesToSize(const SizeType newSize, bool move = 0) {
+		void resizeValuesToSize(const SizeType newSize) {
 			
 			Pointer newValues { new Type[newSize] };
-			
-			move ? std::move(&values[0], &values[count_], &newValues[0]) : std::copy(&values[0], &values[count_], &newValues[0]);
+			std::move(&values[0], &values[count_], &newValues[0]);
 			values = std::move(newValues);
 			
 			capacity_ = newSize;
@@ -251,8 +250,10 @@ namespace evt {
 			std::generate(this->begin(), this->end(), [&n]{ return n++; });
 		}
 		
-		template <typename Container, typename = typename std::enable_if<!std::is_same<Container,Array>::value && !std::is_same<Container,Type>::value
-		&& !std::is_arithmetic<Container>::value>::type>
+		template <typename Container, typename = typename std::enable_if<
+		!std::is_same<Container,Array>::value &&
+		!std::is_same<Container,Type>::value &&
+		!std::is_arithmetic<Container>::value>::type>
 		Array(Container&& elements, SizeType initialCapacity = 2) { assignNewMagicElements(elements, initialCapacity); }
 		
 		// MARK: Capacity
@@ -297,7 +298,7 @@ namespace evt {
 			}
 		}
 		
-		void insert(const Type& newElement, const SizeType index, const SizeType capacityResizeFactor = 2) {
+		void insert(const Type& newElement, const SizeType index, const SizeType capacityResizeFactor = 4) {
 			
 			if (index != 0) {
 				checkIfOutOfRange(index);
@@ -326,7 +327,7 @@ namespace evt {
 			count_ += 1;
 		}
 		
-		void insert(Type&& newElement, const SizeType index, const SizeType capacityResizeFactor = 2) {
+		void insert(Type&& newElement, const SizeType index, const SizeType capacityResizeFactor = 4) {
 			
 			if (index != 0) {
 				checkIfOutOfRange(index);
@@ -377,20 +378,22 @@ namespace evt {
 			}
 		}
 		
-		CONSTEXPR void append(const Type& newElement, const SizeType capacityResizeFactor = 2) {
-			
+		void append(const Type& newElement, const SizeType capacityResizeFactor = 4) {
+
 			if (capacity_ == count_) {
 				resizeValuesToSize(capacity_ * capacityResizeFactor);
 			}
+			
 			values[count_] = newElement;
 			count_ += 1;
 		}
 		
-		CONSTEXPR void append(Type&& newElement, const SizeType capacityResizeFactor = 2) {
-			
+		void append(Type&& newElement, const SizeType capacityResizeFactor = 4) {
+
 			if (capacity_ == count_) {
-				resizeValuesToSize(capacity_ * capacityResizeFactor, true);
+				resizeValuesToSize(capacity_ * capacityResizeFactor);
 			}
+			
 			values[count_] = std::move(newElement);
 			count_ += 1;
 		}
@@ -547,6 +550,9 @@ namespace evt {
 			for (const Type& elm: (*this)) {
 				if (element == elm) { return true; }
 			}
+			/*for (size_t i = 0; i < count_; i++) {
+				if (values[i] == element) { return true; }
+			}*/
 			return false;
 		}
 		

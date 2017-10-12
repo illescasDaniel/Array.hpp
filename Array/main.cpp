@@ -469,7 +469,7 @@ int main() {
 	cout << "evt::Array Append elements: " << testArrayAppendElements() << "s" << endl;
 	
 	cout << "evt::Array Element access: " << testElementAccess() << "s" << endl;
-	
+
 	cout << "evt::Array Element find: " << testFindElement() << "s" << endl;
  
 	//
