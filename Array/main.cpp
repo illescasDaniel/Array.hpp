@@ -19,6 +19,11 @@ public:
 
 int main() {
 	
+	Array<string> names2_ {"daniel", "test", "lol"};
+	
+	cout << names2_ << endl;
+	cout << names2_.map<size_t>([](const string& element){ return element.length(); }) << endl;
+	
 	Array<int> numbers__(6, 3);
 	cout << numbers__ << endl;
 	

@@ -561,7 +561,7 @@ namespace evt {
 			return (std::find(&values[0], &values[count_], element) - &values[0]);
 		}
 		
-		SizeType findIf(const std::function<bool(const Type&)>& findFunction) const {
+		SizeType findIf(std::function<bool(const Type&)> findFunction) const {
 			return (std::find_if(&values[0], &values[count_], findFunction) - &values[0]);
 		}
 		
@@ -641,7 +641,7 @@ namespace evt {
 			return this->operator==(elements);
 		}
 		
-		Array filter(const std::function<bool(const Type&)>& filterFunction) const {
+		Array filter(std::function<bool(const Type&)> filterFunction) const {
 			Array filteredArray;
 			for (const auto& element: *this) {
 				if (filterFunction(element)) {
@@ -651,7 +651,16 @@ namespace evt {
 			return filteredArray;
 		}
 		
-		SizeType countOf(const std::function<bool(const Type&)>& countOfFunction) const {
+		template <typename MapType>
+		Array<MapType> map(std::function<MapType(const Type&)> mapFunctor) {
+			Array<MapType> mappedArray;
+			for (const auto& element: *this) {
+				mappedArray.append(mapFunctor(element));
+			}
+			return mappedArray;
+		}
+		
+		SizeType countOf(std::function<bool(const Type&)> countOfFunction) const {
 			return std::count_if(this->begin(), this->end(), countOfFunction);
 		}
 		
@@ -661,7 +670,7 @@ namespace evt {
 		
 #if (__cplusplus >= 201406)
 		
-		inline std::experimental::optional<Type> first(const std::function<bool(const Type&)>& filterFunction) const {
+		inline std::experimental::optional<Type> first(std::function<bool(const Type&)> filterFunction) const {
 			for (const auto& element: *this) {
 				if (filterFunction(element)) {
 					return element;
@@ -670,7 +679,7 @@ namespace evt {
 			return std::experimental::nullopt;
 		}
 		
-		inline std::experimental::optional<Type> last(const std::function<bool(const Type&)>& filterFunction) const {
+		inline std::experimental::optional<Type> last(std::function<bool(const Type&)> filterFunction) const {
 			
 			std::experimental::optional<Type> optElement;
 			
@@ -894,11 +903,11 @@ namespace evt {
 		
 		// MARK: Sort
 		
-		void sort(const std::function<bool(Type&,Type&)>& compareFunction = std::less_equal<Type>()) {
+		void sort(std::function<bool(Type&,Type&)> compareFunction = std::less_equal<Type>()) {
 			std::sort(&values[0], &values[count_], compareFunction);
 		}
 		
-		Array sorted(const std::function<bool(Type&,Type&)>& compareFunction = std::less_equal<Type>()) const {
+		Array sorted(std::function<bool(Type&,Type&)> compareFunction = std::less_equal<Type>()) const {
 			
 			if (this->isEmpty()) {
 				return *this;
