@@ -652,12 +652,29 @@ namespace evt {
 		}
 		
 		template <typename MapType>
-		Array<MapType> map(std::function<MapType(const Type&)> mapFunctor) {
-			Array<MapType> mappedArray;
+		Array<MapType> map(std::function<MapType(const Type&)> mapFunctor) const {
+			Array<MapType> mappedArray(this->count());
 			for (const auto& element: *this) {
 				mappedArray.append(mapFunctor(element));
 			}
 			return mappedArray;
+		}
+		
+		template <typename ReduceType>
+		ReduceType reduce(std::function<ReduceType(const ReduceType result, const Type&)> reduceFunctor, ReduceType initialValue = ReduceType()) const {
+			ReduceType reducedArrayValue{initialValue};
+			for (const auto& element: *this) {
+				reducedArrayValue = reduceFunctor(reducedArrayValue, element);
+			}
+			return reducedArrayValue;
+		}
+		
+		inline size_t sum() const {
+			return this->reduce<size_t>([](const size_t result, const Type& value){ return result + value; });
+		}
+		
+		inline double mean() const {
+			return double(this->sum()) / double(this->count());
 		}
 		
 		SizeType countOf(std::function<bool(const Type&)> countOfFunction) const {

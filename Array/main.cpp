@@ -21,8 +21,23 @@ int main() {
 	
 	Array<string> names2_ {"daniel", "test", "lol"};
 	
-	cout << names2_ << endl;
-	cout << names2_.map<size_t>([](const string& element){ return element.length(); }) << endl;
+	double namesSizeMean = names2_.map<size_t>([](const string& element) {
+		return element.length();
+	}).mean();
+	
+	size_t namesSizeSum = names2_.map<size_t>([](const string& element) {
+		return element.length();
+	}).sum();
+	
+	size_t namesSizeSum2 = names2_.map<size_t>([](const string& element) {
+		return element.length();
+	}).reduce<size_t>([&](const size_t result, const size_t strSize) {
+		return result + strSize;
+	});
+	
+	cout << namesSizeMean << endl;
+	cout << namesSizeSum << endl;
+	cout << namesSizeSum2 << endl;
 	
 	Array<int> numbers__(6, 3);
 	cout << numbers__ << endl;
