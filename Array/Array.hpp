@@ -674,7 +674,7 @@ namespace evt {
 		}
 		
 		inline double mean() const {
-			return double(this->sum()) / double(this->count());
+			return static_cast<double>(this->sum()) / static_cast<double>(this->count());
 		}
 		
 		SizeType countOf(std::function<bool(const Type&)> countOfFunction) const {
