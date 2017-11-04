@@ -45,7 +45,7 @@
 
 namespace evt {
 	
-	namespace internalArrayPrintEVT {
+	namespace ArrayPrint {
 		
 		// Extra functions for the "toString()" method
 		inline std::string to_string(const std::string& str) { return str; }
@@ -53,11 +53,9 @@ namespace evt {
 		
 		template <typename Arithmetic, typename = typename std::enable_if<std::is_arithmetic<Arithmetic>::value,bool>::type>
 		inline std::string to_string(const Arithmetic& arithmeticValue) {
-			
 			if (std::is_same<Arithmetic, bool>::value) {
 				return arithmeticValue ? "true" : "false";
 			}
-			
 			return std::to_string(arithmeticValue);
 		}
 		/* Place your custom "to_string()" function/s here for other classes. Use templates if you want. */
@@ -550,9 +548,6 @@ namespace evt {
 			for (const Type& elm: (*this)) {
 				if (element == elm) { return true; }
 			}
-			/*for (size_t i = 0; i < count_; i++) {
-				if (values[i] == element) { return true; }
-			}*/
 			return false;
 		}
 		
@@ -593,11 +588,11 @@ namespace evt {
 			for (const auto& value: *this) {
 				output += [&] {
 					if (typeid(value) == typeid(std::string)) {
-						return ("\"" + evt::internalArrayPrintEVT::to_string(value) + "\"");
+						return ("\"" + evt::ArrayPrint::to_string(value) + "\"");
 					} else if (typeid(value) == typeid(char)) {
-						return ("\'" + evt::internalArrayPrintEVT::to_string(value) + "\'");
+						return ("\'" + evt::ArrayPrint::to_string(value) + "\'");
 					}
-					return evt::internalArrayPrintEVT::to_string(value);
+					return evt::ArrayPrint::to_string(value);
 				}();
 				
 				if (position+1 < count_) {
@@ -660,6 +655,10 @@ namespace evt {
 			return mappedArray;
 		}
 		
+		Array map(std::function<Type(const Type&)> mapFunctor) const {
+			return this->map<Type>(mapFunctor);
+		}
+		
 		template <typename ReduceType>
 		ReduceType reduce(std::function<ReduceType(const ReduceType result, const Type&)> reduceFunctor, ReduceType initialValue = ReduceType()) const {
 			ReduceType reducedArrayValue{initialValue};
@@ -675,6 +674,45 @@ namespace evt {
 		
 		inline double mean() const {
 			return static_cast<double>(this->sum()) / static_cast<double>(this->count());
+		}
+		
+		std::string joinToString(const std::string& separator = ", ",
+								 const std::string& prefix = "",
+								 const std::string& postfix = "",
+								 const size_t limit = -1,
+								 const std::string& truncated = "...",
+								 std::function<const std::string(const Type&)> transform = [](const Type& element) { return ArrayPrint::to_string(element); }) const {
+			
+			std::string output = "";
+			output += prefix;
+			
+			std::size_t index = 0;
+			for (const auto& element: (*this)) {
+				
+				if (index < limit || limit == 0) {
+					if (index+1 < this->count()) {
+						output += transform(element) + separator;
+					} else {
+						output += transform(element);
+					}
+				} else {
+					output += truncated;
+					output += postfix;
+					return output;
+				}
+				index += 1;
+			}
+			
+			output += postfix;
+			return output;
+		}
+		
+		std::string joinToString(std::function<const std::string(const Type&)> transform) const {
+			return this->joinToString(", ", "", "", -1, "...", transform);
+		}
+		
+		std::string joinToString(const std::string& separator, std::function<const std::string(const Type&)> transform) const {
+			return this->joinToString(separator, "", "", -1, "...", transform);
 		}
 		
 		SizeType countOf(std::function<bool(const Type&)> countOfFunction) const {

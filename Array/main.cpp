@@ -21,6 +21,22 @@ int main() {
 	
 	Array<string> names2_ {"daniel", "test", "lol"};
 	
+	string joint = names2_.joinToString(", ", "->", "END", -1, "...", [](const string& element) {
+		return "`" + element + "`";
+	});
+	
+	joint = names2_.joinToString(", ", "->", "END", 2);
+	cout << joint << endl;
+	
+	joint = names2_.joinToString(", ", [](const string& element) {
+		return "(" + element + ")";
+	});
+	
+	cout << joint << endl;
+	
+	joint = names2_.joinToString(" <-> "s);
+	cout << joint << endl;
+	
 	double namesSizeMean = names2_.map<size_t>([](const string& element) {
 		return element.length();
 	}).mean();
@@ -34,6 +50,11 @@ int main() {
 	}).reduce<size_t>([&](const size_t result, const size_t strSize) {
 		return result + strSize;
 	});
+	
+	Array<string> names22_ = names2_.map([](const string& element) {
+		return "(" + element + ")";
+	});
+	cout << names22_ << endl;
 	
 	cout << namesSizeMean << endl;
 	cout << namesSizeSum << endl;
