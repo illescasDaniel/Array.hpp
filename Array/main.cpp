@@ -19,9 +19,41 @@ public:
 
 int main() {
 	
-	Array<string> names2_ {"daniel", "test", "lol"};
+	Array<string> names {"Daniel", "John", "Peter"};
 	
-	string joint = names2_.joinToString(", ", "->", "END", -1, "...", [](const string& element) {
+	auto sizes = names.map<size_t>([](const string& str) {
+		return str.size();
+	});
+	
+	auto arrSize = sizes.reduce<size_t>([](const size_t totalSize, const size_t strSize){
+		return totalSize + strSize;
+	});
+	
+	cout << arrSize << endl;
+	
+	auto totalStrSize = [](const Array<string> strArray) {
+		return strArray.map<size_t>([](auto str) {
+			return str.size();
+		})
+		.reduce<size_t>([](auto total, auto strSize) {
+			return total + strSize;
+		});
+	};
+	
+	Array<string>({"names", "john"})
+	    .map<size_t>([](auto str) {
+		    return str.size();
+	    })
+	    .reduce<size_t>([](auto total, auto strSize) {
+		    return total + strSize;
+	    });
+	
+	cout << totalStrSize(Array<string>{"hola", "adios"}) << endl;
+
+	/*
+	 Array<string> names2_ {"daniel", "test", "lol"};
+	 
+	 string joint = names2_.joinToString(", ", "->", "END", -1, "...", [](const string& element) {
 		return "`" + element + "`";
 	});
 	
@@ -520,4 +552,5 @@ int main() {
 	cout << "std::vector push_back: " << testVectorPushBackTEST() << "s" << endl;
 	cout << "std::vector emplace_back: " << testVectorEmplaceBackTEST() << "s" << endl;
 	cout << "evt::Array Append: " << testArrayAppendTEST() << "s" << endl;
+	 */
 }
