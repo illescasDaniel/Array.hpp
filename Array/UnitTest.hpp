@@ -9,6 +9,8 @@
 
 #include <string>
 #include <iostream>
+#include <vector>
+#include <functional>
 
 namespace evt {
 	
@@ -32,6 +34,7 @@ namespace evt {
 				} else {
 					std::cout << "✗ TEST FAILED (\"" << this->testName << "\"): \"" << errorMessage << "\"" << std::endl;
 				}
+				
 				exit(1);
 			}
 		}
@@ -47,6 +50,13 @@ namespace evt {
 			else {
 				std::cout << "\n✓ ALL TESTS PASSED [\"" << testName << "\"]\n" << std::endl;
 			}
+		}
+		
+		static void run(const std::string& testName, std::vector<std::function<void()>> tests) {
+			for (const auto& test: tests) {
+				test();
+			}
+			evt::UnitTest::testPassed(testName);
 		}
 		
 		//
