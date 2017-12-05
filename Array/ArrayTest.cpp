@@ -10,7 +10,7 @@
 #include "Array.hpp"
 #include <vector>
 
-class ArrayTest: public evt::UnitTest {
+class ArrayTest {
 	
 	// evt::Array<int> commonArray{};
 	
