@@ -30,6 +30,7 @@
 #include <typeinfo>
 #include <memory>
 #include <random>
+#include <cmath>
 #include <functional>
 #include <iterator>
 
@@ -390,6 +391,27 @@ namespace evt {
 
 			if (capacity_ == count_) {
 				resizeValuesToSize(capacity_ * capacityResizeFactor);
+			}
+			
+			values[count_] = std::move(newElement);
+			count_ += 1;
+		}
+		
+		// Appends new elements by resizing its capacity with base two numbers
+		void appendEfficiently(const Type& newElement) {
+			if (capacity_ == count_) {
+				SizeType newCapacity = std::pow(2, std::ceil(std::log2(capacity_+1)));
+				resizeValuesToSize(newCapacity);
+			}
+			
+			values[count_] = newElement;
+			count_ += 1;
+		}
+		
+		void appendEfficiently(Type&& newElement) {
+			if (capacity_ == count_) {
+				SizeType newCapacity = std::pow(2, std::ceil(std::log2(capacity_+1)));
+				resizeValuesToSize(newCapacity);
 			}
 			
 			values[count_] = std::move(newElement);

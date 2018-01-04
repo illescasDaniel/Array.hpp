@@ -69,6 +69,18 @@ float testArrayAppend() {
 	}, 20);
 }
 
+float testArrayAppendEfficiently() {
+	
+	return benchmark([] {
+		
+		numbers2.removeAll();
+		
+		for (int i = 0; i < aSize; ++i) {
+			numbers2.appendEfficiently(i);
+		}
+	}, 20);
+}
+
 float testVectorInsertAtBeginning() {
 
 	return benchmark([] {
@@ -272,6 +284,6 @@ float testArrayAppendTEST() {
 		for (int i = 0; i < aSize; ++i) {
 			test2.append(Test(i, double(i), size_t(i), std::to_string(i)));
 		}
-	}, 5);
+	}, 2);
 }
 

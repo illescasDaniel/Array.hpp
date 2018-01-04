@@ -18,7 +18,7 @@ public:
 };
 
 int main() {
-	
+/*
 	Array<string> names {"Daniel", "John", "Peter"};
 	
 	auto sizes = names.map<size_t>([](const string& str) {
@@ -49,7 +49,7 @@ int main() {
 	    });
 	
 	cout << totalStrSize(Array<string>{"hola", "adios"}) << endl;
-
+*/
 	/*
 	 Array<string> names2_ {"daniel", "test", "lol"};
 	 
@@ -518,13 +518,15 @@ int main() {
 	// Array<int> nnnn = vector<int>({1,2,3,4}); // uses the move (&&) operation
 	
 	// BENCHMARKS
-
+*/
 	cout << "\n------- BENCHMARKS -------\n" << endl;
 
-	cout << "std::vector push_back: " << testVectorPushBack() << "s" << endl;
+	//cout << "std::vector push_back: " << testVectorPushBack() << "s" << endl;
 	//cout << "std::vector emplace_back: " << testVectorEmplaceBack() << "s" << endl;
 	cout << "evt::Array Append: " << testArrayAppend() << "s" << endl;
-	
+	// Uses less RAM
+	cout << "evt::Array Append: " << testArrayAppendEfficiently() << "s" << endl;
+	/*
 	cout << "std::vector Removal: " << testVectorRemoval() << "s" << endl;
 	cout << "evt::Array Removal: " << testArrayRemoval() << "s" << endl;
 	
@@ -548,9 +550,9 @@ int main() {
 	//
 	//cout << sizeof(Array<int>) << endl;
 	cout << "\n----- TEST Class Benchmark ----\n" << endl;
-	
-	cout << "std::vector push_back: " << testVectorPushBackTEST() << "s" << endl;
-	cout << "std::vector emplace_back: " << testVectorEmplaceBackTEST() << "s" << endl;
-	cout << "evt::Array Append: " << testArrayAppendTEST() << "s" << endl;
-	 */
+	*/
+	//cout << "std::vector push_back: " << testVectorPushBackTEST() << "s" << endl;
+	//cout << "std::vector emplace_back: " << testVectorEmplaceBackTEST() << "s" << endl;
+	//cout << "evt::Array Append: " << testArrayAppendTEST() << "s" << endl;
+	 
 }
