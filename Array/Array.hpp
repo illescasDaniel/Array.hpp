@@ -661,13 +661,12 @@ namespace evt {
 		template <typename MapType>
 		class LazyMapCollection {
 			
-			Array<Type> collection; // Could be a "Collection" type / abstract class in the future
+			const Array<Type>& collection; // Could be a "Collection" type / abstract class in the future
 			std::function<MapType(const Type&)> function;
 			
 		public:
 			
-			LazyMapCollection(Array<Type> collection, std::function<MapType(const Type&)> function) {
-				this->collection = collection;
+			LazyMapCollection(const Array<Type>& collection, std::function<MapType(const Type&)> function): collection(collection) {
 				this->function = function;
 			}
 			
