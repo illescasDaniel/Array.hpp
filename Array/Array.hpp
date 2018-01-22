@@ -658,6 +658,34 @@ namespace evt {
 			return this->operator==(elements);
 		}
 		
+		template <typename MapType>
+		class LazyMapCollection {
+			
+			Array<Type> collection; // Could be a "Collection" type / abstract class in the future
+			std::function<MapType(const Type&)> function;
+			
+		public:
+			
+			LazyMapCollection(Array<Type> collection, std::function<MapType(const Type&)> function) {
+				this->collection = collection;
+				this->function = function;
+			}
+			
+			inline const MapType operator[](const SizeType index) const {
+				if (index >= collection.count()) { throw std::out_of_range("Index out of range"); }
+				return function(collection[index]);
+			}
+		};
+		
+		template <typename MapType>
+		LazyMapCollection<MapType> lazyMap(std::function<MapType(const Type&)> mapFunctor) {
+			return LazyMapCollection<MapType>(*this, mapFunctor);
+		}
+		
+		LazyMapCollection<Type> lazyMap(std::function<Type(const Type&)> mapFunctor) {
+			return LazyMapCollection<Type>(*this, mapFunctor);
+		}
+		
 		Array filter(std::function<bool(const Type&)> filterFunction) const {
 			Array filteredArray;
 			for (const auto& element: *this) {

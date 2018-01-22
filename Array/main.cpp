@@ -18,6 +18,23 @@ public:
 };
 
 int main() {
+	
+	Array<int> numbers {1,2,3,4,5};
+	const auto& lazyNumbers = numbers.lazyMap<int>([](const int number){
+		return number * 2;
+	});
+	
+	cout << lazyNumbers[1] << endl;
+	
+	//
+	
+	Array<string> names {"Daniel", "John", "Peter"};
+	const auto& lazyNamesSize = names.lazyMap<int>([](const string& name) {
+		return name.size();
+	});
+	
+	cout << lazyNamesSize[0] << endl;
+	
 /*
 	Array<string> names {"Daniel", "John", "Peter"};
 	
