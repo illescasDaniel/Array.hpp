@@ -41,9 +41,12 @@ int main() {
 	testArrayAppend();
 
 	float sortTime = benchmark([&] {
-		numbers2.sort();
+		numbers2.sort([&](const int& lhs, const int& rhs){
+			return lhs >= rhs;
+		});
 	});
 	cout << sortTime << endl;
+	cout << numbers2[0] << ' ' << numbers2[1] << endl;
 	
 	cout << "----" << endl;
 	
