@@ -35,6 +35,18 @@ int main() {
 	
 	cout << lazyNamesSize[0] << endl;
 	
+	
+	//
+	cout << "-----" << endl;
+	testArrayAppend();
+
+	float sortTime = benchmark([&] {
+		numbers2.sort();
+	});
+	cout << sortTime << endl;
+	
+	cout << "----" << endl;
+	
 /*
 	Array<string> names {"Daniel", "John", "Peter"};
 	

@@ -1007,11 +1007,11 @@ namespace evt {
 		
 		// MARK: Sort
 		
-		void sort(std::function<bool(Type&,Type&)> compareFunction = std::less_equal<Type>()) {
-			std::sort(&values[0], &values[count_], compareFunction);
+		void sort(std::function<bool(const Type&, const Type&)> compareFunction = std::less_equal<Type>()) {
+			std::stable_sort(&values[0], &values[count_], compareFunction);
 		}
 		
-		Array sorted(std::function<bool(Type&,Type&)> compareFunction = std::less_equal<Type>()) const {
+		Array sorted(std::function<bool(const Type&, const Type&)> compareFunction = std::less_equal<Type>()) const {
 			
 			if (this->isEmpty()) {
 				return *this;
