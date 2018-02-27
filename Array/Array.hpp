@@ -609,12 +609,41 @@ namespace evt {
 			
 			for (const auto& value: *this) {
 				output += [&] {
+					
+#if (__cplusplus >= 201406L) && defined(__clang__)
+					
+					if constexpr (std::is_same<Type, std::string>::value) {
+						return ("\"" + evt::ArrayPrint::to_string(value) + "\"");
+					}
+					else if constexpr (std::is_same<Type, char>::value) {
+						return ("\'" + evt::ArrayPrint::to_string(value) + "\'");
+					}
+					else if constexpr (std::is_arithmetic<Type>::value) {
+						return evt::ArrayPrint::to_string(value);
+					}
+					else if constexpr (std::is_same<Array, Array>::value) { // I don't know... it just works for matrices :3
+						return value.toString();
+					}
+
+					return std::string("Object");
+					
+#else
 					if (typeid(value) == typeid(std::string)) {
 						return ("\"" + evt::ArrayPrint::to_string(value) + "\"");
 					} else if (typeid(value) == typeid(char)) {
 						return ("\'" + evt::ArrayPrint::to_string(value) + "\'");
 					}
 					return evt::ArrayPrint::to_string(value);
+					
+#endif
+					
+					/*if (typeid(value) == typeid(std::string)) {
+						return ("\"" + evt::ArrayPrint::to_string(value) + "\"");
+					} else if (typeid(value) == typeid(char)) {
+						return ("\'" + evt::ArrayPrint::to_string(value) + "\'");
+					}
+					return evt::ArrayPrint::to_string(value);
+					*/
 				}();
 				
 				if (position+1 < count_) {

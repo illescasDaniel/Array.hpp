@@ -18,8 +18,8 @@ public:
 };
 
 int main() {
-	
-	Array<int> numbers {1,2,3,4,5};
+
+	/*Array<int> numbers {1,2,3,4,5};
 	const auto& lazyNumbers = numbers.lazyMap<int>([](const int number){
 		return number * 2;
 	});
@@ -47,9 +47,20 @@ int main() {
 	});
 	cout << sortTime << endl;
 	cout << numbers2[0] << ' ' << numbers2[1] << endl;
-	
+
 	cout << "----" << endl;
+	*/
+	auto numbersMatrix = Array<Array<int>>({{1,2,3}, {4,5,6}});
+	numbersMatrix.append(Array<int>({1,2,3}));
+	cout << numbersMatrix << endl;
 	
+	/*
+	cout << numbersMatrix << endl;
+	
+	
+	Array<int> test{1,2,3,9787};
+	cout << test << endl;
+	cout << "finished" << endl;*/
 /*
 	Array<string> names {"Daniel", "John", "Peter"};
 	
@@ -551,13 +562,17 @@ int main() {
 	
 	// BENCHMARKS
 */
-	cout << "\n------- BENCHMARKS -------\n" << endl;
+	//cout << "\n------- BENCHMARKS -------\n" << endl;
 
 	//cout << "std::vector push_back: " << testVectorPushBack() << "s" << endl;
 	//cout << "std::vector emplace_back: " << testVectorEmplaceBack() << "s" << endl;
-	cout << "evt::Array Append: " << testArrayAppend() << "s" << endl;
+	
+	//cout << "evt::Array Append: " << testArrayAppend() << "s" << endl;
+	
 	// Uses less RAM
-	cout << "evt::Array Append: " << testArrayAppendEfficiently() << "s" << endl;
+	
+	//cout << "evt::Array Append: " << testArrayAppendEfficiently() << "s" << endl;
+	
 	/*
 	cout << "std::vector Removal: " << testVectorRemoval() << "s" << endl;
 	cout << "evt::Array Removal: " << testArrayRemoval() << "s" << endl;
