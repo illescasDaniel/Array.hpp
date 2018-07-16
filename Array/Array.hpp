@@ -34,6 +34,8 @@
 #include <functional>
 #include <iterator>
 
+#include <thread>
+
 #if (__cplusplus >= 201406)
 	#include <experimental/optional>
 #endif
@@ -571,6 +573,64 @@ namespace evt {
 				if (element == elm) { return true; }
 			}
 			return false;
+		}
+		
+		inline bool contains(std::function<bool(const Type&)> condition) const {
+			for (const Type& elm: (*this)) {
+				if (condition(elm)) { return true; }
+			}
+			return false;
+		}
+		
+		// TODO: Needs to be improved
+		inline bool parallelContains(const Type& element) const {
+			
+			bool isElementFound = false;
+			
+			std::thread firstHalf([&] {
+				const size_t halfElementsCount = size_t(this->count_ / 2.0);
+				size_t i = 0;
+				while(!isElementFound && i < halfElementsCount) {
+					if (element == this->values[i]) { isElementFound = true; return; }
+					i++;
+				}
+			}), secondHalf([&] {
+				size_t j = size_t(this->count_ / 2.0);
+				while(!isElementFound && j < this->count_) {
+					if (element == this->values[j]) { isElementFound = true; return; }
+					j++;
+				}
+			});
+			
+			firstHalf.join();
+			secondHalf.join();
+			
+			return isElementFound;
+		}
+		
+		inline bool parallelContains(std::function<bool(const Type&)> condition) const {
+			
+			bool isElementFound = false;
+			
+			std::thread firstHalf([&] {
+				const size_t halfElementsCount = size_t(this->count_ / 2.0);
+				size_t i = 0;
+				while(!isElementFound && i < halfElementsCount) {
+					if (condition(this->values[i])) { isElementFound = true; return; }
+					i++;
+				}
+			}), secondHalf([&] {
+				size_t j = size_t(this->count_ / 2.0);
+				while(!isElementFound && j < this->count_) {
+					if (condition(this->values[j])) { isElementFound = true; return; }
+					j++;
+				}
+			});
+			
+			firstHalf.join();
+			secondHalf.join();
+			
+			return isElementFound;
 		}
 		
 		/// Returns the index of the first ocurrence of the element. Last position if the element isn't found

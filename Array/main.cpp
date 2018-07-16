@@ -2,6 +2,8 @@
 #include "Array.hpp"
 #include "Benchmark.hpp"
 
+#include <future>
+
 using namespace std;
 using namespace evt;
 
@@ -17,10 +19,25 @@ public:
 	Test2(int a, int b): a(a), b(b) {}
 };
 
-int main() {
+/*template <typename RandomIt>
+int parallel_sum(RandomIt beg, RandomIt end) {
+	auto len = end - beg;
+	if (len < 1000)
+		return std::accumulate(beg, end, 0);
+	
+	RandomIt mid = beg + len/2;
+	auto handle = std::async(std::launch::async,
+							 parallel_sum<RandomIt>, mid, end);
 
-	/*Array<int> numbers {1,2,3,4,5};
-	const auto& lazyNumbers = numbers.lazyMap<int>([](const int number){
+	int sum = parallel_sum(beg, mid);
+	return sum + handle.get();
+}*/
+
+int main() {
+	
+	boolalpha(cout);
+	
+	/*const auto& lazyNumbers = numbers.lazyMap<int>([](const int number){
 		return number * 2;
 	});
 	
@@ -50,9 +67,10 @@ int main() {
 
 	cout << "----" << endl;
 	*/
-	auto numbersMatrix = Array<Array<int>>({{1,2,3}, {4,5,6}});
+	// Matrix
+	/*auto numbersMatrix = Array<Array<int>>({{1,2,3}, {4,5,6}});
 	numbersMatrix.append(Array<int>({1,2,3}));
-	cout << numbersMatrix << endl;
+	cout << numbersMatrix << endl;*/
 	
 	/*
 	cout << numbersMatrix << endl;
